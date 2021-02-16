@@ -32,10 +32,9 @@
 #ifndef __METADATA_HANDLER_H__
 #define __METADATA_HANDLER_H__
 
-#include <array>
-
 #include "common.h"
 #include "context.h"
+#include "contrib/eternal.hpp"
 
 // forward declaration
 class CdsItem;
@@ -116,7 +115,7 @@ enum metadata_fields_t {
     M_MAX
 };
 
-constexpr std::array<std::pair<metadata_fields_t, const char*>, M_MAX> mt_keys = { {
+constexpr auto mt_keys = mapbox::eternal::map<metadata_fields_t, std::string_view>({
     { M_TITLE, "dc:title" },
     { M_ARTIST, "upnp:artist" },
     { M_ALBUM, "upnp:album" },
@@ -139,7 +138,7 @@ constexpr std::array<std::pair<metadata_fields_t, const char*>, M_MAX> mt_keys =
     { M_COMPOSER, "upnp:composer" },
     { M_CONDUCTOR, "upnp:conductor" },
     { M_ORCHESTRA, "upnp:orchestra" },
-} };
+});
 
 // res tag attributes
 enum resource_attributes_t {
@@ -159,7 +158,7 @@ enum resource_attributes_t {
     R_MAX
 };
 
-constexpr std::array<std::pair<resource_attributes_t, const char*>, R_MAX> res_keys = { {
+constexpr auto res_keys = mapbox::eternal::map<resource_attributes_t, std::string_view>({
     { R_SIZE, "size" },
     { R_DURATION, "duration" },
     { R_BITRATE, "bitrate" },
@@ -173,7 +172,7 @@ constexpr std::array<std::pair<resource_attributes_t, const char*>, R_MAX> res_k
     { R_FANART_RES_ID, "fanArtResource" },
     { R_BITS_PER_SAMPLE, "bitsPerSample" },
     { R_TYPE, "type" },
-} };
+});
 
 /// \brief This class is responsible for providing access to metadata information
 /// of various media.
