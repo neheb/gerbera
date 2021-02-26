@@ -263,7 +263,7 @@ size_t ProcessIOHandler::read(char* buf, size_t length)
 size_t ProcessIOHandler::write(char* buf, size_t length)
 {
     fd_set writeSet;
-    struct timespec timeout;
+    struct timeval timeout;
     ssize_t bytes_written = 0;
     size_t num_bytes = 0;
     char* p_buffer = buf;
@@ -275,9 +275,9 @@ size_t ProcessIOHandler::write(char* buf, size_t length)
         FD_SET(fd, &writeSet);
 
         timeout.tv_sec = FIFO_WRITE_TIMEOUT;
-        timeout.tv_nsec = 0;
+        timeout.tv_usec = 0;
 
-        ret = pselect(fd + 1, nullptr, &writeSet, nullptr, &timeout, nullptr);
+        ret = select(fd + 1, nullptr, &writeSet, nullptr, &timeout);
         if (ret == -1) {
             if (errno == EINTR) {
                 continue;
