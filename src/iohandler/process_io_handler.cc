@@ -171,7 +171,7 @@ void ProcessIOHandler::open(enum UpnpOpenFileMode mode)
 size_t ProcessIOHandler::read(char* buf, size_t length)
 {
     fd_set readSet;
-    struct timespec timeout;
+    struct timeval timeout;
     ssize_t bytes_read = 0;
     size_t num_bytes = 0;
     char* p_buffer = buf;
@@ -184,9 +184,9 @@ size_t ProcessIOHandler::read(char* buf, size_t length)
         FD_SET(fd, &readSet);
 
         timeout.tv_sec = FIFO_READ_TIMEOUT;
-        timeout.tv_nsec = 0;
+        timeout.tv_usec = 0;
 
-        ret = pselect(fd + 1, &readSet, nullptr, nullptr, &timeout, nullptr);
+        ret = select(fd + 1, &readSet, nullptr, nullptr, &timeout);
         if (ret == -1) {
             if (errno == EINTR)
                 continue;
