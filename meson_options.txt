@@ -1,0 +1,74 @@
+option('avcodec', type : 'boolean',
+  value : true,
+  description : 'Use ffmpeg/libav to extract file metadata',
+)
+
+option('curl', type : 'boolean',
+  value : true,
+  description : 'CURL required for online services',
+)
+
+option('exif', type : 'boolean',
+  value : true,
+  description : 'Use libexif to extract image metadata',
+)
+
+option('exiv2', type : 'boolean',
+  value : true,
+  description : 'Use libexiv2 to extract image metadata',
+)
+
+option('ffmpegthumbnailer', type : 'boolean',
+  value : true,
+  description : 'Enable Thumbnail generation',
+)
+
+option('inotify', type : 'boolean',
+  value : true,
+  description : 'Enable Inotify file monitoring support',
+)
+
+option('js', type : 'boolean',
+  value : true,
+  description : 'Enable JavaScript for scripting',
+)
+
+option('lastfm', type : 'boolean',
+  value : false,
+  description : 'Enable scrobbling to LastFM',
+)
+
+option('magic', type : 'boolean',
+  value : true,
+  description : 'Use libmagic to identify file mime types',
+)
+
+option('matroska', type : 'boolean',
+  value : true,
+  description : 'Use libmatroska to extract video/mkv metadata',
+)
+
+option('mysql', type : 'boolean',
+  value : true,
+  description : 'Store media information in MySQL DB',
+)
+
+option('npupnp', type : 'boolean',
+  value : false,
+  description : 'Use npupnp instead of libupnp',
+)
+
+option('systemd', type : 'boolean',
+  value : true,
+  description : 'Install Systemd unit file',
+)
+
+option('taglib', type : 'boolean',
+  value : true,
+  description : 'Use TagLib to extract audio file metadata',
+)
+
+option('tests', type : 'boolean',
+  value : false,
+  description : 'Build unit tests',
+)
