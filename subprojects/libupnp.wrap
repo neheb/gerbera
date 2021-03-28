@@ -1,0 +1,13 @@
+[wrap-file]
+directory = libupnp-1.14.12
+source_url = https://github.com/pupnp/pupnp/releases/download/release-1.14.12/libupnp-1.14.12.tar.bz2
+source_filename = libupnp-1.14.12.tar.bz2
+source_hash = 091c80aada1e939c2294245c122be2f5e337cc932af7f7d40504751680b5b5ac
+patch_filename = libupnp_1.14.12-2_patch.zip
+patch_url = https://wrapdb.mesonbuild.com/v2/libupnp_1.14.12-2/get_patch
+patch_hash = 02dc93d5b90c199d1c383b3595849d4aab0c6e73fe0e8b26e7f44db0b8249c1e
+wrapdb_version = 1.14.12-2
+
+[provide]
+libupnp = libupnp_dep
+

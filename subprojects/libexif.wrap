@@ -1,0 +1,12 @@
+[wrap-file]
+directory = libexif-0.6.24
+source_url = https://github.com/libexif/libexif/releases/download/v0.6.24/libexif-0.6.24.tar.bz2
+source_filename = libexif-0.6.24.tar.gz
+source_hash = d47564c433b733d83b6704c70477e0a4067811d184ec565258ac563d8223f6ae
+patch_filename = libexif_0.6.24-3_patch.zip
+patch_url = https://wrapdb.mesonbuild.com/v2/libexif_0.6.24-3/get_patch
+patch_hash = 3c83b87a7e1ec3a88e96e4144797993c85c84231e07d290823a242b45ca368be
+
+[provide]
+libexif = exif_dep
+
