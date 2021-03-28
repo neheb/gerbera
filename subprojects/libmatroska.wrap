@@ -1,0 +1,12 @@
+[wrap-file]
+directory = libmatroska-release-1.6.3
+source_url = https://github.com/Matroska-Org/libmatroska/archive/refs/tags/release-1.6.3.tar.gz
+source_filename = release-1.6.3.tar.gz
+source_hash = 0c8c875ae26ac69a722f7fd0f4a4fecb4fdff681f2a165f09c06a40cbf1d0de6
+patch_filename = libmatroska_1.6.3-1_patch.zip
+patch_url = https://wrapdb.mesonbuild.com/v2/libmatroska_1.6.3-1/get_patch
+patch_hash = 36cf38c80cc3712aecc3002bcdfe2f6b37c6db0768ab2391b284438e953cb2ba
+
+[provide]
+libmatroska = libmatroska_dep
+

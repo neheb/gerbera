@@ -1,0 +1,10 @@
+[wrap-file]
+directory = lastfmlib-15db6feb930f77bd771fc3f207ff4ca4b7ba5962
+source_url = https://github.com/dirkvdb/lastfmlib/archive/15db6feb930f77bd771fc3f207ff4ca4b7ba5962.tar.gz
+source_filename = lastfmlib-15db6feb930f77bd771fc3f207ff4ca4b7ba5962.tar.gz
+source_hash = a19bdcb9834c0b68e0e026f2f695748d90cd1f9e0f88f0bd8bf58ad7c29066cf
+patch_directory = lastfmlib
+
+[provide]
+lastfmlib = lastfm_dep
+
