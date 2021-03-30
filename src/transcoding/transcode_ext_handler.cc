@@ -126,7 +126,7 @@ std::unique_ptr<IOHandler> TranscodeExternalHandler::serveContent(std::shared_pt
 #ifdef HAVE_CURL
             std::string url = location;
             strcpy(fifo_template, "mt_transcode_XXXXXX");
-            location = tempName(config->getOption(CFG_SERVER_TMPDIR), fifo_template);
+            location = tempName(config->getOption(CFG_SERVER_TMPDIR), fifo_template).string();
             log_debug("creating reader fifo: {}", location.c_str());
             if (mkfifo(location.c_str(), O_RDWR) == -1) {
                 log_error("Failed to create fifo for the remote content reading thread: {}", std::strerror(errno));
@@ -159,33 +159,33 @@ std::unique_ptr<IOHandler> TranscodeExternalHandler::serveContent(std::shared_pt
     if (profile->getCommand().is_absolute()) {
         std::error_code ec;
         if (!isRegularFile(profile->getCommand(), ec))
-            throw_std_runtime_error("Could not find transcoder: {}", profile->getCommand().c_str());
+            throw_std_runtime_error("Could not find transcoder: {}", profile->getCommand().string().c_str());
 
         check = profile->getCommand();
     } else {
         check = findInPath(profile->getCommand());
 
         if (check.empty())
-            throw_std_runtime_error("Could not find transcoder {} in $PATH", profile->getCommand().c_str());
+            throw_std_runtime_error("Could not find transcoder {} in $PATH", profile->getCommand().string().c_str());
     }
 
     int err = 0;
     if (!isExecutable(check, &err))
-        throw_std_runtime_error("Transcoder {} is not executable: {}", profile->getCommand().c_str(), std::strerror(err));
+        throw_std_runtime_error("Transcoder {} is not executable: {}", profile->getCommand().string().c_str(), std::strerror(err));
 
-    log_debug("creating fifo: {}", fifo_name.c_str());
+    log_debug("creating fifo: {}", fifo_name.string().c_str());
     if (mkfifo(fifo_name.c_str(), O_RDWR) == -1) {
         log_error("Failed to create fifo for the transcoding process!: {}", std::strerror(errno));
         throw_std_runtime_error("Could not create fifo");
     }
 
-    chmod(fifo_name.c_str(), S_IWUSR | S_IRUSR);
+    chmod(fifo_name.string().c_str(), S_IWUSR | S_IRUSR);
 
-    arglist = populateCommandLine(profile->getArguments(), location, fifo_name, range, obj->getTitle());
+    arglist = populateCommandLine(profile->getArguments(), location, fifo_name.string(), range, obj->getTitle());
 
-    log_debug("Command: {}", profile->getCommand().c_str());
+    log_debug("Command: {}", profile->getCommand().string().c_str());
     log_debug("Arguments: {}", profile->getArguments().c_str());
-    auto main_proc = std::make_shared<TranscodingProcessExecutor>(profile->getCommand(), arglist);
+    auto main_proc = std::make_shared<TranscodingProcessExecutor>(profile->getCommand().string(), arglist);
     main_proc->removeFile(fifo_name);
     if (isURL && (!profile->acceptURL())) {
         main_proc->removeFile(location);

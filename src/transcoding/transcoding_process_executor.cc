@@ -48,6 +48,6 @@ TranscodingProcessExecutor::~TranscodingProcessExecutor()
     kill();
 
     for (auto&& name : file_list) {
-        unlink(name.c_str());
+        unlink(name.string().c_str());
     }
 }

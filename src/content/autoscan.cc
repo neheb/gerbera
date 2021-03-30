@@ -86,7 +86,7 @@ bool AutoscanDirectory::updateLMT()
     if (result) {
         result = last_mod_previous_scan < last_mod_current_scan;
         last_mod_previous_scan = last_mod_current_scan;
-        log_debug("set autoscan lmt location: {}; last_modified: {}", location.c_str(), last_mod_current_scan.count());
+        log_debug("set autoscan lmt location: {}; last_modified: {}", location.string().c_str(), last_mod_current_scan.count());
     }
     return result;
 }

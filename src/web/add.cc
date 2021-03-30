@@ -62,7 +62,7 @@ void web::add::process()
     if (!ec) {
         content->addFile(dirEnt, asSetting);
     } else {
-        log_error("Failed to read {}: {}", path.c_str(), ec.message());
+        log_error("Failed to read {}: {}", path.string().c_str(), ec.message());
     }
     log_debug("add: returning");
 }

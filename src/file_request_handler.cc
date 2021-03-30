@@ -66,12 +66,12 @@ static bool checkFileAndSubtitle(fs::path& path, const std::shared_ptr<CdsObject
             path = res_path;
         }
     }
-    int ret = stat(path.c_str(), &statbuf);
+    int ret = stat(path.string().c_str(), &statbuf);
     if (ret != 0) {
         if (is_srt) {
-            throw SubtitlesNotFoundException(fmt::format("Subtitle file {} is not available.", path.c_str()));
+            throw SubtitlesNotFoundException(fmt::format("Subtitle file {} is not available.", path.string().c_str()));
         }
-        throw_std_runtime_error("Failed to open {}: {}", path.c_str(), std::strerror(errno));
+        throw_std_runtime_error("Failed to open {}: {}", path.string().c_str(), std::strerror(errno));
     }
     return is_srt;
 }
@@ -106,12 +106,12 @@ void FileRequestHandler::getInfo(const char* filename, UpnpFileInfo* info)
     struct stat statbuf;
     bool is_srt = checkFileAndSubtitle(path, obj, res_id, mimeType, statbuf, rh);
 
-    UpnpFileInfo_set_IsReadable(info, access(path.c_str(), R_OK) == 0);
+    UpnpFileInfo_set_IsReadable(info, access(path.string().c_str(), R_OK) == 0);
 
     std::string header;
-    log_debug("path: {}", path.c_str());
+    log_debug("path: {}", path.string().c_str());
     if (!path.filename().empty()) {
-        header = fmt::format("Content-Disposition: attachment; filename=\"{}\"", path.filename().c_str());
+        header = fmt::format("Content-Disposition: attachment; filename=\"{}\"", path.filename().string().c_str());
     }
 
     // for transcoded resourecs res_id will always be negative
@@ -153,7 +153,7 @@ void FileRequestHandler::getInfo(const char* filename, UpnpFileInfo* info)
         auto tp = config->getTranscodingProfileListOption(CFG_TRANSCODING_PROFILE_LIST)
                       ->getByName(tr_profile);
         if (tp == nullptr)
-            throw_std_runtime_error("Transcoding of file {} but no profile matching the name {} found", path.c_str(), tr_profile.c_str());
+            throw_std_runtime_error("Transcoding of file {} but no profile matching the name {} found", path.string().c_str(), tr_profile.c_str());
 
         mimeType = tp->getTargetMimeType();
 
@@ -273,7 +273,7 @@ std::unique_ptr<IOHandler> FileRequestHandler::open(const char* filename, enum U
         auto tp = config->getTranscodingProfileListOption(CFG_TRANSCODING_PROFILE_LIST)
                       ->getByName(tr_profile);
 
-        auto io_handler = tr_d->serveContent(tp, path, item, range);
+        auto io_handler = tr_d->serveContent(tp, path.string(), item, range);
         io_handler->open(mode);
 
         log_debug("end");

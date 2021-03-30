@@ -34,7 +34,6 @@
 #include <csignal>
 
 #include <fcntl.h>
-#include <sys/select.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -142,15 +141,15 @@ void ProcessIOHandler::open(enum UpnpOpenFileMode mode)
 
     if (mode == UPNP_READ)
 #ifdef __linux__
-        fd = ::open(filename.c_str(), O_RDONLY | O_NONBLOCK | O_CLOEXEC);
+        fd = ::open(filename.string().c_str(), O_RDONLY | O_NONBLOCK | O_CLOEXEC);
 #else
-        fd = ::open(filename.c_str(), O_RDONLY | O_NONBLOCK);
+        fd = ::open(filename.string().c_str(), O_RDONLY);
 #endif
     else if (mode == UPNP_WRITE)
 #ifdef __linux__
-        fd = ::open(filename.c_str(), O_WRONLY | O_NONBLOCK | O_CLOEXEC);
+        fd = ::open(filename.string().c_str(), O_WRONLY | O_NONBLOCK | O_CLOEXEC);
 #else
-        fd = ::open(filename.c_str(), O_WRONLY | O_NONBLOCK);
+        fd = ::open(filename.string().c_str(), O_WRONLY);
 #endif
     else
         fd = -1;
@@ -163,8 +162,8 @@ void ProcessIOHandler::open(enum UpnpOpenFileMode mode)
         killAll();
         if (mainProc != nullptr)
             mainProc->kill();
-        unlink(filename.c_str());
-        throw_std_runtime_error("open: failed to open: {}", filename.c_str());
+        unlink(filename.string().c_str());
+        throw_std_runtime_error("open: failed to open: {}", filename.string().c_str());
     }
 }
 
@@ -359,7 +358,7 @@ void ProcessIOHandler::close()
 {
     bool ret;
 
-    log_debug("terminating process, closing {}", this->filename.c_str());
+    log_debug("terminating process, closing {}", this->filename.string().c_str());
     unregisterAll();
 
     if (mainProc != nullptr) {
@@ -371,7 +370,7 @@ void ProcessIOHandler::close()
 
     ::close(fd);
 
-    unlink(filename.c_str());
+    unlink(filename.string().c_str());
 
     if (!ret)
         throw_std_runtime_error("failed to kill process");

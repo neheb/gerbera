@@ -179,7 +179,7 @@ void CdsItem::validate()
 
     std::error_code ec;
     if (!isRegularFile(location, ec))
-        throw_std_runtime_error("Item validation failed: file {} not found", location.c_str());
+        throw_std_runtime_error("Item validation failed: file {} not found", location.string().c_str());
 }
 
 //---------

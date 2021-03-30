@@ -41,7 +41,12 @@
 #include <vector>
 namespace fs = std::filesystem;
 
+#ifndef _WIN32
 #include <netinet/in.h>
+#else
+using in_port_t = unsigned short;
+#undef interface // some MinGW header thing
+#endif
 
 #include "common.h"
 

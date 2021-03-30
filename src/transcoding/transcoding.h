@@ -40,6 +40,8 @@
 #include <vector>
 namespace fs = std::filesystem;
 
+#include <unistd.h>
+
 #define SOURCE (-1)
 #define OFF 0
 

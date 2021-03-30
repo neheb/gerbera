@@ -99,7 +99,7 @@ protected:
     // TODO: Remove this and use centralised routing instead of building URLs all over the place
     class PathBase {
     public:
-        std::string pathBase;
+        fs::path pathBase;
         bool addResID;
     };
 

@@ -69,7 +69,7 @@ void MetadataHandler::setMetadata(const std::shared_ptr<Context>& context, const
 {
     std::error_code ec;
     if (!isRegularFile(dirEnt, ec))
-        throw_std_runtime_error("Not a file: {}", dirEnt.path().c_str());
+        throw_std_runtime_error("Not a file: {}", dirEnt.path().string().c_str());
     auto filesize = getFileSize(dirEnt);
 
     std::string mimetype = item->getMimeType();

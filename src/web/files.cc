@@ -65,17 +65,17 @@ void web::files::process()
 
         if (!isRegularFile(it, ec))
             continue;
-        if (exclude_config_files && startswith(filepath.filename(), "."))
+        if (exclude_config_files && startswith(filepath.filename().string(), "."))
             continue;
 
         std::string id = hexEncode(filepath.c_str(), filepath.string().length());
-        filesMap[id] = { filepath.filename().native() };
+        filesMap[id] = { filepath.filename() };
     }
 
     auto f2i = StringConverter::f2i(config);
     for (auto&& [key, val] : filesMap) {
         auto fe = files.append_child("file");
         fe.append_attribute("id") = key.c_str();
-        fe.append_attribute("filename") = f2i->convert(val).c_str();
+        fe.append_attribute("filename") = f2i->convert(val.string()).c_str();
     }
 }

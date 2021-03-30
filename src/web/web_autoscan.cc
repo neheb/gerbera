@@ -130,7 +130,7 @@ void web::autoscan::process()
             auto autoscanEl = autoscansEl.append_child("autoscan");
             autoscanEl.append_attribute("objectID") = autoscanDir->getObjectID();
 
-            autoscanEl.append_child("location").append_child(pugi::node_pcdata).set_value(autoscanDir->getLocation().c_str());
+            autoscanEl.append_child("location").append_child(pugi::node_pcdata).set_value(autoscanDir->getLocation().string().c_str());
             autoscanEl.append_child("scan_mode").append_child(pugi::node_pcdata).set_value(AutoscanDirectory::mapScanmode(autoscanDir->getScanMode()).data());
             autoscanEl.append_child("from_config").append_child(pugi::node_pcdata).set_value(autoscanDir->persistent() ? "1" : "0");
             //autoscanEl.append_child("scan_level").append_child(pugi::node_pcdata)

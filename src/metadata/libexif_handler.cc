@@ -362,7 +362,7 @@ void LibExifHandler::fillMetadata(std::shared_ptr<CdsObject> obj)
 
     auto sc = StringConverter::m2i(CFG_IMPORT_LIBOPTS_EXIF_CHARSET, item->getLocation(), config);
 
-    ed = exif_data_new_from_file(item->getLocation().c_str());
+    ed = exif_data_new_from_file(item->getLocation().string().c_str());
 
     if (!ed) {
         log_debug("Exif data not found, attempting to set resolution internally...");
@@ -415,7 +415,7 @@ std::unique_ptr<IOHandler> LibExifHandler::serveContent(std::shared_ptr<CdsObjec
     if (ctype != EXIF_THUMBNAIL)
         throw_std_runtime_error("Got unknown content type: {}", ctype);
 
-    ExifData* ed = exif_data_new_from_file(item->getLocation().c_str());
+    ExifData* ed = exif_data_new_from_file(item->getLocation().string().c_str());
     if (!ed)
         throw_std_runtime_error("resource has no exif information");
 

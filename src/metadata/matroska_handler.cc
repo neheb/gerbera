@@ -145,7 +145,7 @@ std::unique_ptr<IOHandler> MatroskaHandler::serveContent(std::shared_ptr<CdsObje
 
 void MatroskaHandler::parseMKV(const std::shared_ptr<CdsItem>& item, MemIOHandler** p_io_handler) const
 {
-    file_io_callback ebml_file(item->getLocation().c_str());
+    file_io_callback ebml_file(item->getLocation().string().c_str());
     EbmlStream ebml_stream(ebml_file);
 
     auto el_l0 = ebml_stream.FindNextID(LIBMATROSKA_NAMESPACE::KaxSegment::ClassInfos, ~0);
@@ -269,7 +269,7 @@ void MatroskaHandler::addArtworkResource(const std::shared_ptr<CdsItem>& item, c
 {
     // if we could not determine the mimetype, then there is no
     // point to add the resource - it's probably garbage
-    log_debug("Found artwork of type {} in file {}", art_mimetype.c_str(), item->getLocation().c_str());
+    log_debug("Found artwork of type {} in file {}", art_mimetype.c_str(), item->getLocation().string().c_str());
 
     if (art_mimetype != MIMETYPE_DEFAULT) {
         auto resource = std::make_shared<CdsResource>(CH_MATROSKA);

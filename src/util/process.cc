@@ -39,7 +39,6 @@
 
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <sys/wait.h>
 #include <unistd.h>
 
 #include "config/config_manager.h"
@@ -56,15 +55,15 @@ std::string run_simple_process(const std::shared_ptr<Config>& cfg, const std::st
     char temp_in[] = "mt_in_XXXXXX";
     char temp_out[] = "mt_out_XXXXXX";
 
-    std::string input_file = tempName(cfg->getOption(CFG_SERVER_TMPDIR), temp_in);
+    fs::path input_file = tempName(cfg->getOption(CFG_SERVER_TMPDIR), temp_in);
 #ifdef __linux__
-    fd = open(input_file.c_str(), O_RDWR | O_CREAT | O_EXCL | O_CLOEXEC, S_IRUSR | S_IWUSR);
+    fd = open(input_file.string().c_str(), O_RDWR | O_CREAT | O_EXCL | O_CLOEXEC, S_IRUSR | S_IWUSR);
 #else
-    fd = open(input_file.c_str(), O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
+    fd = open(input_file.string().c_str(), O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
 #endif
     if (fd == -1) {
-        log_debug("Failed to open input file {}: {}", input_file.c_str(), std::strerror(errno));
-        throw_std_runtime_error("Failed to open input file {}: {}", input_file.c_str(), std::strerror(errno));
+        log_debug("Failed to open input file {}: {}", input_file.string().c_str(), std::strerror(errno));
+        throw_std_runtime_error("Failed to open input file {}: {}", input_file.string().c_str(), std::strerror(errno));
     }
     size_t ret = write(fd, input.c_str(), input.length());
     close(fd);
@@ -75,20 +74,20 @@ std::string run_simple_process(const std::shared_ptr<Config>& cfg, const std::st
     }
 
     /* touching output file */
-    std::string output_file = tempName(cfg->getOption(CFG_SERVER_TMPDIR), temp_out);
+    fs::path output_file = tempName(cfg->getOption(CFG_SERVER_TMPDIR), temp_out);
 #ifdef __linux__
-    fd = open(output_file.c_str(), O_RDWR | O_CREAT | O_EXCL | O_CLOEXEC, S_IRUSR | S_IWUSR);
+    fd = open(output_file.string().c_str(), O_RDWR | O_CREAT | O_EXCL | O_CLOEXEC, S_IRUSR | S_IWUSR);
 #else
-    fd = open(output_file.c_str(), O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
+    fd = open(output_file.string().c_str(), O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
 #endif
     if (fd == -1) {
-        log_debug("Failed to open output file {}: {}", output_file.c_str(), std::strerror(errno));
-        throw_std_runtime_error("Failed to open output file {}: {}", output_file.c_str(), std::strerror(errno));
+        log_debug("Failed to open output file {}: {}", output_file.string().c_str(), std::strerror(errno));
+        throw_std_runtime_error("Failed to open output file {}: {}", output_file.string().c_str(), std::strerror(errno));
     }
     close(fd);
 
     /* executing script */
-    std::string command = prog + " " + param + " < " + input_file + " > " + output_file;
+    std::string command = fmt::format("{} {} < {} > {}", prog, param, input_file.string().c_str(), output_file.string().c_str());
     log_debug("running {}", command.c_str());
     int sysret = system(command.c_str());
     if (sysret == -1) {
@@ -98,13 +97,13 @@ std::string run_simple_process(const std::shared_ptr<Config>& cfg, const std::st
 
     /* reading output file */
 #ifdef __linux__
-    file = ::fopen(output_file.c_str(), "re");
+    file = ::fopen(output_file.string().c_str(), "re");
 #else
-    file = ::fopen(output_file.c_str(), "r");
+    file = ::fopen(output_file.string().c_str(), "r");
 #endif
     if (!file) {
-        log_debug("Could not open output file {}: {}", output_file.c_str(), std::strerror(errno));
-        throw_std_runtime_error("Failed to open output file {}: {}", output_file.c_str(), std::strerror(errno));
+        log_debug("Could not open output file {}: {}", output_file.string().c_str(), std::strerror(errno));
+        throw_std_runtime_error("Failed to open output file {}: {}", output_file.string().c_str(), std::strerror(errno));
     }
     std::ostringstream output;
 
@@ -120,8 +119,8 @@ std::string run_simple_process(const std::shared_ptr<Config>& cfg, const std::st
     fclose(file);
 
     /* removing input and output files */
-    unlink(input_file.c_str());
-    unlink(output_file.c_str());
+    unlink(input_file.string().c_str());
+    unlink(output_file.string().c_str());
 
     return output.str();
 }

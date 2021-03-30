@@ -32,8 +32,13 @@
 #include <memory>
 #include <mutex>
 #include <pugixml.hpp>
-#include <sys/socket.h>
 #include <vector>
+
+#ifndef _WIN32
+#include <sys/socket.h>
+#else
+#include <winsock2.h>
+#endif
 
 #include "util/upnp_quirks.h"
 

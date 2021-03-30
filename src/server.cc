@@ -267,7 +267,7 @@ void Server::writeBookmark(const std::string& addr)
         : httpRedirectTo(addr, "disabled.html");
 
     fs::path path = config->getOption(CFG_SERVER_BOOKMARK_FILE);
-    log_debug("Writing bookmark file to: {}", path.c_str());
+    log_debug("Writing bookmark file to: {}", path.string().c_str());
     writeTextFile(path, data);
 }
 
@@ -276,7 +276,7 @@ void Server::emptyBookmark()
     const std::string data = "<html><body><h1>Gerbera Media Server is not running.</h1><p>Please start it and try again.</p></body></html>";
 
     fs::path path = config->getOption(CFG_SERVER_BOOKMARK_FILE);
-    log_debug("Clearing bookmark file at: {}", path.c_str());
+    log_debug("Clearing bookmark file at: {}", path.string().c_str());
     writeTextFile(path, data);
 }
 

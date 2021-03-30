@@ -389,8 +389,8 @@ std::vector<std::shared_ptr<SQLDatabase::AddUpdateTable>> SQLDatabase::_addUpdat
 
     if (obj->isContainer() && op == Operation::Update && obj->isVirtual()) {
         fs::path dbLocation = addLocationPrefix(LOC_VIRT_PREFIX, obj->getLocation());
-        cdsObjectSql["location"] = quote(dbLocation);
-        cdsObjectSql["location_hash"] = quote(stringHash(dbLocation));
+        cdsObjectSql["location"] = quote(dbLocation.string());
+        cdsObjectSql["location_hash"] = quote(stringHash(dbLocation.string()));
     }
 
     if (obj->isItem()) {
@@ -404,11 +404,11 @@ std::vector<std::shared_ptr<SQLDatabase::AddUpdateTable>> SQLDatabase::_addUpdat
                 int parentID = ensurePathExistence(loc.parent_path(), changedContainer);
                 obj->setParentID(parentID);
                 fs::path dbLocation = addLocationPrefix(LOC_FILE_PREFIX, loc);
-                cdsObjectSql["location"] = quote(dbLocation);
-                cdsObjectSql["location_hash"] = quote(stringHash(dbLocation));
+                cdsObjectSql["location"] = quote(dbLocation.string());
+                cdsObjectSql["location_hash"] = quote(stringHash(dbLocation.string()));
             } else {
                 // URLs
-                cdsObjectSql["location"] = quote(loc);
+                cdsObjectSql["location"] = quote(loc.string());
                 cdsObjectSql["location_hash"] = SQL_NULL;
             }
         } else {
@@ -468,7 +468,7 @@ std::vector<std::shared_ptr<SQLDatabase::AddUpdateTable>> SQLDatabase::_addUpdat
     }
 
     if (obj->getParentID() == INVALID_OBJECT_ID) {
-        throw_std_runtime_error("Tried to create or update an object {} with an illegal parent id {}", obj->getLocation().c_str(), obj->getParentID());
+        throw_std_runtime_error("Tried to create or update an object {} with an illegal parent id {}", obj->getLocation().string().c_str(), obj->getParentID());
     }
 
     cdsObjectSql["parent_id"] = fmt::to_string(obj->getParentID());
@@ -916,7 +916,7 @@ int SQLDatabase::ensurePathExistence(fs::path path, int* changedContainer)
     if (changedContainer != nullptr && *changedContainer == INVALID_OBJECT_ID)
         *changedContainer = parentID;
 
-    return createContainer(parentID, f2i->convert(path.filename()), path, false, "", INVALID_OBJECT_ID, std::map<std::string, std::string>());
+    return createContainer(parentID, f2i->convert(path.filename().string()), path.string(), false, "", INVALID_OBJECT_ID, std::map<std::string, std::string>());
 }
 
 int SQLDatabase::createContainer(int parentID, std::string name, const std::string& virtualPath, bool isVirtual, const std::string& upnpClass, int refID, const std::map<std::string, std::string>& itemMetadata)
@@ -1051,12 +1051,12 @@ void SQLDatabase::addContainerChain(std::string virtualPath, const std::string& 
     updateID.emplace(updateID.begin(), *containerID);
 }
 
-std::string SQLDatabase::addLocationPrefix(char prefix, const std::string& path)
+std::string SQLDatabase::addLocationPrefix(char prefix, const fs::path& path)
 {
-    return std::string(1, prefix) + path;
+    return std::string(1, prefix) + path.string();
 }
 
-fs::path SQLDatabase::stripLocationPrefix(std::string dbLocation, char* prefix)
+fs::path SQLDatabase::stripLocationPrefix(const std::string& dbLocation, char* prefix)
 {
     if (dbLocation.empty()) {
         if (prefix)
@@ -1398,11 +1398,11 @@ void SQLDatabase::_removeObjects(const std::vector<int32_t>& objectIDs)
         while ((row = res->nextRow()) != nullptr) {
             bool persistent = remapBool(row->col(1));
             if (persistent) {
-                std::string location = stripLocationPrefix(row->col(2));
+                fs::path location = stripLocationPrefix(row->col(2));
                 std::ostringstream u;
                 u << "UPDATE " << TQ(AUTOSCAN_TABLE)
                   << " SET " << TQ("obj_id") << "=" SQL_NULL
-                  << ',' << TQ("location") << '=' << quote(location)
+                  << ',' << TQ("location") << '=' << quote(location.string())
                   << " WHERE " << TQ("id") << '=' << quote(row->col(0));
                 exec(u.str());
             } else {
@@ -1835,7 +1835,7 @@ void SQLDatabase::updateAutoscanList(ScanMode scanmode, std::shared_ptr<Autoscan
         // the scanmode should match the given parameter
         assert(ad->getScanMode() == scanmode);
 
-        std::string location = ad->getLocation();
+        fs::path location = ad->getLocation();
         if (location.empty())
             throw_std_runtime_error("AutoscanDirectoy with illegal location given to SQLDatabase::updateAutoscanPersistentList");
 
@@ -1845,7 +1845,7 @@ void SQLDatabase::updateAutoscanList(ScanMode scanmode, std::shared_ptr<Autoscan
         int objectID = findObjectIDByPath(location);
         log_debug("objectID = {}", objectID);
         if (objectID == INVALID_OBJECT_ID)
-            q << TQ("location") << '=' << quote(location);
+            q << TQ("location") << '=' << quote(location.string());
         else
             q << TQ("obj_id") << '=' << quote(objectID);
         q << " LIMIT 1";
@@ -1948,7 +1948,7 @@ std::shared_ptr<AutoscanDirectory> SQLDatabase::_fillAutoscanDirectory(const std
         interval = std::stoi(row->col(6));
     auto last_modified = std::chrono::seconds(std::stol(row->col(7)));
 
-    log_info("Loading autoscan location: {}; recursive: {}, last_modified: {}", location.c_str(), recursive, last_modified > std::chrono::seconds::zero() ? fmt::format("{:%Y-%m-%d %H:%M:%S}", fmt::localtime(last_modified.count())) : "unset");
+    log_info("Loading autoscan location: {}; recursive: {}, last_modified: {}", location.string().c_str(), recursive, last_modified > std::chrono::seconds::zero() ? fmt::format("{:%Y-%m-%d %H:%M:%S}", fmt::localtime(last_modified.count())) : "unset");
 
     auto dir = std::make_shared<AutoscanDirectory>(location, mode, recursive, persistent, INVALID_SCAN_ID, interval, hidden);
     dir->setObjectID(objectID);
@@ -2000,7 +2000,7 @@ void SQLDatabase::addAutoscanDirectory(std::shared_ptr<AutoscanDirectory> adir)
       << quote(adir->getInterval().count()) << ','
       << quote(adir->getPreviousLMT().count()) << ','
       << mapBool(adir->persistent()) << ','
-      << (objectID >= 0 ? SQL_NULL : quote(adir->getLocation())) << ','
+      << (objectID >= 0 ? SQL_NULL : quote(adir->getLocation().string())) << ','
       << (pathIds == nullptr ? SQL_NULL : quote("," + toCSV(*pathIds) + ','))
       << ')';
     adir->setDatabaseID(exec(q.str(), true));
@@ -2034,7 +2034,7 @@ void SQLDatabase::updateAutoscanDirectory(std::shared_ptr<AutoscanDirectory> adi
     if (adir->getPreviousLMT() > std::chrono::seconds::zero())
         q << ',' << TQ("last_modified") << '=' << quote(adir->getPreviousLMT().count());
     q << ',' << TQ("persistent") << '=' << mapBool(adir->persistent())
-      << ',' << TQ("location") << '=' << (objectID >= 0 ? SQL_NULL : quote(adir->getLocation()))
+      << ',' << TQ("location") << '=' << (objectID >= 0 ? SQL_NULL : quote(adir->getLocation().string()))
       << ',' << TQ("path_ids") << '=' << (pathIds == nullptr ? SQL_NULL : quote("," + toCSV(*pathIds) + ','))
       << ',' << TQ("touched") << '=' << mapBool(true)
       << " WHERE " << TQ("id") << '=' << quote(adir->getDatabaseID());
@@ -2120,8 +2120,8 @@ std::unique_ptr<std::vector<int>> SQLDatabase::_checkOverlappingAutoscans(const 
             auto obj = loadObject(checkObjectID);
             if (obj == nullptr)
                 throw_std_runtime_error("Referenced object (by Autoscan) not found.");
-            log_error("There is already an Autoscan set on {}", obj->getLocation().c_str());
-            throw_std_runtime_error("There is already an Autoscan set on {}", obj->getLocation().c_str());
+            log_error("There is already an Autoscan set on {}", obj->getLocation().string().c_str());
+            throw_std_runtime_error("There is already an Autoscan set on {}", obj->getLocation().string().c_str());
         }
     }
 
@@ -2146,8 +2146,8 @@ std::unique_ptr<std::vector<int>> SQLDatabase::_checkOverlappingAutoscans(const 
             auto obj = loadObject(objectID);
             if (obj == nullptr)
                 throw_std_runtime_error("Referenced object (by Autoscan) not found.");
-            log_error("Overlapping Autoscans are not allowed. There is already an Autoscan set on {}", obj->getLocation().c_str());
-            throw_std_runtime_error("Overlapping Autoscans are not allowed. There is already an Autoscan set on {}", obj->getLocation().c_str());
+            log_error("Overlapping Autoscans are not allowed. There is already an Autoscan set on {}", obj->getLocation().string().c_str());
+            throw_std_runtime_error("Overlapping Autoscans are not allowed. There is already an Autoscan set on {}", obj->getLocation().string().c_str());
         }
     }
 
@@ -2177,8 +2177,8 @@ std::unique_ptr<std::vector<int>> SQLDatabase::_checkOverlappingAutoscans(const 
     if (obj == nullptr) {
         throw_std_runtime_error("Referenced object (by Autoscan) not found.");
     }
-    log_error("Overlapping Autoscans are not allowed. There is already a recursive Autoscan set on {}", obj->getLocation().c_str());
-    throw_std_runtime_error("Overlapping Autoscans are not allowed. There is already a recursive Autoscan set on {}", obj->getLocation().c_str());
+    log_error("Overlapping Autoscans are not allowed. There is already a recursive Autoscan set on {}", obj->getLocation().string().c_str());
+    throw_std_runtime_error("Overlapping Autoscans are not allowed. There is already a recursive Autoscan set on {}", obj->getLocation().string().c_str());
 }
 
 std::unique_ptr<std::vector<int>> SQLDatabase::getPathIDs(int objectID)

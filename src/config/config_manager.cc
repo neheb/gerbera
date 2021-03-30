@@ -1038,8 +1038,8 @@ void ConfigManager::load(const fs::path& userHome)
     auto self = getSelf();
     std::shared_ptr<ConfigSetup> co;
 
-    log_info("Loading configuration from: {}", filename.c_str());
-    pugi::xml_parse_result result = xmlDoc->load_file(filename.c_str());
+    log_info("Loading configuration from: {}", filename.string().c_str());
+    pugi::xml_parse_result result = xmlDoc->load_file(filename.string().c_str());
     if (result.status != pugi::xml_parse_status::status_ok) {
         throw ConfigParseException(result.description());
     }
@@ -1065,13 +1065,13 @@ void ConfigManager::load(const fs::path& userHome)
     co = findConfigSetup(CFG_SERVER_HOME);
     if (!userHome.empty()) {
         // respect command line; ignore xml value
-        temp = userHome;
+        temp = userHome.string();
     } else {
         temp = co->getXmlContent(root);
     }
 
     if (!fs::is_directory(temp))
-        throw_std_runtime_error("Directory '{}' does not exist", temp);
+        throw_std_runtime_error("Directory '{}' does not exist", temp.c_str());
     co->makeOption(temp, self);
     ConfigPathSetup::Home = temp;
 

@@ -343,15 +343,15 @@ std::string UpnpXMLBuilder::getFirstResourcePath(const std::shared_ptr<CdsItem>&
     auto urlBase = getPathBase(item);
 
     if (item->isExternalItem() && !urlBase->addResID) { // a remote resource
-        return urlBase->pathBase;
+        return urlBase->pathBase.string();
     }
 
     if (urlBase->addResID) { // a proxy, remote, resource
-        return fmt::format(SERVER_VIRTUAL_DIR "{}0", urlBase->pathBase.c_str());
+        return fmt::format(SERVER_VIRTUAL_DIR "{}0", urlBase->pathBase.string().c_str());
     }
 
     // a local resource
-    return fmt::format(SERVER_VIRTUAL_DIR "{}", urlBase->pathBase.c_str());
+    return fmt::format(SERVER_VIRTUAL_DIR "{}", urlBase->pathBase.string().c_str());
 }
 
 std::string UpnpXMLBuilder::getArtworkUrl(const std::shared_ptr<CdsItem>& item) const
@@ -361,9 +361,9 @@ std::string UpnpXMLBuilder::getArtworkUrl(const std::shared_ptr<CdsItem>& item) 
 
     auto urlBase = getPathBase(item);
     if (urlBase->addResID) {
-        return fmt::format("{}{}1/rct/aa", virtualURL, urlBase->pathBase);
+        return fmt::format("{}{}1/rct/aa", virtualURL, urlBase->pathBase.string().c_str());
     }
-    return virtualURL + urlBase->pathBase;
+    return fmt::format("{}{}", virtualURL, urlBase->pathBase.string().c_str());
 }
 
 bool UpnpXMLBuilder::renderContainerImage(const std::string& virtualURL, const std::shared_ptr<CdsContainer>& cont, std::string& url)
@@ -416,9 +416,9 @@ bool UpnpXMLBuilder::renderItemImage(const std::string& virtualURL, const std::s
             auto res_attrs = res->getAttributes();
             auto res_params = res->getParameters();
             if (urlBase->addResID) {
-                url = fmt::format("{}{}{}{}", virtualURL.c_str(), urlBase->pathBase.c_str(), realCount, _URL_PARAM_SEPARATOR);
+                url = fmt::format("{}{}{}{}", virtualURL.c_str(), urlBase->pathBase.string().c_str(), realCount, _URL_PARAM_SEPARATOR);
             } else
-                url = virtualURL + urlBase->pathBase;
+                url = fmt::format("{}{}", virtualURL, urlBase->pathBase.string().c_str());
 
             if (!res_params.empty()) {
                 url.append(dictEncodeSimple(res_params));
@@ -441,9 +441,9 @@ bool UpnpXMLBuilder::renderSubtitle(const std::string& virtualURL, const std::sh
             auto res_attrs = res->getAttributes();
             auto res_params = res->getParameters();
             if (urlBase->addResID) {
-                url = fmt::format("{}{}{}{}", virtualURL.c_str(), urlBase->pathBase, realCount, _URL_PARAM_SEPARATOR);
+                url = fmt::format("{}{}{}{}", virtualURL.c_str(), urlBase->pathBase.string().c_str(), realCount, _URL_PARAM_SEPARATOR);
             } else
-                url = virtualURL + urlBase->pathBase;
+                url = fmt::format("{}{}", virtualURL, urlBase->pathBase.string().c_str());
 
             if (!res_params.empty()) {
                 url.append(dictEncodeSimple(res_params));
@@ -646,17 +646,17 @@ void UpnpXMLBuilder::addResources(const std::shared_ptr<CdsItem>& item, pugi::xm
         bool transcoded = (getValueOrDefault(res_params, URL_PARAM_TRANSCODE) == URL_VALUE_TRANSCODE);
         if (!transcoded) {
             if (urlBase->addResID) {
-                url = fmt::format("{}{}", urlBase->pathBase, realCount);
+                url = fmt::format("{}{}", urlBase->pathBase.string().c_str(), realCount);
             } else
-                url = urlBase->pathBase;
+                url = urlBase->pathBase.string();
 
             realCount++;
         } else {
             if (!skipURL)
-                url = urlBase->pathBase + URL_VALUE_TRANSCODE_NO_RES_ID;
+                url = fmt::format("{}{}", urlBase->pathBase.string().c_str(), URL_VALUE_TRANSCODE_NO_RES_ID);
             else {
                 assert(urlBase_tr != nullptr);
-                url = urlBase_tr->pathBase + URL_VALUE_TRANSCODE_NO_RES_ID;
+                url = fmt::format("{}{}", urlBase_tr->pathBase.string().c_str(), URL_VALUE_TRANSCODE_NO_RES_ID);
             }
         }
         if (!res_params.empty()) {
@@ -706,7 +706,7 @@ void UpnpXMLBuilder::addResources(const std::shared_ptr<CdsItem>& item, pugi::xm
             // content type here and that we will not limit ourselves to the
             // first resource
             if (!skipURL) {
-                url.append(renderExtension(contentType, transcoded ? "" : item->getLocation()));
+                url.append(renderExtension(contentType, transcoded ? "" : item->getLocation().string()));
             }
         }
 

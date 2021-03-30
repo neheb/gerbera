@@ -45,7 +45,7 @@ fs::path MetacontentHandler::getContentPath(const std::vector<std::string>& name
         if (folder.empty()) {
             folder = (obj->isContainer()) ? obj->getLocation() : obj->getLocation().parent_path();
         }
-        log_debug("Folder name: {}", folder.c_str());
+        log_debug("Folder name: {}", folder.string().c_str());
 
         if (isCaseSensitive) {
             for (auto&& name : names) {
@@ -55,7 +55,7 @@ fs::path MetacontentHandler::getContentPath(const std::vector<std::string>& name
                 if (!exists)
                     continue;
 
-                log_debug("{}: found", found.c_str());
+                log_debug("{}: found", found.string().c_str());
                 return found;
             }
         } else {
@@ -63,7 +63,7 @@ fs::path MetacontentHandler::getContentPath(const std::vector<std::string>& name
             std::error_code ec;
             for (auto&& p : fs::directory_iterator(folder, ec))
                 if (isRegularFile(p, ec))
-                    fileNames[toLower(p.path().filename())] = p;
+                    fileNames[toLower(p.path().filename().string())] = p;
 
             for (auto&& name : names) {
                 auto fileName = toLower(expandName(name, obj));
@@ -97,14 +97,14 @@ std::string MetacontentHandler::expandName(const std::string& name, const std::s
 
     if (obj->isItem()) {
         fs::path location = obj->getLocation();
-        replaceString(copy, "%filename%", location.stem());
+        replaceString(copy, "%filename%", location.stem().string());
     }
     if (obj->isContainer()) {
         auto title = obj->getTitle();
         if (!title.empty())
             replaceString(copy, "%filename%", title);
         fs::path location = obj->getLocation();
-        replaceString(copy, "%filename%", location.filename());
+        replaceString(copy, "%filename%", location.filename().string());
     }
     return copy;
 }
@@ -133,7 +133,7 @@ FanArtHandler::FanArtHandler(const std::shared_ptr<Context>& context)
 
 void FanArtHandler::fillMetadata(std::shared_ptr<CdsObject> obj)
 {
-    log_debug("Running fanart handler on {}", obj->getLocation().c_str());
+    log_debug("Running fanart handler on {}", obj->getLocation().string().c_str());
     auto tweak = config->getDirectoryTweakOption(CFG_IMPORT_DIRECTORIES_LIST)->get(obj->getLocation());
     auto path = getContentPath(tweak == nullptr || !tweak->hasFanArtFile() ? names : std::vector<std::string> { tweak->getFanArtFile() }, obj, tweak != nullptr && tweak->hasCaseSensitive() ? tweak->getCaseSensitive() : caseSensitive);
 
@@ -158,11 +158,11 @@ std::unique_ptr<IOHandler> FanArtHandler::serveContent(std::shared_ptr<CdsObject
         auto tweak = config->getDirectoryTweakOption(CFG_IMPORT_DIRECTORIES_LIST)->get(obj->getLocation());
         path = getContentPath(tweak == nullptr || !tweak->hasFanArtFile() ? names : std::vector<std::string> { tweak->getFanArtFile() }, obj, tweak != nullptr && tweak->hasCaseSensitive() ? tweak->getCaseSensitive() : caseSensitive);
     }
-    log_debug("FanArt: Opening name: {}", path.c_str());
+    log_debug("FanArt: Opening name: {}", path.string().c_str());
     struct stat statbuf;
-    int ret = stat(path.c_str(), &statbuf);
+    int ret = stat(path.string().c_str(), &statbuf);
     if (ret != 0) {
-        log_warning("File does not exist: {} ({})", path.c_str(), std::strerror(errno));
+        log_warning("File does not exist: {} ({})", path.string().c_str(), std::strerror(errno));
         return nullptr;
     }
     return std::make_unique<FileIOHandler>(path);
@@ -196,7 +196,7 @@ void ContainerArtHandler::fillMetadata(std::shared_ptr<CdsObject> obj)
     if (path.empty()) {
         path = getContentPath(names, obj, caseSensitive);
     }
-    log_debug("Running ContainerArt handler on {}", !path.empty() ? path.c_str() : obj->getLocation().c_str());
+    log_debug("Running ContainerArt handler on {}", !path.empty() ? path.string().c_str() : obj->getLocation().string().c_str());
 
     if (!path.empty()) {
         auto resource = std::make_shared<CdsResource>(CH_CONTAINERART);
@@ -221,11 +221,11 @@ std::unique_ptr<IOHandler> ContainerArtHandler::serveContent(std::shared_ptr<Cds
             path = getContentPath(names, obj, caseSensitive);
         }
     }
-    log_debug("ContainerArt: Opening name: {}", path.c_str());
+    log_debug("ContainerArt: Opening name: {}", path.string().c_str());
     struct stat statbuf;
-    int ret = stat(path.c_str(), &statbuf);
+    int ret = stat(path.string().c_str(), &statbuf);
     if (ret != 0) {
-        log_warning("File does not exist: {} ({})", path.c_str(), std::strerror(errno));
+        log_warning("File does not exist: {} ({})", path.string().c_str(), std::strerror(errno));
         return nullptr;
     }
     return std::make_unique<FileIOHandler>(path);
@@ -251,7 +251,7 @@ void SubtitleHandler::fillMetadata(std::shared_ptr<CdsObject> obj)
 {
     auto tweak = config->getDirectoryTweakOption(CFG_IMPORT_DIRECTORIES_LIST)->get(obj->getLocation());
     auto path = getContentPath(tweak == nullptr || !tweak->hasSubTitleFile() ? names : std::vector<std::string> { tweak->getSubTitleFile() }, obj, tweak != nullptr && tweak->hasCaseSensitive() ? tweak->getCaseSensitive() : caseSensitive);
-    log_debug("Running subtitle handler on {} -> {}", obj->getLocation().c_str(), path.c_str());
+    log_debug("Running subtitle handler on {} -> {}", obj->getLocation().string().c_str(), path.string().c_str());
 
     if (!path.empty()) {
         auto resource = std::make_shared<CdsResource>(CH_SUBTITLE);
@@ -280,11 +280,11 @@ std::unique_ptr<IOHandler> SubtitleHandler::serveContent(std::shared_ptr<CdsObje
         auto tweak = config->getDirectoryTweakOption(CFG_IMPORT_DIRECTORIES_LIST)->get(obj->getLocation());
         path = getContentPath(tweak == nullptr || !tweak->hasSubTitleFile() ? names : std::vector<std::string> { tweak->getSubTitleFile() }, obj, tweak != nullptr && tweak->hasCaseSensitive() ? tweak->getCaseSensitive() : caseSensitive);
     }
-    log_debug("Subtitle: Opening name: {}", path.c_str());
+    log_debug("Subtitle: Opening name: {}", path.string().c_str());
     struct stat statbuf;
-    int ret = stat(path.c_str(), &statbuf);
+    int ret = stat(path.string().c_str(), &statbuf);
     if (ret != 0) {
-        log_warning("File does not exist: {} ({})", path.c_str(), std::strerror(errno));
+        log_warning("File does not exist: {} ({})", path.string().c_str(), std::strerror(errno));
         return nullptr;
     }
     return std::make_unique<FileIOHandler>(path);
@@ -330,11 +330,11 @@ std::unique_ptr<IOHandler> ResourceHandler::serveContent(std::shared_ptr<CdsObje
         auto tweak = config->getDirectoryTweakOption(CFG_IMPORT_DIRECTORIES_LIST)->get(obj->getLocation());
         path = getContentPath(tweak == nullptr || !tweak->hasResourceFile() ? names : std::vector<std::string> { tweak->getResourceFile() }, obj, tweak != nullptr && tweak->hasCaseSensitive() ? tweak->getCaseSensitive() : caseSensitive);
     }
-    log_debug("Resource: Opening name: {}", path.c_str());
+    log_debug("Resource: Opening name: {}", path.string().c_str());
     struct stat statbuf;
-    int ret = stat(path.c_str(), &statbuf);
+    int ret = stat(path.string().c_str(), &statbuf);
     if (ret != 0) {
-        log_warning("File does not exist: {} ({})", path.c_str(), std::strerror(errno));
+        log_warning("File does not exist: {} ({})", path.string().c_str(), std::strerror(errno));
         return nullptr;
     }
     return std::make_unique<FileIOHandler>(path);

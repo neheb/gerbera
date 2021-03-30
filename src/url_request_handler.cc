@@ -87,7 +87,7 @@ void URLRequestHandler::getInfo(const char* filename, UpnpFileInfo* info)
         } else
 #endif
         {
-            url = item->getLocation();
+            url = item->getLocation().string();
         }
 
         log_debug("Online content url: {}", url.c_str());
@@ -149,7 +149,7 @@ std::unique_ptr<IOHandler> URLRequestHandler::open(const char* filename, enum Up
     } else
 #endif
     {
-        url = item->getLocation();
+        url = item->getLocation().string();
     }
 
     log_debug("Online content url: {}", url.c_str());

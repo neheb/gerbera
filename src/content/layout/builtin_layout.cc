@@ -111,9 +111,9 @@ void BuiltinLayout::addVideo(const std::shared_ptr<CdsObject>& obj, const fs::pa
     if (!rootpath.empty()) {
         // make location relative to rootpath: "/home/.../Videos/Action/a.mkv" with rootpath "/home/.../Videos" -> "Action"
         dir = fs::relative(obj->getLocation().parent_path(), config->getBoolOption(CFG_IMPORT_LAYOUT_PARENT_PATH) ? rootpath.parent_path() : rootpath);
-        dir = f2i->convert(dir);
+        dir = f2i->convert(dir.string());
     } else
-        dir = esc(f2i->convert(getLastPath(obj->getLocation())));
+        dir = esc(f2i->convert(getLastPath(obj->getLocation()).string()));
 
     if (!dir.empty()) {
         id = content->addContainerChain(fmt::format("/Video/Directories/{}", dir.string().c_str()));
@@ -165,9 +165,9 @@ void BuiltinLayout::addImage(const std::shared_ptr<CdsObject>& obj, const fs::pa
     if (!rootpath.empty()) {
         // make location relative to rootpath: "/home/.../Photos/Action/a.mkv" with rootpath "/home/.../Photos" -> "Action"
         dir = fs::relative(obj->getLocation().parent_path(), config->getBoolOption(CFG_IMPORT_LAYOUT_PARENT_PATH) ? rootpath.parent_path() : rootpath);
-        dir = f2i->convert(dir);
+        dir = f2i->convert(dir.string());
     } else
-        dir = esc(f2i->convert(getLastPath(obj->getLocation())));
+        dir = esc(f2i->convert(getLastPath(obj->getLocation()).string()));
 
     if (!dir.empty()) {
         id = content->addContainerChain(fmt::format("/Photos/Directories/{}", dir.string().c_str()));
@@ -309,9 +309,9 @@ void BuiltinLayout::addAudio(const std::shared_ptr<CdsObject>& obj, const fs::pa
     if (!rootpath.empty()) {
         // make location relative to rootpath: "/home/.../Audio/Action/a.mp3" with rootpath "/home/.../Audio" -> "Action"
         dir = fs::relative(obj->getLocation().parent_path(), config->getBoolOption(CFG_IMPORT_LAYOUT_PARENT_PATH) ? rootpath.parent_path() : rootpath);
-        dir = f2i->convert(dir);
+        dir = f2i->convert(dir.string());
     } else
-        dir = esc(f2i->convert(getLastPath(obj->getLocation())));
+        dir = esc(f2i->convert(getLastPath(obj->getLocation()).string()));
 
     if (!dir.empty()) {
         id = content->addContainerChain(fmt::format("/Audio/Directories/{}", dir.string().c_str()));
