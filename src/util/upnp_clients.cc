@@ -121,7 +121,7 @@ static const auto bultinClientInfo = std::array<ClientInfo, 8> {
 
 Clients::Clients(const std::shared_ptr<Config>& config)
 {
-    std::copy(bultinClientInfo.begin(), bultinClientInfo.end(), std::back_inserter(clientInfo));
+    std::ranges::copy(bultinClientInfo, std::back_inserter(clientInfo));
     auto clientConfigList = config->getClientConfigListOption(CFG_CLIENTS_LIST);
     for (size_t i = 0; i < clientConfigList->size(); i++) {
         auto clientConfig = clientConfigList->get(i);
@@ -183,7 +183,7 @@ void Clients::getInfo(const struct sockaddr_storage* addr, const std::string& us
 
 bool Clients::getInfoByAddr(const struct sockaddr_storage* addr, const ClientInfo** ppInfo)
 {
-    auto it = std::find_if(clientInfo.begin(), clientInfo.end(), [&](auto&& c) {
+    auto it = std::ranges::find_if(clientInfo, [&](auto&& c) {
         if (c.matchType != ClientMatchType::IP) {
             return false;
         }
@@ -240,7 +240,7 @@ bool Clients::getInfoByCache(const struct sockaddr_storage* addr, const ClientIn
 {
     AutoLock lock(mutex);
 
-    auto it = std::find_if(cache->begin(), cache->end(), [&](auto&& entry) //
+    auto it = std::ranges::find_if(*cache, [&](auto&& entry) //
         { return sockAddrCmpAddr(reinterpret_cast<const struct sockaddr*>(&entry.addr), reinterpret_cast<const struct sockaddr*>(addr)) == 0; });
 
     if (it != cache->end()) {
@@ -264,7 +264,7 @@ void Clients::updateCache(const struct sockaddr_storage* addr, const std::string
                      [now](auto&& entry) { return entry.last + std::chrono::hours(6) < now; }),
         cache->end());
 
-    auto it = std::find_if(cache->begin(), cache->end(), [=](auto&& entry) //
+    auto it = std::ranges::find_if(*cache, [=](auto&& entry) //
         { return sockAddrCmpAddr(reinterpret_cast<const struct sockaddr*>(&entry.addr), reinterpret_cast<const struct sockaddr*>(addr)) == 0; });
 
     if (it != cache->end()) {

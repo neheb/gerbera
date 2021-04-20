@@ -74,18 +74,18 @@ void web::directories::process()
     std::map<std::string, dirInfo> filesMap;
 
     for (auto&& it : fs::directory_iterator(path, ec)) {
-        const fs::path& filepath = it.path();
+        auto&& filepath = it.path();
 
         if (!it.is_directory(ec))
             continue;
-        if (std::find(excludes_fullpath.begin(), excludes_fullpath.end(), filepath) != excludes_fullpath.end())
+        if (std::ranges::find(excludes_fullpath, filepath.string()) != excludes_fullpath.end())
             continue;
-        if (std::find(excludes_dirname.begin(), excludes_dirname.end(), filepath.filename()) != excludes_dirname.end()
+        if (std::ranges::find(excludes_dirname, filepath.filename()) != excludes_dirname.end()
             || (exclude_config_dirs && startswith(filepath.filename(), ".")))
             continue;
 
         auto&& dir = fs::directory_iterator(filepath, ec);
-        bool hasContent = std::any_of(begin(dir), end(dir), [&](auto&& sub) { return sub.is_directory(ec) || isRegularFile(sub, ec); });
+        bool hasContent = std::ranges::any_of(dir, [&](auto&& sub) { return sub.is_directory(ec) || isRegularFile(sub, ec); });
 
         /// \todo replace hexEncode with base64_encode?
         std::string id = hexEncode(filepath.c_str(), filepath.string().length());

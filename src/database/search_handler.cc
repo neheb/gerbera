@@ -64,7 +64,7 @@ static const std::unordered_map<std::string_view, TokenType> tokenTypes {
 static std::string aslowercase(const std::string& src)
 {
     std::string copy = src;
-    std::transform(copy.begin(), copy.end(), copy.begin(), ::tolower);
+    std::ranges::transform(copy, copy.begin(), ::tolower);
     return copy;
 }
 

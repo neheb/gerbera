@@ -535,7 +535,7 @@ void UpnpXMLBuilder::addResources(const std::shared_ptr<CdsItem>& item, pugi::xm
                     // we have the current and hopefully valid fcc string
                     // let's have a look if it matches the list
                     else {
-                        bool fcc_match = std::find(fcc_list.begin(), fcc_list.end(), current_fcc) != fcc_list.end();
+                        bool fcc_match = std::ranges::find(fcc_list, current_fcc) != fcc_list.end();
                         if (!fcc_match && (fcc_mode == FCC_Process))
                             continue;
 

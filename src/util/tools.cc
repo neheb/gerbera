@@ -102,7 +102,7 @@ std::vector<std::string> splitString(const std::string& str, char sep, bool empt
 
 void leftTrimStringInPlace(std::string& str)
 {
-    str.erase(str.begin(), std::find_if_not(str.begin(), str.end(), ::isspace));
+    str.erase(str.begin(), std::ranges::find_if_not(str, ::isspace));
 }
 
 void rightTrimStringInPlace(std::string& str)
@@ -133,7 +133,7 @@ bool startswith(const std::string& str, const std::string& check)
 
 std::string toLower(std::string str)
 {
-    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+    std::ranges::transform(str, str.begin(), ::tolower);
     return str;
 }
 
@@ -154,9 +154,7 @@ unsigned long stoulString(const std::string& str, int def, int base)
 
 std::string reduceString(std::string str, char ch)
 {
-    std::string::iterator new_end = std::unique(
-        str.begin(), str.end(),
-        [&](char lhs, char rhs) { return (lhs == rhs) && (lhs == ch); });
+    auto new_end = std::unique(str.begin(), str.end(), [&](char lhs, char rhs) { return (lhs == rhs) && (lhs == ch); });
 
     str.erase(new_end, str.end());
     return str;

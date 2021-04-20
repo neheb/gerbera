@@ -118,9 +118,9 @@ bool CdsResource::equals(const std::shared_ptr<CdsResource>& other) const
 {
     return (
         handlerType == other->handlerType
-        && std::equal(attributes.begin(), attributes.end(), other->attributes.begin())
-        && std::equal(parameters.begin(), parameters.end(), other->parameters.begin())
-        && std::equal(options.begin(), options.end(), other->options.begin()));
+        && std::ranges::equal(attributes, other->attributes)
+        && std::ranges::equal(parameters, other->parameters)
+        && std::ranges::equal(options, other->options));
 }
 
 std::shared_ptr<CdsResource> CdsResource::clone()

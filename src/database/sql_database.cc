@@ -271,7 +271,7 @@ std::string SQLDatabase::getSortCapabilities()
 {
     auto sortKeys = std::vector<std::string>();
     for (auto&& [key, col] : browseSortMap) {
-        if (std::find(sortKeys.begin(), sortKeys.end(), key) != sortKeys.end()) {
+        if (std::ranges::find(sortKeys, key) != sortKeys.end()) {
             sortKeys.emplace_back(key);
         }
     }

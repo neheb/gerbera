@@ -50,7 +50,7 @@ int AutoscanList::add(const std::shared_ptr<AutoscanDirectory>& dir, size_t inde
 
 int AutoscanList::_add(const std::shared_ptr<AutoscanDirectory>& dir, size_t index)
 {
-    if (std::any_of(list.begin(), list.end(), [loc = dir->getLocation()](auto&& item) { return loc == item->getLocation(); })) {
+    if (std::ranges::any_of(list, [loc = dir->getLocation()](auto&& item) { return loc == item->getLocation(); })) {
         throw_std_runtime_error("Attempted to add same autoscan path twice");
     }
     if (index == std::numeric_limits<std::size_t>::max()) {
@@ -81,7 +81,7 @@ size_t AutoscanList::getEditSize() const
     if (indexMap.empty()) {
         return 0;
     }
-    return (*std::max_element(indexMap.begin(), indexMap.end(), [&](auto a, auto b) { return (a.first < b.first); })).first + 1;
+    return std::ranges::max_element(indexMap, [&](auto a, auto b) { return (a.first < b.first); })->first + 1;
 }
 
 std::vector<std::shared_ptr<AutoscanDirectory>> AutoscanList::getArrayCopy()
@@ -110,7 +110,7 @@ std::shared_ptr<AutoscanDirectory> AutoscanList::getByObjectID(int objectID)
 {
     AutoLock lock(mutex);
 
-    auto it = std::find_if(list.begin(), list.end(), [=](auto&& item) { return objectID == item->getObjectID(); });
+    auto it = std::ranges::find_if(list, [=](auto&& item) { return objectID == item->getObjectID(); });
     return it != list.end() ? *it : nullptr;
 }
 
@@ -118,7 +118,7 @@ std::shared_ptr<AutoscanDirectory> AutoscanList::get(const fs::path& location)
 {
     AutoLock lock(mutex);
 
-    auto it = std::find_if(list.begin(), list.end(), [=](auto&& item) { return location == item->getLocation(); });
+    auto it = std::ranges::find_if(list, [=](auto&& item) { return location == item->getLocation(); });
     return it != list.end() ? *it : nullptr;
 }
 
@@ -142,7 +142,7 @@ void AutoscanList::remove(size_t id, bool edit)
             return;
         }
         auto&& dir = indexMap[id];
-        auto entry = std::find_if(list.begin(), list.end(), [loc = dir->getScanID()](auto&& item) { return loc == item->getScanID(); });
+        auto entry = std::ranges::find_if(list, [loc = dir->getScanID()](auto&& item) { return loc == item->getScanID(); });
         dir->setScanID(INVALID_SCAN_ID);
         list.erase(entry);
 

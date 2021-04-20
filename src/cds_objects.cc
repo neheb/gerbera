@@ -90,7 +90,7 @@ bool CdsObject::equals(const std::shared_ptr<CdsObject>& obj, bool exactly)
             && mtime == obj->getMTime()
             && sizeOnDisk == obj->getSizeOnDisk()
             && virt == obj->isVirtual()
-            && std::equal(auxdata.begin(), auxdata.end(), obj->auxdata.begin())
+            && std::ranges::equal(auxdata, obj->auxdata)
             && objectFlags == obj->getFlags()));
 }
 
@@ -100,7 +100,7 @@ bool CdsObject::resourcesEqual(const std::shared_ptr<CdsObject>& obj)
         return false;
 
     // compare all resources
-    return std::equal(resources.begin(), resources.end(), obj->resources.begin(),
+    return std::ranges::equal(resources, obj->resources,
         [](auto&& r1, auto&& r2) { return r1->equals(r2); });
 }
 

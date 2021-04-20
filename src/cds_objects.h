@@ -307,13 +307,13 @@ public:
     /// \brief Search resources for given handler id
     bool hasResource(int id) const
     {
-        return std::any_of(resources.begin(), resources.end(), [=](auto&& res) { return id == res->getHandlerType(); });
+        return std::ranges::any_of(resources, [=](auto&& res) { return id == res->getHandlerType(); });
     }
 
     /// \brief Remove resource with given handler id
     void removeResource(int id)
     {
-        auto index = std::find_if(resources.begin(), resources.end(), [=](auto&& res) { return id == res->getHandlerType(); });
+        auto index = std::ranges::find_if(resources, [=](auto&& res) { return id == res->getHandlerType(); });
         if (index != resources.end()) {
             resources.erase(index);
         }

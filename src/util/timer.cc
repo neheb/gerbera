@@ -75,7 +75,7 @@ void Timer::addTimerSubscriber(Subscriber* timerSubscriber, std::chrono::seconds
     TimerSubscriberElement element(timerSubscriber, notifyInterval, std::move(parameter), once);
 
     if (!subscribers.empty()) {
-        bool err = std::find(subscribers.begin(), subscribers.end(), element) != subscribers.end();
+        bool err = std::ranges::find(subscribers, element) != subscribers.end();
         if (err) {
             throw_std_runtime_error("Tried to add same timer twice");
         }
@@ -91,7 +91,7 @@ void Timer::removeTimerSubscriber(Subscriber* timerSubscriber, std::shared_ptr<P
     auto lock = threadRunner->lockGuard();
     if (!subscribers.empty()) {
         TimerSubscriberElement element(timerSubscriber, std::chrono::seconds::zero(), std::move(parameter));
-        auto it = std::find(subscribers.begin(), subscribers.end(), element);
+        auto it = std::ranges::find(subscribers, element);
         if (it != subscribers.end()) {
             subscribers.erase(it);
             threadRunner->notify();

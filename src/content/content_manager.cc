@@ -388,7 +388,7 @@ std::deque<std::shared_ptr<GenericTask>> ContentManager::getTasklist()
         return taskList;
 
     taskList.push_back(t);
-    std::copy_if(taskQueue1.begin(), taskQueue1.end(), std::back_inserter(taskList), [](auto&& task) { return task->isValid(); });
+    std::ranges::copy_if(taskQueue1, std::back_inserter(taskList), [](auto&& task) { return task->isValid(); });
 
     for (auto&& task : taskQueue2) {
         if (task->isValid())
@@ -1188,12 +1188,12 @@ void ContentManager::assignFanArt(const std::vector<std::shared_ptr<CdsContainer
     int count = 0;
     for (auto&& container : containerList) {
         const std::vector<std::shared_ptr<CdsResource>>& resources = container->getResources();
-        auto fanart = std::find_if(resources.begin(), resources.end(), [=](auto&& res) { return res->isMetaResource(ID3_ALBUM_ART); });
+        auto fanart = std::ranges::find_if(resources, [=](auto&& res) { return res->isMetaResource(ID3_ALBUM_ART); });
         if (fanart == resources.end()) {
             MetadataHandler::createHandler(context, CH_CONTAINERART)->fillMetadata(container);
             int containerChanged = INVALID_OBJECT_ID;
             database->updateObject(container, &containerChanged);
-            fanart = std::find_if(resources.begin(), resources.end(), [=](auto&& res) { return res->isMetaResource(ID3_ALBUM_ART); });
+            fanart = std::ranges::find_if(resources, [=](auto&& res) { return res->isMetaResource(ID3_ALBUM_ART); });
         }
         auto location = container->getLocation().string();
         if (fanart != resources.end() && (*fanart)->getHandlerType() != CH_CONTAINERART) {
@@ -1210,9 +1210,9 @@ void ContentManager::assignFanArt(const std::vector<std::shared_ptr<CdsContainer
         }
 
         if (origObj != nullptr) {
-            if (fanart == resources.end() && (origObj->isContainer() || (count < config->getIntOption(CFG_IMPORT_RESOURCES_CONTAINERART_PARENTCOUNT) && container->getParentID() != CDS_ID_ROOT && std::count(location.begin(), location.end(), '/') > config->getIntOption(CFG_IMPORT_RESOURCES_CONTAINERART_MINDEPTH)))) {
+            if (fanart == resources.end() && (origObj->isContainer() || (count < config->getIntOption(CFG_IMPORT_RESOURCES_CONTAINERART_PARENTCOUNT) && container->getParentID() != CDS_ID_ROOT && std::ranges::count(location, '/') > config->getIntOption(CFG_IMPORT_RESOURCES_CONTAINERART_MINDEPTH)))) {
                 const std::vector<std::shared_ptr<CdsResource>>& origResources = origObj->getResources();
-                fanart = std::find_if(origResources.begin(), origResources.end(), [=](auto&& res) { return res->isMetaResource(ID3_ALBUM_ART); });
+                fanart = std::ranges::find_if(origResources, [=](auto&& res) { return res->isMetaResource(ID3_ALBUM_ART); });
                 if (fanart != origResources.end()) {
                     if ((*fanart)->getAttribute(R_RESOURCE_FILE).empty()) {
                         (*fanart)->addAttribute(R_FANART_OBJ_ID, fmt::to_string(origObj->getID() != INVALID_OBJECT_ID ? origObj->getID() : origObj->getRefID()));
@@ -1686,7 +1686,7 @@ std::vector<std::shared_ptr<AutoscanDirectory>> ContentManager::getAutoscanDirec
 
 #if HAVE_INOTIFY
     auto ino = autoscan_inotify->getArrayCopy();
-    std::copy(ino.begin(), ino.end(), std::back_inserter(all));
+    std::ranges::copy(ino, std::back_inserter(all));
 #endif
     return all;
 }
@@ -1845,7 +1845,7 @@ void ContentManager::triggerPlayHook(const std::shared_ptr<CdsObject>& obj)
     if (config->getBoolOption(CFG_SERVER_EXTOPTS_MARK_PLAYED_ITEMS_ENABLED) && !obj->getFlag(OBJECT_FLAG_PLAYED)) {
         std::vector<std::string> mark_list = config->getArrayOption(CFG_SERVER_EXTOPTS_MARK_PLAYED_ITEMS_CONTENT_LIST);
 
-        bool mark = std::any_of(mark_list.begin(), mark_list.end(), [&](auto&& i) { return startswith(std::static_pointer_cast<CdsItem>(obj)->getMimeType(), i); });
+        bool mark = std::ranges::any_of(mark_list, [&](auto&& i) { return startswith(std::static_pointer_cast<CdsItem>(obj)->getMimeType(), i); });
         if (mark) {
             obj->setFlag(OBJECT_FLAG_PLAYED);
 

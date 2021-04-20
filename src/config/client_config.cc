@@ -76,7 +76,7 @@ size_t ClientConfigList::getEditSize() const
     if (indexMap.empty()) {
         return 0;
     }
-    return (*std::max_element(indexMap.begin(), indexMap.end(), [&](auto a, auto b) { return (a.first < b.first); })).first + 1;
+    return std::ranges::max_element(indexMap, [&](auto a, auto b) { return a.first < b.first; })->first + 1;
 }
 
 std::vector<std::shared_ptr<ClientConfig>> ClientConfigList::getArrayCopy()
@@ -118,7 +118,7 @@ void ClientConfigList::remove(size_t id, bool edit)
             return;
         }
         auto&& client = indexMap[id];
-        auto entry = std::find_if(list.begin(), list.end(), [ip = client->getIp(), user = client->getUserAgent()](auto&& item) { return ip == item->getIp() && user == item->getUserAgent(); });
+        auto entry = std::ranges::find_if(list, [ip = client->getIp(), user = client->getUserAgent()](auto&& item) { return ip == item->getIp() && user == item->getUserAgent(); });
         list.erase(entry);
         if (id >= origSize) {
             indexMap.erase(id);
