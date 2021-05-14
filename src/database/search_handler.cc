@@ -30,6 +30,8 @@
 #include <sstream>
 #include <stack>
 
+#include <frozen/map.h>
+
 #include "config/config_manager.h"
 #include "database/sql_database.h"
 #include "util/tools.h"
@@ -39,7 +41,7 @@
 /* table quote with dot */
 #define TQD(data1, data2) TQ(data1) << '.' << TQ(data2)
 
-static const std::unordered_map<std::string_view, TokenType> tokenTypes {
+static constexpr auto tokenTypes = frozen::make_map<std::string_view, TokenType>({
     { "(", TokenType::LPAREN },
     { ")", TokenType::RPAREN },
     { "*", TokenType::ASTERISK },
@@ -58,8 +60,8 @@ static const std::unordered_map<std::string_view, TokenType> tokenTypes {
     { ">", TokenType::COMPAREOP },
     { ">=", TokenType::COMPAREOP },
     { "and", TokenType::AND },
-    { "or", TokenType::OR }
-};
+    { "or", TokenType::OR },
+});
 
 static std::string aslowercase(const std::string& src)
 {

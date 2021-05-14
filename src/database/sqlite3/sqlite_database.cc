@@ -31,7 +31,7 @@
 
 #include "sqlite_database.h" // API
 
-#include <array>
+#include <frozen/set.h>
 
 #include "config/config_manager.h"
 
@@ -118,7 +118,7 @@ PRAGMA foreign_keys = ON;"
 
 #define SQLITE3_UPDATE_VERSION "UPDATE \"mt_internal_setting\" SET \"value\"='{}' WHERE \"key\"='db_version' AND \"value\"='{}'"
 
-static const auto dbUpdates = std::array<std::vector<const char*>, 9> { {
+static const auto dbUpdates = frozen::make_set<std::vector<const char*>> ( {
     { SQLITE3_UPDATE_1_2_1, SQLITE3_UPDATE_1_2_2, SQLITE3_UPDATE_1_2_3 },
     { SQLITE3_UPDATE_2_3_1, SQLITE3_UPDATE_2_3_2 },
     { SQLITE3_UPDATE_3_4_1, SQLITE3_UPDATE_3_4_2 },
@@ -128,7 +128,7 @@ static const auto dbUpdates = std::array<std::vector<const char*>, 9> { {
     { SQLITE3_UPDATE_7_8_1, SQLITE3_UPDATE_7_8_2, SQLITE3_UPDATE_7_8_3 },
     { SQLITE3_UPDATE_8_9_1 },
     { SQLITE3_UPDATE_9_10_1 },
-} };
+} );
 
 Sqlite3Database::Sqlite3Database(std::shared_ptr<Config> config, std::shared_ptr<Timer> timer)
     : SQLDatabase(std::move(config))

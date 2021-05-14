@@ -26,11 +26,11 @@
 #ifndef __SCRIPTING_SCRIPT_NAMES_H__
 #define __SCRIPTING_SCRIPT_NAMES_H__
 
-#include <array>
+#include <frozen/map.h>
 
 #include "metadata/metadata_handler.h"
 
-static constexpr auto res_names = std::array<std::pair<resource_attributes_t, const char*>, 11> { {
+static constexpr auto res_names = frozen::make_map<resource_attributes_t, const char *>({
     { R_SIZE, "R_SIZE" },
     { R_DURATION, "R_DURATION" },
     { R_BITRATE, "R_BITRATE" },
@@ -42,9 +42,9 @@ static constexpr auto res_names = std::array<std::pair<resource_attributes_t, co
     { R_RESOURCE_FILE, "R_RESOURCE_FILE" },
     { R_BITS_PER_SAMPLE, "R_BITS_PER_SAMPLE" },
     { R_TYPE, "R_TYPE" },
-} };
+});
 
-static constexpr auto mt_names = std::array<std::pair<metadata_fields_t, const char*>, 23> { {
+static constexpr auto mt_names = frozen::make_map<metadata_fields_t, const char *>({
     { M_TITLE, "M_TITLE" },
     { M_ARTIST, "M_ARTIST" },
     { M_ALBUM, "M_ALBUM" },
@@ -68,15 +68,15 @@ static constexpr auto mt_names = std::array<std::pair<metadata_fields_t, const c
     { M_COMPOSER, "M_COMPOSER" },
     { M_CONDUCTOR, "M_CONDUCTOR" },
     { M_ORCHESTRA, "M_ORCHESTRA" },
-} };
+});
 
-static constexpr auto ot_names = std::array<std::pair<int, const char*>, 5> { {
+static constexpr auto ot_names = frozen::make_map<int, const char *>({
     { OBJECT_TYPE_CONTAINER, "OBJECT_TYPE_CONTAINER" },
     { OBJECT_TYPE_ITEM, "OBJECT_TYPE_ITEM" },
     { OBJECT_TYPE_ITEM_EXTERNAL_URL, "OBJECT_TYPE_ITEM_EXTERNAL_URL" },
-} };
+});
 
-static constexpr auto upnp_classes = std::array<std::pair<const char*, const char*>, 12> { {
+static constexpr auto upnp_classes = frozen::make_map<std::string_view, const char *>({
     { UPNP_CLASS_MUSIC_ALBUM, "UPNP_CLASS_CONTAINER_MUSIC_ALBUM" },
     { UPNP_CLASS_MUSIC_ARTIST, "UPNP_CLASS_CONTAINER_MUSIC_ARTIST" },
     { UPNP_CLASS_MUSIC_GENRE, "UPNP_CLASS_CONTAINER_MUSIC_GENRE" },
@@ -89,6 +89,6 @@ static constexpr auto upnp_classes = std::array<std::pair<const char*, const cha
     { UPNP_CLASS_VIDEO_ITEM, "UPNP_CLASS_CONTAINER_ITEM_VIDEO" },
     { UPNP_CLASS_IMAGE_ITEM, "UPNP_CLASS_CONTAINER_ITEM_IMAGE" },
     { UPNP_CLASS_PLAYLIST_CONTAINER, "UPNP_CLASS_PLAYLIST_CONTAINER" },
-} };
+});
 
 #endif

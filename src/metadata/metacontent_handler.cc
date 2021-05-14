@@ -27,6 +27,8 @@
 
 #include <sys/stat.h>
 
+#include <frozen/map.h>
+
 #include "cds_objects.h"
 #include "config/config.h"
 #include "config/directory_tweak.h"
@@ -79,13 +81,13 @@ fs::path MetacontentHandler::getContentPath(const std::vector<std::string>& name
     return "";
 }
 
-static constexpr std::array<std::pair<std::string_view, metadata_fields_t>, 5> metaTags { {
+static constexpr auto metaTags = frozen::make_map<std::string_view, metadata_fields_t>({
     { "%album%", M_ALBUM },
     { "%albumArtist%", M_ALBUMARTIST },
     { "%artist%", M_ARTIST },
     { "%genre%", M_GENRE },
     { "%title%", M_TITLE },
-} };
+});
 bool MetacontentHandler::caseSensitive = true;
 
 std::string MetacontentHandler::expandName(const std::string& name, const std::shared_ptr<CdsObject>& obj)

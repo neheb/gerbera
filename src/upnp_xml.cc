@@ -31,6 +31,8 @@
 
 #include "upnp_xml.h" // API
 
+#include <frozen/map.h>
+
 #include "config/config_manager.h"
 #include "content/scripting/script_names.h"
 #include "database/database.h"
@@ -221,7 +223,7 @@ std::unique_ptr<pugi::xml_document> UpnpXMLBuilder::renderDeviceDescription()
     else
         device.append_child("presentationURL").append_child(pugi::node_pcdata).set_value(presentationURL.c_str());
 
-    constexpr std::array<std::pair<const char*, config_option_t>, 9> deviceProperties { {
+    constexpr auto deviceProperties = frozen::make_map<std::string_view, config_option_t>({
         // { "deviceType", {} },
         // { "presentationURL", {} },
         { "friendlyName", CFG_SERVER_NAME },
@@ -233,33 +235,33 @@ std::unique_ptr<pugi::xml_document> UpnpXMLBuilder::renderDeviceDescription()
         { "modelURL", CFG_SERVER_MODEL_URL },
         { "serialNumber", CFG_SERVER_SERIAL_NUMBER },
         { "UDN", CFG_SERVER_UDN },
-    } };
+    });
     for (auto&& [tag, field] : deviceProperties) {
-        device.append_child(tag).append_child(pugi::node_pcdata).set_value(config->getOption(field).c_str());
+        device.append_child(tag.data()).append_child(pugi::node_pcdata).set_value(config->getOption(field).c_str());
     }
 
     // add icons
     {
         auto iconList = device.append_child("iconList");
 
-        constexpr std::array<std::pair<const char*, const char*>, 3> iconDims { {
+        static constexpr auto iconDims = frozen::make_map<std::string_view, const char *>({
             { "120", "24" },
             { "48", "24" },
             { "32", "8" },
-        } };
+        });
 
-        constexpr std::array<std::pair<const char*, const char*>, 3> iconTypes { {
+        static constexpr auto iconTypes = frozen::make_map<std::string_view, const char *>({
             { UPNP_DESC_ICON_PNG_MIMETYPE, ".png" },
             { UPNP_DESC_ICON_BMP_MIMETYPE, ".bmp" },
             { UPNP_DESC_ICON_JPG_MIMETYPE, ".jpg" },
-        } };
+        });
 
         for (auto&& [dim, depth] : iconDims) {
             for (auto&& [mimetype, ext] : iconTypes) {
                 auto icon = iconList.append_child("icon");
-                icon.append_child("mimetype").append_child(pugi::node_pcdata).set_value(mimetype);
-                icon.append_child("width").append_child(pugi::node_pcdata).set_value(dim);
-                icon.append_child("height").append_child(pugi::node_pcdata).set_value(dim);
+                icon.append_child("mimetype").append_child(pugi::node_pcdata).set_value(mimetype.data());
+                icon.append_child("width").append_child(pugi::node_pcdata).set_value(dim.data());
+                icon.append_child("height").append_child(pugi::node_pcdata).set_value(dim.data());
                 icon.append_child("depth").append_child(pugi::node_pcdata).set_value(depth);
                 std::string url = fmt::format("/icons/mt-icon{}{}", dim, ext);
                 icon.append_child("url").append_child(pugi::node_pcdata).set_value(url.c_str());

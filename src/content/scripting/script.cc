@@ -210,24 +210,20 @@ Script::Script(std::shared_ptr<ContentManager> content,
 
     for (auto&& [field, sym] : mt_keys) {
         duk_push_string(ctx, sym);
-        for (auto&& [f, s] : mt_names) {
-            if (f == field) {
-                duk_put_global_string(ctx, s);
-            }
-        }
+	auto it = mt_keys.find(field);
+	if (it != mt_keys.end())
+            duk_put_global_string(ctx, it->second);
     }
 
     for (auto&& [field, sym] : res_keys) {
         duk_push_string(ctx, sym);
-        for (auto&& [f, s] : res_names) {
-            if (f == field) {
-                duk_put_global_string(ctx, s);
-            }
-        }
+	auto it = res_names.find(field);
+	if (it != res_names.end())
+            duk_put_global_string(ctx, it->second);
     }
 
     for (auto&& [field, sym] : upnp_classes) {
-        duk_push_string(ctx, field);
+        duk_push_string(ctx, field.data());
         duk_put_global_string(ctx, sym);
     }
 
