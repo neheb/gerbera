@@ -214,7 +214,7 @@ private:
         [[nodiscard]] std::map<std::string, std::string> getDict() const { return dict; }
         [[nodiscard]] Operation getOperation() const { return operation; }
 
-    protected:
+    private:
         std::string tableName;
         std::map<std::string, std::string> dict;
         Operation operation;

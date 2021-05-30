@@ -40,7 +40,7 @@ namespace fs = std::filesystem;
 
 /// \brief Allows the web server to read from a file.
 class FileIOHandler : public IOHandler {
-protected:
+private:
     /// \brief Name of the file.
     fs::path filename;
 

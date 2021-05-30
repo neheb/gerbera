@@ -34,7 +34,7 @@ public:
     std::shared_ptr<GenericTask> getCurrentTask();
     void invalidateTask(unsigned int taskID);
 
-protected:
+private:
     std::shared_ptr<Config> config;
     std::unique_ptr<StdThreadRunner> threadRunner;
 
@@ -58,7 +58,7 @@ public:
         bool unscheduled_refresh);
     void run() override;
 
-protected:
+private:
     std::shared_ptr<ContentManager> content;
     std::shared_ptr<TaskProcessor> task_processor;
     std::shared_ptr<Timer> timer;

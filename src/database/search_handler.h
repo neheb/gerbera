@@ -71,7 +71,7 @@ public:
         return lhs.type == rhs.type && lhs.value == rhs.value;
     }
 
-protected:
+private:
     const TokenType type;
     std::string value;
 };
@@ -89,7 +89,7 @@ public:
     SearchLexer& operator=(const SearchLexer&) = delete;
     SearchLexer(const SearchLexer&) = delete;
 
-protected:
+private:
     std::string nextStringToken(const std::string& input);
     static std::unique_ptr<SearchToken> makeToken(const std::string& tokenStr);
     std::string getQuotedValue(const std::string& input);
@@ -131,7 +131,7 @@ public:
     }
     std::string emit() const override;
 
-protected:
+private:
     std::string value;
 };
 
@@ -144,7 +144,7 @@ public:
     }
     std::string emit() const override;
 
-protected:
+private:
     std::string value;
 };
 
@@ -157,7 +157,7 @@ public:
     }
     std::string emit() const override;
 
-protected:
+private:
     std::string value;
 };
 
@@ -170,7 +170,7 @@ public:
     }
     std::string emit() const override;
 
-protected:
+private:
     std::shared_ptr<ASTNode> bracketedNode;
 };
 
@@ -183,7 +183,7 @@ public:
     }
     std::string emit() const override;
 
-protected:
+private:
     std::string value;
 };
 
@@ -196,7 +196,7 @@ public:
     }
     std::string emit() const override;
 
-protected:
+private:
     std::string value;
 };
 
@@ -212,7 +212,7 @@ public:
     }
     std::string emit() const override;
 
-protected:
+private:
     std::shared_ptr<ASTDQuote> openQuote;
     std::shared_ptr<ASTEscapedString> escapedString;
     std::shared_ptr<ASTDQuote> closeQuote;
@@ -230,7 +230,7 @@ public:
     std::string emit(const std::string& property, const std::string& value) const;
     std::string getValue() const { return value; }
 
-protected:
+private:
     std::string value;
 };
 
@@ -247,7 +247,7 @@ public:
     }
     std::string emit() const override;
 
-protected:
+private:
     std::shared_ptr<ASTProperty> lhs;
     std::shared_ptr<ASTCompareOperator> operatr;
     std::shared_ptr<ASTQuotedString> rhs;
@@ -261,11 +261,12 @@ public:
         , value(std::move(value))
     {
     }
+
     std::string emit() const override;
     std::string emit(const std::string& property, const std::string& value) const;
     std::string getValue() const { return value; }
 
-protected:
+private:
     std::string value;
 };
 
@@ -282,7 +283,7 @@ public:
     }
     std::string emit() const override;
 
-protected:
+private:
     std::shared_ptr<ASTProperty> lhs;
     std::shared_ptr<ASTStringOperator> operatr;
     std::shared_ptr<ASTQuotedString> rhs;
@@ -298,7 +299,7 @@ public:
     std::string emit() const override;
     std::string emit(const std::string& property, const std::string& value) const;
 
-protected:
+private:
     std::string value;
 };
 
@@ -315,7 +316,7 @@ public:
     }
     std::string emit() const override;
 
-protected:
+private:
     std::shared_ptr<ASTProperty> lhs;
     std::shared_ptr<ASTExistsOperator> operatr;
     std::shared_ptr<ASTBoolean> rhs;
@@ -332,7 +333,7 @@ public:
     }
     std::string emit() const override;
 
-protected:
+private:
     std::shared_ptr<ASTNode> lhs;
     std::shared_ptr<ASTNode> rhs;
 };
@@ -348,7 +349,7 @@ public:
     }
     std::string emit() const override;
 
-protected:
+private:
     std::shared_ptr<ASTNode> lhs;
     std::shared_ptr<ASTNode> rhs;
 };
@@ -415,7 +416,7 @@ public:
     }
     std::shared_ptr<ASTNode> parse();
 
-protected:
+private:
     void getNextToken();
     std::shared_ptr<ASTNode> parseSearchExpression();
     std::shared_ptr<ASTNode> parseRelationshipExpression();
@@ -423,7 +424,6 @@ protected:
     std::shared_ptr<ASTQuotedString> parseQuotedString();
     void checkIsExpected(TokenType tokenType, const std::string& tokenTypeDescription);
 
-private:
     std::shared_ptr<SearchToken> currentToken;
     std::shared_ptr<SearchLexer> lexer;
     const SQLEmitter& sqlEmitter;

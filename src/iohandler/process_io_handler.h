@@ -52,7 +52,7 @@ public:
     std::shared_ptr<Executor> getExecutor();
     bool abortOnDeath() const;
 
-protected:
+private:
     std::shared_ptr<Executor> executor;
     bool abort;
 };
@@ -99,7 +99,7 @@ public:
     /// \brief Close a previously opened file and kills the kill_pid process
     void close() override;
 
-protected:
+private:
     std::shared_ptr<ContentManager> content;
 
     /// \brief List of associated processes.

@@ -57,7 +57,7 @@ class Timer;
 #define BROWSE_HIDE_FS_ROOT 0x00000020
 
 class BrowseParam {
-protected:
+private:
     unsigned int flags;
     int objectID;
 
@@ -122,7 +122,7 @@ public:
 };
 
 class SearchParam {
-protected:
+private:
     std::string containerID;
     std::string searchCrit;
     std::string sortCrit;

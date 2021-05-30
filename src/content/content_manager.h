@@ -79,7 +79,7 @@ class Server;
 class TaskProcessor;
 
 class CMAddFileTask : public GenericTask, public std::enable_shared_from_this<CMAddFileTask> {
-protected:
+private:
     std::shared_ptr<ContentManager> content;
     fs::directory_entry dirEnt;
     fs::path rootpath;
@@ -94,7 +94,7 @@ public:
 };
 
 class CMRemoveObjectTask : public GenericTask {
-protected:
+private:
     std::shared_ptr<ContentManager> content;
     std::shared_ptr<AutoscanDirectory> adir;
     int objectID;
@@ -108,7 +108,7 @@ public:
 };
 
 class CMRescanDirectoryTask : public GenericTask, public std::enable_shared_from_this<CMRescanDirectoryTask> {
-protected:
+private:
     std::shared_ptr<ContentManager> content;
     std::shared_ptr<AutoscanDirectory> adir;
     int containerID;
@@ -121,7 +121,7 @@ public:
 
 #ifdef ONLINE_SERVICES
 class CMFetchOnlineContentTask : public GenericTask {
-protected:
+private:
     std::shared_ptr<ContentManager> content;
     std::shared_ptr<TaskProcessor> task_processor;
     std::shared_ptr<Timer> timer;
@@ -314,7 +314,7 @@ public:
         return context;
     }
 
-protected:
+private:
     std::shared_ptr<Config> config;
     std::shared_ptr<Mime> mime;
     std::shared_ptr<Database> database;

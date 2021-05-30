@@ -68,7 +68,7 @@ public:
     /// \return CdsObject or nullptr if there are no more objects to parse.
     std::shared_ptr<CdsObject> getNextObject() override;
 
-protected:
+private:
     std::shared_ptr<CdsObject> getObject(const pugi::xml_node& trailer) const;
 
     pugi::xml_node_iterator trailer_it;

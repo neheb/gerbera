@@ -91,7 +91,7 @@ public:
 
     void clearUpdateIDs();
 
-protected:
+private:
     /// \brief Is called by SessionManager if UI update is needed
     /// \param objectID the container that needs to be updated
     void containerChangedUI(int objectID);
@@ -124,7 +124,7 @@ protected:
 
 /// \brief This class offers ways to create new sessoins, stores all available sessions and provides access to them.
 class SessionManager : public Timer::Subscriber {
-protected:
+private:
     std::shared_ptr<Timer> timer;
 
     std::mutex mutex;

@@ -52,7 +52,7 @@ public:
     bool kill() override;
     int getStatus() override;
 
-protected:
+private:
     pid_t process_id;
     int exit_status { 0 };
 };

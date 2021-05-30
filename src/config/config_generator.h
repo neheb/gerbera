@@ -51,7 +51,7 @@ public:
 
     std::shared_ptr<pugi::xml_node> getNode(const std::string& tag);
 
-protected:
+private:
     std::map<std::string, std::shared_ptr<pugi::xml_node>> generated;
     pugi::xml_document doc;
     std::shared_ptr<pugi::xml_node> setValue(const std::string& tag, const std::string& value = "", bool makeLastChild = false);

@@ -78,7 +78,7 @@ public:
     /// \brief returns a copy of the autoscan list in the form of an array
     std::vector<std::shared_ptr<AutoscanDirectory>> getArrayCopy();
 
-protected:
+private:
     size_t origSize { 0 };
     std::map<size_t, std::shared_ptr<AutoscanDirectory>> indexMap;
 

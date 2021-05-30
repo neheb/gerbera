@@ -146,7 +146,7 @@ public:
     static std::string_view mapScanmode(ScanMode scanmode);
     static ScanMode remapScanmode(const std::string& scanmode);
 
-protected:
+private:
     fs::path location;
     ScanMode mode;
     bool isOrig { false };

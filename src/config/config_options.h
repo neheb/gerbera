@@ -227,7 +227,7 @@ public:
     }
     std::shared_ptr<DirectoryConfigList> getDirectoryTweakOption() const override { return option; }
 
-protected:
+private:
     std::shared_ptr<DirectoryConfigList> option;
 };
 
@@ -247,7 +247,7 @@ public:
         option->setKey(oldKey, newKey);
     }
 
-protected:
+private:
     std::shared_ptr<TranscodingProfileList> option;
 };
 

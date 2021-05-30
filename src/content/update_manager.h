@@ -61,7 +61,7 @@ public:
     void containerChanged(int objectID, int flushPolicy = FLUSH_SPEC);
     void containersChanged(const std::vector<int>& objectIDs, int flushPolicy = FLUSH_SPEC);
 
-protected:
+private:
     std::shared_ptr<Config> config;
     std::shared_ptr<Database> database;
     std::shared_ptr<Server> server;

@@ -49,7 +49,7 @@ public:
     /// will be removed once the class is destroyed.
     void removeFile(const fs::path& filename);
 
-protected:
+private:
     /// \brief The files in this list will be removed once the class is no
     /// longer in use.
     std::vector<fs::path> file_list;

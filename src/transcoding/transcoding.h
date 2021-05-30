@@ -182,7 +182,7 @@ public:
 
     static std::string mapFourCcMode(avi_fourcc_listmode_t mode);
 
-protected:
+private:
     std::string name;
     std::string tm;
     fs::path command;
@@ -193,7 +193,6 @@ protected:
     bool accept_url { true };
     bool hide_orig_res { false };
     bool thumbnail { false };
-    bool force_chunked { true };
     size_t buffer_size {};
     size_t chunk_size {};
     size_t initial_fill_size {};
@@ -222,7 +221,7 @@ public:
         list[newKey] = oldValue;
     }
 
-protected:
+private:
     // outer dictionary is keyed by the source mimetype, inner dictionary by
     // profile name; this whole construction is necessary to allow to transcode
     // to the same output format but vary things like resolution, bitrate, etc.
@@ -240,7 +239,7 @@ public:
     pid_t getPID() const { return pid; }
     std::string getFName() const { return fname; }
 
-protected:
+private:
     pid_t pid;
     std::string fname;
 };

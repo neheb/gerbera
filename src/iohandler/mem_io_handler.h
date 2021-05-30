@@ -37,7 +37,7 @@
 
 /// \brief Allows the web server to read from a memory buffer instead of a file.
 class MemIOHandler : public IOHandler {
-protected:
+private:
     /// \brief buffer that is holding our data.
     char* buffer;
     off_t length;

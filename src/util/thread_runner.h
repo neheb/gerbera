@@ -164,7 +164,7 @@ public:
         }
     }
 
-protected:
+private:
     std::shared_ptr<Config> config;
 
     /// \brief thread method is injected

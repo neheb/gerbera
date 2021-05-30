@@ -63,7 +63,7 @@ public:
         void setID(int id) { this->id = id; }
         int getID() const { return id; }
 
-    protected:
+    private:
         timer_param_t param;
         int id;
     };
@@ -98,7 +98,7 @@ public:
     void removeTimerSubscriber(Subscriber* timerSubscriber, std::shared_ptr<Parameter> parameter = nullptr, bool dontFail = false);
     void triggerWait();
 
-protected:
+private:
     class TimerSubscriberElement {
     public:
         TimerSubscriberElement(Subscriber* subscriber, std::chrono::seconds notifyInterval, std::shared_ptr<Parameter> parameter, bool once = false)
@@ -131,7 +131,7 @@ protected:
         }
         bool isOnce() const { return once; }
 
-    protected:
+    private:
         Subscriber* subscriber;
         std::chrono::milliseconds notifyInterval;
         std::shared_ptr<Parameter> parameter;

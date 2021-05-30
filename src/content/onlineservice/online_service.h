@@ -146,7 +146,7 @@ public:
     /// \brief Retrieves a service given by the service ID from the list
     std::shared_ptr<OnlineService> getService(service_type_t service);
 
-protected:
+private:
     std::vector<std::shared_ptr<OnlineService>> service_list { OS_Max };
 };
 
