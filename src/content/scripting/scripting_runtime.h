@@ -39,7 +39,7 @@
 
 /// \brief ScriptingRuntime class definition.
 class ScriptingRuntime {
-protected:
+private:
     duk_context* ctx;
     std::recursive_mutex mutex;
 

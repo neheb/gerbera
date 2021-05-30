@@ -58,7 +58,7 @@ public:
     /// \brief returns a copy of the client config list in the form of an array
     std::vector<std::shared_ptr<ClientConfig>> getArrayCopy();
 
-protected:
+private:
     size_t origSize;
     std::map<size_t, std::shared_ptr<ClientConfig>> indexMap;
 
@@ -113,7 +113,7 @@ public:
 
     bool getOrig() const { return isOrig; }
 
-protected:
+private:
     bool isOrig { false };
     std::shared_ptr<ClientInfo> clientInfo;
 };

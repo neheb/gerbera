@@ -42,7 +42,7 @@ class ImportScript;
 class ScriptingRuntime;
 
 class JSLayout : public Layout {
-protected:
+private:
     std::shared_ptr<ScriptingRuntime> runtime;
     std::unique_ptr<ImportScript> import_script;
 

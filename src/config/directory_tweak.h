@@ -72,7 +72,7 @@ public:
     /// \brief returns a copy of the directory config list in the form of an array
     std::vector<std::shared_ptr<DirectoryTweak>> getArrayCopy();
 
-protected:
+private:
     size_t origSize;
     std::map<size_t, std::shared_ptr<DirectoryTweak>> indexMap;
 
@@ -134,7 +134,7 @@ public:
     bool hasResourceFile() const { return resourceFiles.find("Resource") != resourceFiles.end(); }
     std::string getResourceFile() const { return resourceFiles.at("Resource"); }
 
-protected:
+private:
     fs::path location;
     bool isOrig { false };
     bool inherit { true };

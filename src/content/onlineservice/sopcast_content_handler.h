@@ -72,10 +72,9 @@ public:
     /// \return CdsObject or nullptr if there are no more objects to parse.
     std::shared_ptr<CdsObject> getNextObject() override;
 
-protected:
+private:
     static std::shared_ptr<CdsObject> getObject(const std::string& groupName, const pugi::xml_node& channel);
 
-protected:
     std::shared_ptr<Config> config;
     std::shared_ptr<Database> database;
 

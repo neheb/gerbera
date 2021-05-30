@@ -132,7 +132,7 @@ public:
     static bool isDebugLogging() { return debug; }
     fs::path getDataDir() const override { return dataDir; }
 
-protected:
+private:
     fs::path filename;
     fs::path dataDir;
     fs::path magicFile;

@@ -170,7 +170,7 @@ public:
 };
 
 class ConfigStringSetup : public ConfigSetup {
-protected:
+private:
     bool notEmpty = false;
 
 public:
@@ -195,7 +195,7 @@ public:
 
 template <class En>
 class ConfigEnumSetup : public ConfigSetup {
-protected:
+private:
     bool notEmpty = true;
     std::map<std::string, En> valueMap;
 
@@ -263,7 +263,7 @@ public:
 };
 
 class ConfigPathSetup : public ConfigSetup {
-protected:
+private:
     bool isFile = false;
     bool mustExist = false;
     bool notEmpty = false;
@@ -302,7 +302,7 @@ public:
 };
 
 class ConfigIntSetup : public ConfigSetup {
-protected:
+private:
     IntCheckFunction valueCheck = nullptr;
     IntMinFunction minCheck = nullptr;
     int minValue;
@@ -433,7 +433,7 @@ public:
 };
 
 class ConfigArraySetup : public ConfigSetup {
-protected:
+private:
     bool notEmpty = false;
     bool itemNotEmpty = false;
     ArrayInitFunction initArray = nullptr;
@@ -503,7 +503,7 @@ public:
 };
 
 class ConfigDictionarySetup : public ConfigSetup {
-protected:
+private:
     bool notEmpty = false;
     bool itemNotEmpty = false;
     DictionaryInitFunction initDict = nullptr;
@@ -573,7 +573,7 @@ public:
 };
 
 class ConfigAutoscanSetup : public ConfigSetup {
-protected:
+private:
     ScanMode scanMode;
     bool hiddenFiles = false;
 
@@ -607,7 +607,7 @@ public:
 };
 
 class ConfigTranscodingSetup : public ConfigSetup {
-protected:
+private:
     bool isEnabled = false;
 
     /// \brief Creates an array of TranscodingProfile objects from an XML
@@ -635,7 +635,7 @@ public:
 };
 
 class ConfigClientSetup : public ConfigSetup {
-protected:
+private:
     bool isEnabled = false;
 
     /// \brief Creates an array of ClientConfig objects from a XML nodeset.
@@ -664,7 +664,7 @@ public:
 };
 
 class ConfigDirectorySetup : public ConfigSetup {
-protected:
+private:
     /// \brief Creates an array of ClientConfig objects from a XML nodeset.
     /// \param element starting element of the nodeset.
     static bool createDirectoryTweakListFromNode(const pugi::xml_node& element, std::shared_ptr<DirectoryConfigList>& result);

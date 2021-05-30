@@ -102,7 +102,7 @@ public:
 
     std::string_view taskType() const override { return "InitTask"; }
 
-protected:
+private:
     std::shared_ptr<Config> config;
 };
 
@@ -117,7 +117,7 @@ public:
 
     std::string_view taskType() const override { return "SelectTask"; }
 
-protected:
+private:
     /// \brief The SQL query string
     const char* query;
     /// \brief The Sqlite3Result
@@ -135,7 +135,7 @@ public:
 
     std::string_view taskType() const override { return "ExecTask"; }
 
-protected:
+private:
     /// \brief The SQL query string
     const char* query;
 
@@ -152,7 +152,7 @@ public:
 
     std::string_view taskType() const override { return "BackupTask"; }
 
-protected:
+private:
     std::shared_ptr<Config> config;
     bool restore;
 };
