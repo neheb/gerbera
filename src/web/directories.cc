@@ -42,7 +42,7 @@ web::directories::directories(std::shared_ptr<ContentManager> content)
 
 using dirInfo = struct {
     fs::path filename;
-    bool hasContent;
+    bool hasContent {};
 };
 
 void web::directories::process()
