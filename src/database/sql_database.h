@@ -140,7 +140,7 @@ public:
     std::string incrementUpdateIDs(const std::unique_ptr<std::unordered_set<int>>& ids) override;
 
     fs::path buildContainerPath(int parentID, const std::string& title) override;
-    void addContainerChain(std::string path, const std::string& lastClass, int lastRefID, int* containerID, std::vector<int>& updateID, const std::map<std::string, std::string>& lastMetadata) override;
+    void addContainerChain(std::string path, const std::string& lastClass, int lastRefID, int* containerID, std::vector<int>* updateID, const std::map<std::string, std::string>& lastMetadata) override;
     std::string getInternalSetting(const std::string& key) override;
     void storeInternalSetting(const std::string& key, const std::string& value) override = 0;
 
@@ -222,7 +222,7 @@ private:
     std::vector<std::shared_ptr<AddUpdateTable>> _addUpdateObject(const std::shared_ptr<CdsObject>& obj, Operation op, int* changedContainer);
 
     void generateMetadataDBOperations(const std::shared_ptr<CdsObject>& obj, Operation op,
-        std::vector<std::shared_ptr<AddUpdateTable>>& operations);
+        std::vector<std::shared_ptr<AddUpdateTable>>* operations);
 
     std::unique_ptr<std::ostringstream> sqlForInsert(const std::shared_ptr<CdsObject>& obj, const std::shared_ptr<AddUpdateTable>& addUpdateTable) const;
     std::unique_ptr<std::ostringstream> sqlForUpdate(const std::shared_ptr<CdsObject>& obj, const std::shared_ptr<AddUpdateTable>& addUpdateTable) const;
@@ -237,7 +237,7 @@ private:
         const std::vector<int32_t>& items,
         const std::vector<int32_t>& containers, bool all);
 
-    virtual std::unique_ptr<ChangedContainers> _purgeEmptyContainers(std::unique_ptr<ChangedContainers>& maybeEmpty);
+    virtual std::unique_ptr<ChangedContainers> _purgeEmptyContainers(std::unique_ptr<ChangedContainers> maybeEmpty);
 
     /* helpers for autoscan */
     void _removeAutoscanDirectory(int autoscanID);
