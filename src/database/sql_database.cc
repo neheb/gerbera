@@ -1349,7 +1349,7 @@ std::unique_ptr<Database::ChangedContainers> SQLDatabase::removeObjects(const st
     }
 
     auto rr = _recursiveRemove(items, containers, all);
-    return _purgeEmptyContainers(rr);
+    return _purgeEmptyContainers(std::move(rr));
 }
 
 void SQLDatabase::_removeObjects(const std::vector<int32_t>& objectIDs)
@@ -1444,7 +1444,7 @@ std::unique_ptr<Database::ChangedContainers> SQLDatabase::removeObject(int objec
         itemIds.push_back(objectID);
     }
     auto changedContainers = _recursiveRemove(itemIds, containerIds, all);
-    return _purgeEmptyContainers(changedContainers);
+    return _purgeEmptyContainers(std::move(changedContainers));
 }
 
 std::unique_ptr<Database::ChangedContainers> SQLDatabase::_recursiveRemove(
@@ -1579,7 +1579,7 @@ std::string SQLDatabase::toCSV(const std::vector<int>& input)
     return join(input, ",");
 }
 
-std::unique_ptr<Database::ChangedContainers> SQLDatabase::_purgeEmptyContainers(std::unique_ptr<ChangedContainers>& maybeEmpty)
+std::unique_ptr<Database::ChangedContainers> SQLDatabase::_purgeEmptyContainers(std::unique_ptr<ChangedContainers> maybeEmpty)
 {
     log_debug("start upnp: {}; ui: {}",
         join(maybeEmpty->upnp, ',').c_str(),
@@ -2220,7 +2220,7 @@ void SQLDatabase::clearFlagInDB(int flag)
 }
 
 void SQLDatabase::generateMetadataDBOperations(const std::shared_ptr<CdsObject>& obj, Operation op,
-    std::vector<std::shared_ptr<AddUpdateTable>>& operations)
+    std::vector<std::shared_ptr<AddUpdateTable>> operations)
 {
     auto dict = obj->getMetadata();
     if (op == Operation::Insert) {
