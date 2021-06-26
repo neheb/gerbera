@@ -514,11 +514,6 @@ void SLTask::waitForTask()
 }
 
 /* SLInitTask */
-SLInitTask::SLInitTask(std::shared_ptr<Config> config)
-    : config(std::move(config))
-{
-}
-
 void SLInitTask::run(sqlite3** db, Sqlite3Database* sl)
 {
     log_debug("Running: init");
@@ -553,12 +548,6 @@ void SLInitTask::run(sqlite3** db, Sqlite3Database* sl)
 }
 
 /* SLSelectTask */
-
-SLSelectTask::SLSelectTask(const char* query)
-    : query(query)
-{
-}
-
 void SLSelectTask::run(sqlite3** db, Sqlite3Database* sl)
 {
     log_debug("Running: {}", query);
@@ -679,13 +668,6 @@ std::unique_ptr<SQLRow> Sqlite3Result::nextRow()
         return nullptr;
     }
     return nullptr;
-}
-
-/* Sqlite3Row */
-
-Sqlite3Row::Sqlite3Row(char** row)
-    : row(row)
-{
 }
 
 /* Sqlite3BackupTimerSubscriber */
