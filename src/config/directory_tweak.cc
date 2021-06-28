@@ -33,7 +33,7 @@
 void AutoScanSetting::mergeOptions(const std::shared_ptr<Config>& config, const fs::path& location)
 {
     auto tweak = config->getDirectoryTweakOption(CFG_IMPORT_DIRECTORIES_LIST)->get(location);
-    if (tweak == nullptr)
+    if (!tweak)
         return;
 
     if (tweak->hasFollowSymlinks())
@@ -90,14 +90,14 @@ std::shared_ptr<DirectoryTweak> DirectoryConfigList::get(size_t id, bool edit)
     AutoLock lock(mutex);
     if (!edit) {
         if (id >= list.size())
-            return nullptr;
+            return {};
 
         return list[id];
     }
     if (indexMap.find(id) != indexMap.end()) {
         return indexMap[id];
     }
-    return nullptr;
+    return {};
 }
 
 std::shared_ptr<DirectoryTweak> DirectoryConfigList::get(const fs::path& location)
@@ -106,11 +106,11 @@ std::shared_ptr<DirectoryTweak> DirectoryConfigList::get(const fs::path& locatio
     auto&& myLocation = location.has_filename() ? location.parent_path() : location;
     for (auto testLoc = myLocation; testLoc.has_parent_path() && testLoc != "/"; testLoc = testLoc.parent_path()) {
         auto entry = std::find_if(list.begin(), list.end(), [&](auto&& d) { return (d->getLocation() == myLocation || d->getInherit()) && d->getLocation() == testLoc; });
-        if (entry != list.end() && *entry != nullptr) {
+        if (entry != list.end() && *entry) {
             return *entry;
         }
     }
-    return nullptr;
+    return {};
 }
 
 void DirectoryConfigList::remove(size_t id, bool edit)

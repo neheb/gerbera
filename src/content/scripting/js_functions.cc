@@ -83,7 +83,7 @@ duk_ret_t js_addContainerTree(duk_context* ctx)
             }
             duk_to_object(ctx, -1);
             auto cds_obj = self->dukObject2cdsObject(nullptr);
-            if (cds_obj != nullptr) {
+            if (cds_obj) {
                 result.emplace_back(cds_obj);
             } else {
                 log_js("js_addContainerTree: no CdsObject at {}", i);
@@ -150,7 +150,7 @@ duk_ret_t js_addCdsObject(duk_context* ctx)
         }
 
         auto orig_object = self->dukObject2cdsObject(self->getProcessedObject());
-        if (orig_object == nullptr)
+        if (!orig_object)
             return 0;
 
         std::shared_ptr<CdsObject> cds_obj;
@@ -192,7 +192,7 @@ duk_ret_t js_addCdsObject(duk_context* ctx)
         } else
             cds_obj = self->dukObject2cdsObject(orig_object);
 
-        if (cds_obj == nullptr) {
+        if (!cds_obj) {
             return 0;
         }
 

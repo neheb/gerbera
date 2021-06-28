@@ -58,12 +58,12 @@ void* TaskProcessor::staticThreadProc(void* arg)
 {
     auto inst = static_cast<TaskProcessor*>(arg);
     inst->threadProc();
-    return nullptr;
+    return {};
 }
 
 void TaskProcessor::threadProc()
 {
-    StdThreadRunner::waitFor("TaskProcessor", [this] { return threadRunner != nullptr; });
+    StdThreadRunner::waitFor("TaskProcessor", [this] { return bool(threadRunner); });
 
     std::shared_ptr<GenericTask> task;
     auto lock = threadRunner->uniqueLockS("threadProc");
@@ -72,15 +72,15 @@ void TaskProcessor::threadProc()
     working = true;
 
     while (!shutdownFlag) {
-        currentTask = nullptr;
+        currentTask = {};
 
-        task = nullptr;
+        task = {};
         if (!taskQueue.empty()) {
             task = taskQueue.front();
             taskQueue.pop_front();
         }
 
-        if (task == nullptr) {
+        if (!task) {
             working = false;
             threadRunner->wait(lock);
             working = true;
@@ -127,7 +127,7 @@ void TaskProcessor::invalidateTask(unsigned int taskID)
 {
     auto lock = threadRunner->lockGuard();
     auto tc = getCurrentTask();
-    if (tc != nullptr) {
+    if (tc) {
         if ((tc->getID() == taskID) || (tc->getParentID() == taskID)) {
             tc->invalidate();
         }
@@ -149,7 +149,7 @@ std::deque<std::shared_ptr<GenericTask>> TaskProcessor::getTasklist()
 
     // if there is no current task, then the queues are empty
     // and we do not have to allocate the array
-    if (tc == nullptr)
+    if (!tc)
         return taskList;
 
     taskList.push_back(tc);
@@ -180,7 +180,7 @@ TPFetchOnlineContentTask::TPFetchOnlineContentTask(std::shared_ptr<ContentManage
 
 void TPFetchOnlineContentTask::run()
 {
-    if (this->service == nullptr) {
+    if (!this->service) {
         log_debug("No service specified");
         return;
     }

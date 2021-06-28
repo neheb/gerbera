@@ -140,7 +140,7 @@ void MySQLDatabase::checkMysqlThreadInit() const
 {
     if (!mysql_connection)
         throw_std_runtime_error("mysql connection is not open or already closed");
-    if (pthread_getspecific(mysql_init_key) == nullptr) {
+    if (!pthread_getspecific(mysql_init_key)) {
         if (mysql_thread_init())
             throw_std_runtime_error("error while calling mysql_thread_init()");
         if (pthread_setspecific(mysql_init_key, reinterpret_cast<void*>(1)))
@@ -150,7 +150,7 @@ void MySQLDatabase::checkMysqlThreadInit() const
 
 void MySQLDatabase::threadCleanup()
 {
-    if (pthread_getspecific(mysql_init_key) != nullptr) {
+    if (pthread_getspecific(mysql_init_key)) {
         mysql_thread_end();
     }
 }
@@ -395,24 +395,25 @@ void MySQLDatabase::_exec(const char* query, int length)
 MysqlResult::~MysqlResult()
 {
     if (mysql_res) {
-        if (!nullRead) {
-            while ((mysql_fetch_row(mysql_res)) != nullptr)
+        if (nullRead == 0) {
+            while ((mysql_fetch_row(mysql_res)))
                 ; // read out data
         }
         mysql_free_result(mysql_res);
-        mysql_res = nullptr;
+        mysql_res = {};
     }
 }
 
 std::unique_ptr<SQLRow> MysqlResult::nextRow()
 {
-    if (auto mysql_row = mysql_fetch_row(mysql_res); mysql_row != nullptr) {
+    auto mysql_row = mysql_fetch_row(mysql_res);
+    if (mysql_row) {
         return std::make_unique<MysqlRow>(mysql_row);
     }
-    nullRead = true;
+    nullRead = 1;
     mysql_free_result(mysql_res);
-    mysql_res = nullptr;
-    return nullptr;
+    mysql_res = {};
+    return {};
 }
 
 /* MysqlRow */

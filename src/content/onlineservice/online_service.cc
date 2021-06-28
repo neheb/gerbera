@@ -44,7 +44,7 @@ static constexpr auto service_prefixes = std::array { '\0', 'Y', 'S', 'W', 'T', 
 
 void OnlineServiceList::registerService(const std::shared_ptr<OnlineService>& service)
 {
-    if (service == nullptr)
+    if (!service)
         return;
 
     if (service->getServiceType() >= OS_Max) {
@@ -57,7 +57,7 @@ void OnlineServiceList::registerService(const std::shared_ptr<OnlineService>& se
 std::shared_ptr<OnlineService> OnlineServiceList::getService(service_type_t service)
 {
     if (service > OS_Max)
-        return nullptr;
+        return {};
 
     return service_list.at(service);
 }

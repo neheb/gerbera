@@ -319,7 +319,7 @@ void ContentDirectoryService::processSubscriptionRequest(const std::unique_ptr<S
         deviceHandle, config->getOption(CFG_SERVER_UDN).c_str(),
         UPNP_DESC_CDS_SERVICE_ID, xml, request->getSubscriptionID().c_str());
 #else
-    IXML_Document* event = nullptr;
+    IXML_Document* event = {};
     int err = ixmlParseBufferEx(xml.c_str(), &event);
     if (err != IXML_SUCCESS) {
         throw UpnpException(UPNP_E_SUBSCRIPTION_FAILED, "Could not convert property set to ixml");
@@ -353,7 +353,7 @@ void ContentDirectoryService::sendSubscriptionUpdate(const std::string& containe
     UpnpNotifyXML(deviceHandle, config->getOption(CFG_SERVER_UDN).c_str(),
         UPNP_DESC_CDS_SERVICE_ID, xml);
 #else
-    IXML_Document* event = nullptr;
+    IXML_Document* event = {};
     int err = ixmlParseBufferEx(xml.c_str(), &event);
     if (err != IXML_SUCCESS) {
         /// \todo add another error code

@@ -47,7 +47,7 @@ std::unique_ptr<IOHandler> TranscodeDispatcher::serveContent(std::shared_ptr<Tra
     std::shared_ptr<CdsObject> obj,
     std::string range)
 {
-    if (profile == nullptr)
+    if (!profile)
         throw_std_runtime_error("Transcoding of file {} requested but no profile given ", location.c_str());
 
     if (profile->getType() == TR_External) {

@@ -48,7 +48,7 @@ static duk_ret_t
 js_readln(duk_context* ctx)
 {
     auto self = dynamic_cast<PlaylistParserScript*>(Script::getContextScript(ctx));
-    if (self == nullptr) {
+    if (!self) {
         return 0;
     }
 
@@ -72,7 +72,7 @@ static duk_ret_t
 js_getCdsObject(duk_context* ctx)
 {
     auto self = dynamic_cast<PlaylistParserScript*>(Script::getContextScript(ctx));
-    if (self == nullptr) {
+    if (!self) {
         return 0;
     }
 
@@ -87,7 +87,7 @@ js_getCdsObject(duk_context* ctx)
 
     auto database = self->getDatabase();
     auto obj = database->findObjectByPath(path);
-    if (obj == nullptr) {
+    if (!obj) {
         auto cm = self->getContent();
         std::error_code ec;
         auto dirEnt = fs::directory_entry(path, ec);
@@ -96,7 +96,7 @@ js_getCdsObject(duk_context* ctx)
         } else {
             log_error("Failed to read {}: {}", path.c_str(), ec.message());
         }
-        if (obj == nullptr) { // object ignored
+        if (!obj) { // object ignored
             return 0;
         }
     }
@@ -128,11 +128,11 @@ std::string PlaylistParserScript::readln()
     if (!currentHandle)
         throw_std_runtime_error("Readline not yet setup for use");
 
-    if ((currentTask != nullptr) && (!currentTask->isValid()))
+    if (currentTask && !currentTask->isValid())
         return "";
 
     while (true) {
-        if (fgets(currentLine, ONE_TEXTLINE_BYTES, currentHandle) == nullptr)
+        if (!fgets(currentLine, ONE_TEXTLINE_BYTES, currentHandle))
             return "";
 
         ret = trimString(currentLine);
@@ -143,7 +143,7 @@ std::string PlaylistParserScript::readln()
 
 void PlaylistParserScript::processPlaylistObject(const std::shared_ptr<CdsObject>& obj, std::shared_ptr<GenericTask> task)
 {
-    if ((currentObjectID != INVALID_OBJECT_ID) || (currentHandle != nullptr) || (currentLine != nullptr)) {
+    if ((currentObjectID != INVALID_OBJECT_ID) || !currentHandle || currentLine) {
         throw_std_runtime_error("recursion not allowed");
     }
 
@@ -163,7 +163,7 @@ void PlaylistParserScript::processPlaylistObject(const std::shared_ptr<CdsObject
 #endif
     if (!currentHandle) {
         currentObjectID = INVALID_OBJECT_ID;
-        currentTask = nullptr;
+        currentTask = {};
         delete[] currentLine;
         throw_std_runtime_error("Failed to open file: {}", obj->getLocation().c_str());
     }
@@ -184,25 +184,25 @@ void PlaylistParserScript::processPlaylistObject(const std::shared_ptr<CdsObject
         duk_pop(ctx);
 
         fclose(currentHandle);
-        currentHandle = nullptr;
+        currentHandle = {};
 
         delete[] currentLine;
-        currentLine = nullptr;
+        currentLine = {};
 
         currentObjectID = INVALID_OBJECT_ID;
-        currentTask = nullptr;
+        currentTask = {};
 
         throw e;
     }
 
     fclose(currentHandle);
-    currentHandle = nullptr;
+    currentHandle = {};
 
     delete[] currentLine;
-    currentLine = nullptr;
+    currentLine = {};
 
     currentObjectID = INVALID_OBJECT_ID;
-    currentTask = nullptr;
+    currentTask = {};
 
     gc_counter++;
     if (gc_counter > JS_CALL_GC_AFTER_NUM) {

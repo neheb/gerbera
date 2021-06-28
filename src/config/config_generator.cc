@@ -49,7 +49,7 @@ std::shared_ptr<pugi::xml_node> ConfigGenerator::getNode(const std::string& tag)
 std::shared_ptr<pugi::xml_node> ConfigGenerator::setValue(const std::string& tag, const std::string& value, bool makeLastChild)
 {
     auto split = splitString(tag, '/');
-    std::shared_ptr<pugi::xml_node> result = nullptr;
+    std::shared_ptr<pugi::xml_node> result;
     if (!split.empty()) {
         std::string parent;
         std::string nodeKey;
@@ -117,8 +117,8 @@ std::shared_ptr<pugi::xml_node> ConfigGenerator::setValue(config_option_t option
 std::shared_ptr<pugi::xml_node> ConfigGenerator::setValue(config_option_t option, const std::string& key, const std::string& value)
 {
     auto cs = std::dynamic_pointer_cast<ConfigDictionarySetup>(ConfigDefinition::findConfigSetup(option));
-    if (cs == nullptr)
-        return nullptr;
+    if (!cs)
+        return {};
 
     auto nodeKey = ConfigDefinition::mapConfigOption(cs->nodeOption);
     setValue(fmt::format("{}/{}/", cs->xpath, nodeKey), "", true);
@@ -130,8 +130,8 @@ std::shared_ptr<pugi::xml_node> ConfigGenerator::setValue(config_option_t option
 std::shared_ptr<pugi::xml_node> ConfigGenerator::setDictionary(config_option_t option)
 {
     auto cs = std::dynamic_pointer_cast<ConfigDictionarySetup>(ConfigDefinition::findConfigSetup(option));
-    if (cs == nullptr)
-        return nullptr;
+    if (!cs)
+        return {};
 
     auto nodeKey = ConfigDefinition::mapConfigOption(cs->nodeOption);
     for (auto&& [key, value] : cs->getXmlContent({})) {

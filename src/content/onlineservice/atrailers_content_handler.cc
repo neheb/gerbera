@@ -59,8 +59,8 @@ std::shared_ptr<CdsObject> ATrailersContentHandler::getNextObject()
         auto trailer = *trailer_it;
         ++trailer_it;
 
-        if (trailer == nullptr)
-            return nullptr;
+        if (!trailer)
+            return {};
 
         if (trailer.type() != pugi::node_element)
             continue;
@@ -70,11 +70,11 @@ std::shared_ptr<CdsObject> ATrailersContentHandler::getNextObject()
 
         // we know that we have a trailer
         auto item = getObject(trailer);
-        if (item != nullptr)
+        if (item)
             return item;
     } // while trailer_it
 
-    return nullptr;
+    return {};
 }
 
 std::shared_ptr<CdsObject> ATrailersContentHandler::getObject(const pugi::xml_node& trailer) const
@@ -84,8 +84,8 @@ std::shared_ptr<CdsObject> ATrailersContentHandler::getObject(const pugi::xml_no
     item->addResource(resource);
 
     auto info = trailer.child("info");
-    if (info == nullptr)
-        return nullptr;
+    if (!info)
+        return {};
 
     std::string temp = info.child("title").text().as_string();
     if (temp.empty())
@@ -103,18 +103,18 @@ std::shared_ptr<CdsObject> ATrailersContentHandler::getObject(const pugi::xml_no
         log_warning("Failed to retrieve Trailer ID for \"{}\", "
                     "skipping...\n",
             item->getTitle().c_str());
-        return nullptr;
+        return {};
     }
 
     temp = fmt::format("{}{}", OnlineService::getDatabasePrefix(OS_ATrailers), temp);
     item->setServiceID(temp);
 
     auto preview = trailer.child("preview");
-    if (preview == nullptr) {
+    if (!preview) {
         log_warning("Failed to retrieve Trailer location for \"{}\", "
                     "skipping...\n",
             item->getTitle().c_str());
-        return nullptr;
+        return {};
     }
 
     temp = preview.child("large").text().as_string();
@@ -124,7 +124,7 @@ std::shared_ptr<CdsObject> ATrailersContentHandler::getObject(const pugi::xml_no
         log_error("Could not get location for Trailers item {}, "
                   "skipping.\n",
             item->getTitle().c_str());
-        return nullptr;
+        return {};
     }
 
     item->setClass("object.item.videoItem");
@@ -156,13 +156,13 @@ std::shared_ptr<CdsObject> ATrailersContentHandler::getObject(const pugi::xml_no
     }
 
     auto cast = trailer.child("cast");
-    if (cast != nullptr) {
+    if (cast) {
         std::string actors;
         for (auto&& actor : cast.children()) {
             if (actor.type() != pugi::node_element)
-                return nullptr;
+                return {};
             if (std::string(actor.name()) != "name")
-                return nullptr;
+                return {};
 
             temp = actor.text().as_string();
             if (!temp.empty()) {
@@ -178,13 +178,13 @@ std::shared_ptr<CdsObject> ATrailersContentHandler::getObject(const pugi::xml_no
     }
 
     auto genre = trailer.child("genre");
-    if (genre != nullptr) {
+    if (genre) {
         std::string genres;
         for (auto&& gn : genre.children()) {
             if (gn.type() != pugi::node_element)
-                return nullptr;
+                return {};
             if (std::string(gn.name()) != "name")
-                return nullptr;
+                return {};
 
             temp = gn.text().as_string();
             if (!temp.empty()) {
@@ -205,7 +205,7 @@ std::shared_ptr<CdsObject> ATrailersContentHandler::getObject(const pugi::xml_no
     I add the fastscaler
 
     auto poster = trailer.child("poster");
-    if (poster != nullptr)
+    if (poster)
     {
     }
     */
@@ -219,7 +219,7 @@ std::shared_ptr<CdsObject> ATrailersContentHandler::getObject(const pugi::xml_no
     } catch (const std::runtime_error& ex) {
         log_warning("Failed to validate newly created Trailer item: {}",
             ex.what());
-        return nullptr;
+        return {};
     }
 }
 

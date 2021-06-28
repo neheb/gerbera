@@ -163,7 +163,7 @@ void Server::run()
         UPNPREG_BUF_DESC,
         deviceDescription.c_str(),
         size_t(deviceDescription.length()) + 1,
-        true,
+        1,
         handleUpnpRootDeviceEventCallback,
         this,
         &rootDeviceHandle);
@@ -318,10 +318,10 @@ void Server::shutdown()
 
     if (content) {
         content->shutdown();
-        content = nullptr;
+        content = {};
     }
 
-    session_manager = nullptr;
+    session_manager = {};
 
     if (database->threadCleanupRequired()) {
         try {
@@ -330,13 +330,13 @@ void Server::shutdown()
         }
     }
     database->shutdown();
-    database = nullptr;
+    database = {};
 
     timer->shutdown();
-    timer = nullptr;
+    timer = {};
 
-    mime = nullptr;
-    clients = nullptr;
+    mime = {};
+    clients = {};
 }
 
 int Server::handleUpnpRootDeviceEventCallback(Upnp_EventType eventType, const void* event, void* cookie)
@@ -351,7 +351,7 @@ int Server::handleUpnpRootDeviceEvent(Upnp_EventType eventType, const void* even
     log_debug("start");
 
     // check parameters
-    if (event == nullptr) {
+    if (!event) {
         log_debug("handleUpnpRootDeviceEvent: NULL event structure");
         return UPNP_E_BAD_REQUEST;
     }
@@ -402,7 +402,7 @@ int Server::handleUpnpClientEventCallback(Upnp_EventType eventType, const void* 
 int Server::handleUpnpClientEvent(Upnp_EventType eventType, const void* event)
 {
     // check parameters
-    if (event == nullptr) {
+    if (!event) {
         log_debug("handleUpnpClientEvent: NULL event structure");
         return UPNP_E_BAD_REQUEST;
     }
@@ -561,13 +561,13 @@ int Server::registerVirtualDirCallbacks()
             //log_debug("{} open({})", ioPtr, filename);
             return ioPtr;
         } catch (const ServerShutdownException& se) {
-            return nullptr;
+            return {};
         } catch (const SubtitlesNotFoundException& sex) {
             log_info("SubtitlesNotFoundException: {}", sex.what());
-            return nullptr;
+            return {};
         } catch (const std::runtime_error& ex) {
             log_error("Exception: {}", ex.what());
-            return nullptr;
+            return {};
         }
     });
     if (ret != UPNP_E_SUCCESS)

@@ -69,7 +69,7 @@ std::shared_ptr<CdsObject> SopCastContentHandler::getNextObject()
         }
         skipGroup = true;
 
-        if (group == nullptr)
+        if (!group)
             continue;
 
         if (group.type() != pugi::node_element)
@@ -92,7 +92,7 @@ std::shared_ptr<CdsObject> SopCastContentHandler::getNextObject()
             auto channel = *channel_it;
             ++channel_it;
 
-            if (channel == nullptr)
+            if (!channel)
                 continue;
 
             if (channel.type() != pugi::node_element)
@@ -103,12 +103,12 @@ std::shared_ptr<CdsObject> SopCastContentHandler::getNextObject()
 
             // we know that we have a channel
             auto item = getObject(groupName, channel);
-            if (item != nullptr)
+            if (item)
                 return item;
         } // for channel
     } // for group
 
-    return nullptr;
+    return {};
 }
 
 std::shared_ptr<CdsObject> SopCastContentHandler::getObject(const std::string& groupName, const pugi::xml_node& channel)
@@ -123,7 +123,7 @@ std::shared_ptr<CdsObject> SopCastContentHandler::getObject(const std::string& g
     std::string temp = channel.attribute("id").as_string();
     if (temp.empty()) {
         log_warning("Failed to retrieve SopCast channel ID");
-        return nullptr;
+        return {};
     }
 
     temp.insert(temp.begin(), OnlineService::getDatabasePrefix(OS_SopCast));
@@ -132,7 +132,7 @@ std::shared_ptr<CdsObject> SopCastContentHandler::getObject(const std::string& g
     temp = channel.child("stream_type").text().as_string();
     if (temp.empty()) {
         log_warning("Failed to retrieve SopCast channel mimetype");
-        return nullptr;
+        return {};
     }
 
     // use mimetype setting
@@ -147,22 +147,22 @@ std::shared_ptr<CdsObject> SopCastContentHandler::getObject(const std::string& g
     item->setMimeType(mt);
 
     auto tmp_el = channel.child("sop_address");
-    if (tmp_el == nullptr) {
+    if (!tmp_el) {
         log_warning("Failed to retrieve SopCast channel URL");
-        return nullptr;
+        return {};
     }
 
     temp = tmp_el.child("item").text().as_string();
     if (temp.empty()) {
         log_warning("Failed to retrieve SopCast channel URL");
-        return nullptr;
+        return {};
     }
     item->setURL(temp);
 
     tmp_el = channel.child("name");
-    if (tmp_el == nullptr) {
+    if (!tmp_el) {
         log_warning("Failed to retrieve SopCast channel name");
-        return nullptr;
+        return {};
     }
 
     temp = tmp_el.attribute("en").as_string();
@@ -172,7 +172,7 @@ std::shared_ptr<CdsObject> SopCastContentHandler::getObject(const std::string& g
         item->setTitle("Unknown");
 
     tmp_el = channel.child("region");
-    if (tmp_el != nullptr) {
+    if (tmp_el) {
         temp = tmp_el.attribute("en").as_string();
         if (!temp.empty())
             item->setMetadata(M_REGION, temp);
@@ -198,7 +198,7 @@ std::shared_ptr<CdsObject> SopCastContentHandler::getObject(const std::string& g
     } catch (const std::runtime_error& ex) {
         log_warning("Failed to validate newly created SopCast item: {}",
             ex.what());
-        return nullptr;
+        return {};
     }
 }
 

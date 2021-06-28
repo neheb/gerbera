@@ -87,9 +87,8 @@ void FfmpegHandler::addFfmpegAuxdataFields(const std::shared_ptr<CdsItem>& item,
     std::vector<std::string> aux = config->getArrayOption(CFG_IMPORT_LIBOPTS_FFMPEG_AUXDATA_TAGS_LIST);
     for (auto&& desiredTag : aux) {
         if (!desiredTag.empty()) {
-            AVDictionaryEntry* tag = nullptr;
-            tag = av_dict_get(pFormatCtx->metadata, desiredTag.c_str(), nullptr, AV_DICT_IGNORE_SUFFIX);
-            if (tag && tag->value && tag->value[0]) {
+            auto tag = av_dict_get(pFormatCtx->metadata, desiredTag.c_str(), nullptr, AV_DICT_IGNORE_SUFFIX);
+            if (tag && tag->value && (tag->value[0] != 0)) {
                 log_debug("Added {}: {}", desiredTag.c_str(), tag->value);
                 item->setAuxData(desiredTag, sc->convert(tag->value));
             }
@@ -99,7 +98,7 @@ void FfmpegHandler::addFfmpegAuxdataFields(const std::shared_ptr<CdsItem>& item,
 
 void FfmpegHandler::addFfmpegMetadataFields(const std::shared_ptr<CdsItem>& item, AVFormatContext* pFormatCtx) const
 {
-    AVDictionaryEntry* e = nullptr;
+    AVDictionaryEntry* e = {};
     auto sc = StringConverter::m2i(CFG_IMPORT_LIBOPTS_FFMPEG_CHARSET, item->getLocation(), config);
     metadata_fields_t field;
     std::string value;
@@ -209,7 +208,7 @@ void FfmpegHandler::addFfmpegResourceFields(const std::shared_ptr<CdsItem>& item
     for (size_t i = 0; i < pFormatCtx->nb_streams; i++) {
         AVStream* st = pFormatCtx->streams[i];
 
-        if ((st != nullptr) && (!videoset) && (as_codecpar(st)->codec_type == AVMEDIA_TYPE_VIDEO)) {
+        if (st && (!videoset) && (as_codecpar(st)->codec_type == AVMEDIA_TYPE_VIDEO)) {
             auto codec_id = as_codecpar(st)->codec_id;
             resource->addAttribute(R_AUDIOCODEC, avcodec_get_name(codec_id));
 
@@ -235,7 +234,7 @@ void FfmpegHandler::addFfmpegResourceFields(const std::shared_ptr<CdsItem>& item
                 videoset = true;
             }
         }
-        if ((st != nullptr) && (!audioset) && (as_codecpar(st)->codec_type == AVMEDIA_TYPE_AUDIO)) {
+        if (st && (!audioset) && (as_codecpar(st)->codec_type == AVMEDIA_TYPE_AUDIO)) {
             auto codec_id = as_codecpar(st)->codec_id;
             resource->addAttribute(R_VIDEOCODEC, avcodec_get_name(codec_id));
             // find the first stream that has a valid sample rate
@@ -291,12 +290,12 @@ static void FfmpegNoOutputStub(void* ptr, int level, const char* fmt, va_list vl
 void FfmpegHandler::fillMetadata(std::shared_ptr<CdsObject> obj)
 {
     auto item = std::dynamic_pointer_cast<CdsItem>(obj);
-    if (item == nullptr)
+    if (!item)
         return;
 
     log_debug("Running ffmpeg handler on {}", item->getLocation().c_str());
 
-    AVFormatContext* pFormatCtx = nullptr;
+    AVFormatContext* pFormatCtx = {};
 
     // Suppress all log messages
     av_log_set_callback(FfmpegNoOutputStub);
@@ -370,11 +369,11 @@ std::unique_ptr<IOHandler> FfmpegHandler::serveContent(std::shared_ptr<CdsObject
 {
 #ifdef HAVE_FFMPEGTHUMBNAILER
     auto item = std::dynamic_pointer_cast<CdsItem>(obj);
-    if (item == nullptr)
-        return nullptr;
+    if (!item)
+        return {};
 
     if (!config->getBoolOption(CFG_SERVER_EXTOPTS_FFMPEGTHUMBNAILER_ENABLED))
-        return nullptr;
+        return {};
 
     const auto cache_enabled = config->getBoolOption(CFG_SERVER_EXTOPTS_FFMPEGTHUMBNAILER_CACHE_DIR_ENABLED);
 
@@ -404,7 +403,7 @@ std::unique_ptr<IOHandler> FfmpegHandler::serveContent(std::shared_ptr<CdsObject
 
     return std::make_unique<MemIOHandler>(img.data(), img.size());
 #else
-    return nullptr;
+    return {};
 #endif
 }
 

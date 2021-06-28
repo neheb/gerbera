@@ -73,11 +73,11 @@ void ImportScript::processCdsObject(const std::shared_ptr<CdsObject>& obj, const
         duk_del_prop_string(ctx, -1, "orig");
         duk_del_prop_string(ctx, -1, "object_script_path");
         duk_del_prop_string(ctx, -1, "object_autoscan_id");
-        processed = nullptr;
+        processed = {};
         throw ex;
     }
 
-    processed = nullptr;
+    processed = {};
 
     gc_counter++;
     if (gc_counter > JS_CALL_GC_AFTER_NUM) {

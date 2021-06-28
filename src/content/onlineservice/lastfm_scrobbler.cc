@@ -67,12 +67,12 @@ void LastFm::shutdown()
 
     finished_playing(scrobbler);
     destroy_scrobbler(scrobbler);
-    scrobbler = nullptr;
+    scrobbler = {};
 }
 
 void LastFm::startedPlaying(std::shared_ptr<CdsItem> item)
 {
-    if (currentTrackId == item->getID() || scrobbler == nullptr)
+    if (currentTrackId == item->getID() || !scrobbler)
         return;
 
     currentTrackId = item->getID();

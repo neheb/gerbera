@@ -1145,7 +1145,7 @@ std::shared_ptr<ConfigSetup> ConfigDefinition::findConfigSetup(config_option_t o
     }
 
     if (save)
-        return nullptr;
+        return {};
 
     throw_std_runtime_error("Error in config code: {} tag not found", option);
 }
@@ -1158,7 +1158,7 @@ std::shared_ptr<ConfigSetup> ConfigDefinition::findConfigSetupByPath(const std::
         return *co;
     }
 
-    if (parent != nullptr) {
+    if (parent) {
         auto attrKey = key.substr(parent->getUniquePath().length());
         if (attrKey.find_first_of(']') != std::string::npos) {
             attrKey = attrKey.substr(attrKey.find_first_of(']') + 1);
@@ -1181,7 +1181,10 @@ std::shared_ptr<ConfigSetup> ConfigDefinition::findConfigSetupByPath(const std::
                 size_t len = std::min(uPath.length(), key.length());
                 return key.substr(0, len) == uPath.substr(0, len);
             });
-        return (co != complexOptions.end()) ? *co : nullptr;
+        if (co != complexOptions.end()) {
+            return *co;
+        }
+        return {};
     }
 
     throw_std_runtime_error("Error in config code: {} tag not found", key);

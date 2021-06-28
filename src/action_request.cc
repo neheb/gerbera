@@ -96,7 +96,7 @@ void ActionRequest::setErrorCode(int errCode)
 
 void ActionRequest::update()
 {
-    if (response != nullptr) {
+    if (response) {
         std::ostringstream buf;
         response->print(buf, "", 0);
         std::string xml = buf.str();
@@ -106,7 +106,7 @@ void ActionRequest::update()
         UpnpActionRequest_set_xmlResponse(upnp_request, xml);
         UpnpActionRequest_set_ErrCode(upnp_request, errCode);
 #else
-        IXML_Document* result = nullptr;
+        IXML_Document* result = {};
         int err = ixmlParseBufferEx(xml.c_str(), &result);
 
         if (err != IXML_SUCCESS) {

@@ -230,7 +230,7 @@ Script::Script(std::shared_ptr<ContentManager> content,
     duk_push_object(ctx); // config
     for (auto&& i : ConfigOptionIterator()) {
         auto scs = ConfigDefinition::findConfigSetup(i, true);
-        if (scs == nullptr)
+        if (!scs)
             continue;
         auto value = scs->getCurrentValue();
         if (!value.empty()) {
@@ -270,8 +270,8 @@ Script::Script(std::shared_ptr<ContentManager> content,
             setProperty(ConfigDefinition::removeAttribute(ATTR_AUTOSCAN_DIRECTORY_LOCATION), adir->getLocation());
             setProperty(ConfigDefinition::removeAttribute(ATTR_AUTOSCAN_DIRECTORY_MODE), AutoscanDirectory::mapScanmode(adir->getScanMode()).data());
             setIntProperty(ConfigDefinition::removeAttribute(ATTR_AUTOSCAN_DIRECTORY_INTERVAL), adir->getInterval().count());
-            setIntProperty(ConfigDefinition::removeAttribute(ATTR_AUTOSCAN_DIRECTORY_RECURSIVE), adir->getRecursive());
-            setIntProperty(ConfigDefinition::removeAttribute(ATTR_AUTOSCAN_DIRECTORY_HIDDENFILES), adir->getHidden());
+            setIntProperty(ConfigDefinition::removeAttribute(ATTR_AUTOSCAN_DIRECTORY_RECURSIVE), static_cast<int>(adir->getRecursive()));
+            setIntProperty(ConfigDefinition::removeAttribute(ATTR_AUTOSCAN_DIRECTORY_HIDDENFILES), static_cast<int>(adir->getHidden()));
             setIntProperty(ConfigDefinition::removeAttribute(ATTR_AUTOSCAN_DIRECTORY_SCANCOUNT), adir->getActiveScanCount());
             setIntProperty(ConfigDefinition::removeAttribute(ATTR_AUTOSCAN_DIRECTORY_TASKCOUNT), adir->getTaskCount());
             setProperty(ConfigDefinition::removeAttribute(ATTR_AUTOSCAN_DIRECTORY_LMT), fmt::format("{:%Y-%m-%d %H:%M:%S}", fmt::localtime(adir->getPreviousLMT().count())));
@@ -322,7 +322,7 @@ Script* Script::getContextScript(duk_context* ctx)
     duk_get_prop_string(ctx, -1, "this");
     auto self = static_cast<Script*>(duk_get_pointer(ctx, -1));
     duk_pop_2(ctx);
-    if (self == nullptr) {
+    if (!self) {
         log_debug("Could not retrieve class instance from global object");
         duk_error(ctx, DUK_ERR_ERROR, "Could not retrieve current script from stash");
     }
@@ -405,7 +405,7 @@ std::shared_ptr<CdsObject> Script::dukObject2cdsObject(const std::shared_ptr<Cds
     int objType = getIntProperty("objectType", -1);
     if (objType == -1) {
         log_error("missing objectType property");
-        return nullptr;
+        return {};
     }
 
     auto obj = CdsObject::createObject(objType);
@@ -432,7 +432,7 @@ std::shared_ptr<CdsObject> Script::dukObject2cdsObject(const std::shared_ptr<Cds
     if (duk_is_object(ctx, -1)) {
         duk_to_object(ctx, -1);
         auto parent = dukObject2cdsObject(nullptr);
-        if (parent != nullptr) {
+        if (parent) {
             obj->setParent(parent);
             log_debug("dukObject2cdsObject: Parent {}", parent->getClass());
         }
@@ -444,7 +444,7 @@ std::shared_ptr<CdsObject> Script::dukObject2cdsObject(const std::shared_ptr<Cds
         val = sc->convert(val);
         obj->setTitle(val);
     } else {
-        if (pcd != nullptr)
+        if (pcd)
             obj->setTitle(pcd->getTitle());
     }
 
@@ -453,7 +453,7 @@ std::shared_ptr<CdsObject> Script::dukObject2cdsObject(const std::shared_ptr<Cds
         val = sc->convert(val);
         obj->setClass(val);
     } else {
-        if (pcd != nullptr)
+        if (pcd)
             obj->setClass(pcd->getClass());
     }
 
@@ -492,7 +492,7 @@ std::shared_ptr<CdsObject> Script::dukObject2cdsObject(const std::shared_ptr<Cds
     duk_pop(ctx);
 
     // stuff that has not been exported to js
-    if (pcd != nullptr) {
+    if (pcd) {
         obj->setFlags(pcd->getFlags());
         obj->setResources(pcd->getResources());
         obj->setAuxData(pcd->getAuxData());
@@ -566,7 +566,7 @@ std::shared_ptr<CdsObject> Script::dukObject2cdsObject(const std::shared_ptr<Cds
         auto item = std::static_pointer_cast<CdsItem>(obj);
         std::shared_ptr<CdsItem> pcd_item;
 
-        if (pcd != nullptr)
+        if (pcd)
             pcd_item = std::static_pointer_cast<CdsItem>(pcd);
 
         val = getProperty("mimetype");
@@ -574,7 +574,7 @@ std::shared_ptr<CdsObject> Script::dukObject2cdsObject(const std::shared_ptr<Cds
             val = sc->convert(val);
             item->setMimeType(val);
         } else {
-            if (pcd != nullptr)
+            if (pcd)
                 item->setMimeType(pcd_item->getMimeType());
         }
 
@@ -591,7 +591,7 @@ std::shared_ptr<CdsObject> Script::dukObject2cdsObject(const std::shared_ptr<Cds
             val = sc->convert(val);
             item->setMetadata(M_DESCRIPTION, val);
         } else {
-            if (pcd != nullptr)
+            if (pcd)
                 item->setMetadata(M_DESCRIPTION, pcd_item->getMetadata(M_DESCRIPTION));
         }
         if (this->whoami() == S_PLAYLIST) {
@@ -603,7 +603,7 @@ std::shared_ptr<CdsObject> Script::dukObject2cdsObject(const std::shared_ptr<Cds
         if (!location.empty())
             obj->setLocation(location);
         else {
-            if (pcd != nullptr)
+            if (pcd)
                 obj->setLocation(pcd->getLocation());
         }
 

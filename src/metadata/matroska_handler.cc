@@ -62,7 +62,7 @@ public:
         : file(fopen(path, "rb"))
 #endif
     {
-        if (file == nullptr) {
+        if (!file) {
             throw_std_runtime_error("Could not fopen {}", path);
         }
     }
@@ -77,7 +77,7 @@ public:
 
     uint32 read(void* buffer, size_t size) override
     {
-        assert(file != nullptr);
+        assert(file);
         if (size == 0)
             return 0;
         return fread(buffer, 1, size, file);
@@ -85,7 +85,7 @@ public:
 
     void setFilePointer(int64_t offset, seek_mode mode = seek_beginning) override
     {
-        assert(file != nullptr);
+        assert(file);
         assert(mode == SEEK_CUR || mode == SEEK_END || mode == SEEK_SET);
         if (fseeko(file, offset, mode) != 0) {
             throw_std_runtime_error("fseek failed");
@@ -100,25 +100,25 @@ public:
 
     uint64 getFilePointer() override
     {
-        assert(file != nullptr);
+        assert(file);
         return ftello(file);
     }
 
     void close() override
     {
-        if (file == nullptr)
+        if (!file)
             return;
         if (fclose(file) != 0) {
             log_error("fclose failed");
         }
-        file = nullptr;
+        file = {};
     }
 };
 
 void MatroskaHandler::fillMetadata(std::shared_ptr<CdsObject> obj)
 {
     auto item = std::dynamic_pointer_cast<CdsItem>(obj);
-    if (item == nullptr)
+    if (!item)
         return;
 
     parseMKV(item, nullptr);
@@ -127,8 +127,8 @@ void MatroskaHandler::fillMetadata(std::shared_ptr<CdsObject> obj)
 std::unique_ptr<IOHandler> MatroskaHandler::serveContent(std::shared_ptr<CdsObject> obj, int resNum)
 {
     auto item = std::dynamic_pointer_cast<CdsItem>(obj);
-    if (item == nullptr)
-        return nullptr;
+    if (!item)
+        return {};
 
     std::unique_ptr<MemIOHandler> io_handler;
     parseMKV(item, &io_handler);
@@ -142,10 +142,10 @@ void MatroskaHandler::parseMKV(const std::shared_ptr<CdsItem>& item, std::unique
     EbmlStream ebml_stream(ebml_file);
 
     auto el_l0 = ebml_stream.FindNextID(LIBMATROSKA_NAMESPACE::KaxSegment::ClassInfos, ~0);
-    while (el_l0 != nullptr) {
+    while (el_l0) {
         int i_upper_level = 0;
         auto el_l1 = ebml_stream.FindNextElement(el_l0->Generic().Context, i_upper_level, ~0, true);
-        while (el_l1 != nullptr) {
+        while (el_l1) {
             parseLevel1Element(item, ebml_stream, el_l1, p_io_handler);
 
             el_l1->SkipData(ebml_stream, el_l1->Generic().Context);
@@ -169,7 +169,7 @@ void MatroskaHandler::parseLevel1Element(const std::shared_ptr<CdsItem>& item, E
     if (!el_l1->IsMaster())
         return;
     auto master = dynamic_cast<EbmlMaster*>(el_l1);
-    if (master == nullptr) {
+    if (!master) {
         log_debug("dynamic_cast unexpectedly returned nullptr, seems to be broken");
         return;
     }
@@ -193,7 +193,7 @@ void MatroskaHandler::parseInfo(const std::shared_ptr<CdsItem>& item, EbmlStream
     for (auto&& el : *info) {
         if (EbmlId(*el) == LIBMATROSKA_NAMESPACE::KaxTitle::ClassInfos.GlobalId) {
             auto title_el = dynamic_cast<LIBMATROSKA_NAMESPACE::KaxTitle*>(el);
-            if (title_el == nullptr) {
+            if (!title_el) {
                 log_error("Malformed MKV file; KaxTitle cast failed!");
                 continue;
             }
@@ -202,7 +202,7 @@ void MatroskaHandler::parseInfo(const std::shared_ptr<CdsItem>& item, EbmlStream
             item->setMetadata(M_TITLE, sc->convert(title));
         } else if (EbmlId(*el) == LIBMATROSKA_NAMESPACE::KaxDateUTC::ClassInfos.GlobalId) {
             auto date_el = dynamic_cast<LIBMATROSKA_NAMESPACE::KaxDateUTC*>(el);
-            if (date_el == nullptr) {
+            if (!date_el) {
                 log_error("Malformed MKV file; KaxDateUTC cast failed!");
                 continue;
             }
@@ -231,7 +231,7 @@ void MatroskaHandler::parseAttachments(const std::shared_ptr<CdsItem>& item, Ebm
             auto fileData = GetChild<LIBMATROSKA_NAMESPACE::KaxFileData>(*attachedFile);
             log_debug("KaxFileData (size={})", fileData.GetSize());
 
-            if (p_io_handler != nullptr) {
+            if (p_io_handler) {
                 // serveContent
                 *p_io_handler = std::make_unique<MemIOHandler>(fileData.GetBuffer(), fileData.GetSize());
             } else {

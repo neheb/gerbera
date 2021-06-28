@@ -155,7 +155,7 @@ void UpdateManager::containerChanged(int objectID, int flushPolicy)
 
 void UpdateManager::threadProc()
 {
-    StdThreadRunner::waitFor("UpdateManager", [this] { return threadRunner != nullptr; });
+    StdThreadRunner::waitFor("UpdateManager", [this] { return bool(threadRunner); });
 
     auto lock = threadRunner->uniqueLockS("threadProc");
     // tell run() that we are ready
@@ -234,5 +234,5 @@ void* UpdateManager::staticThreadProc(void* arg)
     auto inst = static_cast<UpdateManager*>(arg);
     inst->threadProc();
 
-    return nullptr;
+    return {};
 }

@@ -358,7 +358,7 @@ void* Sqlite3Database::staticThreadProc(void* arg)
     } catch (const std::runtime_error& e) {
         log_error("Sqlite3Database::staticThreadProc - aborting thread");
     }
-    return nullptr;
+    return {};
 }
 
 void Sqlite3Database::threadProc()
@@ -373,7 +373,7 @@ void Sqlite3Database::threadProc()
         return;
     }
 
-    StdThreadRunner::waitFor("Sqlite3Database", [this] { return threadRunner != nullptr; });
+    StdThreadRunner::waitFor("Sqlite3Database", [this] { return bool(threadRunner); });
     auto lock = threadRunner->uniqueLockS("threadProc");
     // tell init() that we are ready
     threadRunner->setReady();
@@ -416,7 +416,7 @@ void Sqlite3Database::threadProc()
         } else {
             log_error("Sqlite3Database::staticThreadProc - closing database failed");
         }
-        db = nullptr;
+        db = {};
     }
 }
 
@@ -516,7 +516,7 @@ void SLInitTask::run(sqlite3** db, Sqlite3Database* sl)
     auto sql = readTextFile(sqlFilePath);
     sql += fmt::format("\n" SQLITE3_SET_VERSION ";", DBVERSION);
 
-    char* err = nullptr;
+    char* err = {};
     int ret = sqlite3_exec(
         *db,
         sql.c_str(),
@@ -524,7 +524,7 @@ void SLInitTask::run(sqlite3** db, Sqlite3Database* sl)
         nullptr,
         &err);
     std::string error;
-    if (err != nullptr) {
+    if (err) {
         error = err;
         sqlite3_free(err);
     }
@@ -540,7 +540,7 @@ void SLSelectTask::run(sqlite3** db, Sqlite3Database* sl)
     log_debug("Running: {}", query);
     pres = std::make_shared<Sqlite3Result>();
 
-    char* err = nullptr;
+    char* err = {};
     int ret = sqlite3_get_table(
         *db,
         query,
@@ -549,7 +549,7 @@ void SLSelectTask::run(sqlite3** db, Sqlite3Database* sl)
         &pres->ncolumn,
         &err);
     std::string error;
-    if (err != nullptr) {
+    if (err) {
         log_debug(err);
         error = err;
         sqlite3_free(err);
@@ -581,7 +581,7 @@ void SLExecTask::run(sqlite3** db, Sqlite3Database* sl)
         nullptr,
         &err);
     std::string error;
-    if (err != nullptr) {
+    if (err) {
         error = err;
         sqlite3_free(err);
     }
@@ -641,7 +641,7 @@ Sqlite3Result::~Sqlite3Result()
 {
     if (table) {
         sqlite3_free_table(table);
-        table = nullptr;
+        table = {};
     }
 }
 std::unique_ptr<SQLRow> Sqlite3Result::nextRow()
@@ -652,9 +652,8 @@ std::unique_ptr<SQLRow> Sqlite3Result::nextRow()
         if (cur_row <= nrow) {
             return std::make_unique<Sqlite3Row>(row);
         }
-        return nullptr;
     }
-    return nullptr;
+    return {};
 }
 
 /* Sqlite3BackupTimerSubscriber */

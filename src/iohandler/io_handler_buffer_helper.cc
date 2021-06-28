@@ -168,7 +168,7 @@ void IOHandlerBufferHelper::close()
     isOpen = false;
     stopBufferThread();
     delete[] buffer;
-    buffer = nullptr;
+    buffer = {};
 }
 
 // thread stuff...
@@ -186,12 +186,12 @@ void IOHandlerBufferHelper::stopBufferThread()
     lock.unlock();
 
     threadRunner->join();
-    threadRunner = nullptr;
+    threadRunner = {};
 }
 
 void* IOHandlerBufferHelper::staticThreadProc(void* arg)
 {
     auto inst = static_cast<IOHandlerBufferHelper*>(arg);
     inst->threadProc();
-    return nullptr;
+    return {};
 }

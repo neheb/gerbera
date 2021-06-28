@@ -51,7 +51,7 @@ ProcessExecutor::ProcessExecutor(const std::string& command, const std::vector<s
         if (apos >= MAX_ARGS - 2)
             break;
     }
-    argv[++apos] = nullptr;
+    argv[++apos] = {};
 
     process_id = fork();
     switch (process_id) {

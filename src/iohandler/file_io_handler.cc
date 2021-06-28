@@ -42,7 +42,7 @@ FileIOHandler::FileIOHandler(fs::path filename)
 
 FileIOHandler::~FileIOHandler()
 {
-    if (f != nullptr)
+    if (f)
         close();
 }
 
@@ -58,7 +58,7 @@ void FileIOHandler::open(enum UpnpOpenFileMode mode)
         throw_std_runtime_error("open: UpnpOpenFileMode mode not supported");
     }
 
-    if (f == nullptr) {
+    if (!f) {
         throw_std_runtime_error("Failed to open: {}", filename.c_str());
     }
 }
@@ -102,8 +102,8 @@ off_t FileIOHandler::tell()
 
 void FileIOHandler::close()
 {
-    if (f != nullptr && fclose(f) != 0) {
+    if (f && fclose(f) != 0) {
         log_error("fclose failed");
     }
-    f = nullptr;
+    f = {};
 }

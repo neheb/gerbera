@@ -44,7 +44,7 @@ CurlIOHandler::CurlIOHandler(std::shared_ptr<Config> config, const std::string& 
         throw_std_runtime_error("bufSize must be at least CURL_MAX_WRITE_SIZE({})", CURL_MAX_WRITE_SIZE);
 
     this->URL = URL;
-    this->external_curl_handle = (curl_handle != nullptr);
+    this->external_curl_handle = bool(curl_handle);
     this->curl_handle = curl_handle;
     //bytesCurl = 0;
     signalAfterEveryRead = true;
@@ -56,9 +56,9 @@ CurlIOHandler::CurlIOHandler(std::shared_ptr<Config> config, const std::string& 
 
 void CurlIOHandler::open(enum UpnpOpenFileMode mode)
 {
-    if (curl_handle == nullptr) {
+    if (!curl_handle) {
         curl_handle = curl_easy_init();
-        if (curl_handle == nullptr)
+        if (!curl_handle)
             throw_std_runtime_error("failed to init curl");
     } else
         curl_easy_reset(curl_handle);
@@ -70,14 +70,14 @@ void CurlIOHandler::close()
 {
     IOHandlerBufferHelper::close();
 
-    if (external_curl_handle && curl_handle != nullptr)
+    if (external_curl_handle && curl_handle)
         curl_easy_cleanup(curl_handle);
 }
 
 void CurlIOHandler::threadProc()
 {
     CURLcode res;
-    assert(curl_handle != nullptr);
+    assert(curl_handle);
     assert(!URL.empty());
 
     //char error_buffer[CURL_ERROR_SIZE] = {'\0'};

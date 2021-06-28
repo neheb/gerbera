@@ -239,9 +239,8 @@ int main(int argc, char** argv, char** envp)
             uid_t actual_euid = geteuid();
 
             // get user info of requested user from passwd
-            struct passwd* user_id = getpwnam(user->c_str());
-
-            if (user_id == nullptr) {
+            auto user_id = getpwnam(user->c_str());
+            if (!user_id) {
                 log_error("Invalid user requested.");
                 exit(EXIT_FAILURE);
             }
@@ -329,7 +328,7 @@ int main(int argc, char** argv, char** envp)
 
             // x will make it fail if file exists
             auto pidf = ::fopen(pidfile->c_str(), "wx");
-            if (pidf == nullptr) {
+            if (!pidf) {
                 log_error("Pidfile {} exists. It may be that gerbera is already", pidfile->c_str());
                 log_error("running or the file is a leftover from an unclean shutdown.");
                 log_error("In that case, remove the file before starting gerbera.");
@@ -374,14 +373,14 @@ int main(int argc, char** argv, char** envp)
         // If home is not given by the user, get it from the environment
         if (!config_file.has_value() && !home.has_value()) {
             // Check XDG first
-            const char* h = std::getenv("XDG_CONFIG_HOME");
-            if (h != nullptr) {
+            auto h = std::getenv("XDG_CONFIG_HOME");
+            if (h) {
                 home = h;
                 confdir = "gerbera";
             } else {
                 // Then look for home
                 h = std::getenv("HOME");
-                if (h != nullptr)
+                if (h)
                     home = h;
             }
 
@@ -393,24 +392,24 @@ int main(int argc, char** argv, char** envp)
         }
 
         std::optional<std::string> dataDir;
-        char* pref = std::getenv("GERBERA_DATADIR");
-        if (pref != nullptr) {
+        auto pref = std::getenv("GERBERA_DATADIR");
+        if (pref) {
             dataDir = pref;
         } else {
             pref = std::getenv("MEDIATOMB_DATADIR");
-            if (pref != nullptr)
+            if (pref)
                 dataDir = pref;
         }
         if (!dataDir.has_value())
             dataDir = PACKAGE_DATADIR;
 
         std::optional<std::string> magic;
-        char* mgc = std::getenv("GERBERA_MAGIC_FILE");
-        if (mgc != nullptr) {
+        auto mgc = std::getenv("GERBERA_MAGIC_FILE");
+        if (mgc) {
             magic = mgc;
         } else {
             mgc = std::getenv("MEDIATOMB_MAGIC_FILE");
-            if (mgc != nullptr)
+            if (mgc)
                 magic = mgc;
         }
 
@@ -491,8 +490,8 @@ int main(int argc, char** argv, char** envp)
             try {
                 if (server)
                     server->shutdown();
-                server = nullptr;
-                configManager = nullptr;
+                server = {};
+                configManager = {};
             } catch (const std::runtime_error& e) {
                 log_error("{}", e.what());
             }
@@ -539,8 +538,8 @@ int main(int argc, char** argv, char** envp)
                 log_info("Restarting Gerbera!");
                 try {
                     server->shutdown();
-                    server = nullptr;
-                    configManager = nullptr;
+                    server = {};
+                    configManager = {};
 
                     try {
                         configManager = std::make_shared<ConfigManager>(
@@ -581,8 +580,8 @@ int main(int argc, char** argv, char** envp)
         int ret = EXIT_SUCCESS;
         try {
             server->shutdown();
-            server = nullptr;
-            configManager = nullptr;
+            server = {};
+            configManager = {};
         } catch (const UpnpException& upnp_e) {
             log_error("main: upnp error {}", upnp_e.getErrorCode());
             ret = EXIT_FAILURE;

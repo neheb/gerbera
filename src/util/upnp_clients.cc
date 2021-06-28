@@ -131,7 +131,7 @@ Clients::Clients(const std::shared_ptr<Config>& config)
 void Clients::addClientByDiscovery(const struct sockaddr_storage* addr, const std::string& userAgent, const std::string& descLocation)
 {
 #if 0 // only needed if UserAgent is not good enough
-    const ClientInfo* info = nullptr;
+    const ClientInfo* info = {};
 
     std::unique_ptr<pugi::xml_document> descXml;
     if (downloadDescription(descLocation, descXml)) {
@@ -143,7 +143,7 @@ void Clients::addClientByDiscovery(const struct sockaddr_storage* addr, const st
 
 void Clients::getInfo(const struct sockaddr_storage* addr, const std::string& userAgent, const ClientInfo** ppInfo)
 {
-    const ClientInfo* info = nullptr;
+    const ClientInfo* info = {};
 
     // 1. by IP address
     bool found = getInfoByAddr(addr, &info);
@@ -213,7 +213,7 @@ bool Clients::getInfoByAddr(const struct sockaddr_storage* addr, const ClientInf
         return true;
     }
 
-    *ppInfo = nullptr;
+    *ppInfo = {};
     return false;
 }
 
@@ -228,7 +228,7 @@ bool Clients::getInfoByType(const std::string& match, ClientMatchType type, cons
         }
     }
 
-    *ppInfo = nullptr;
+    *ppInfo = {};
     return false;
 }
 
@@ -246,7 +246,7 @@ bool Clients::getInfoByCache(const struct sockaddr_storage* addr, const ClientIn
         return true;
     }
 
-    *ppInfo = nullptr;
+    *ppInfo = {};
     return false;
 }
 
@@ -289,7 +289,7 @@ bool Clients::downloadDescription(const std::string& location, std::unique_ptr<p
     xml = std::make_unique<pugi::xml_document>();
     auto ret = xml->load_string(description.c_str());
 #else
-    IXML_Document* descDoc = nullptr;
+    IXML_Document* descDoc = {};
     int errCode = UpnpDownloadXmlDoc(location.c_str(), &descDoc);
     if (errCode != UPNP_E_SUCCESS) {
         log_debug("Error obtaining client description from {} -- error = {}", location, errCode);

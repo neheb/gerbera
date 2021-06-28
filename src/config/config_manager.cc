@@ -143,7 +143,7 @@ void ConfigManager::load(const fs::path& userHome)
     if (root.name() != ConfigSetup::ROOT_NAME)
         throw std::runtime_error("Error in config file: <config> tag not found");
 
-    if (root.child("server") == nullptr)
+    if (!root.child("server"))
         throw std::runtime_error("Error in config file: <server> tag not found");
 
     std::string version = root.attribute("version").as_string();
@@ -288,7 +288,7 @@ void ConfigManager::load(const fs::path& userHome)
     setOption(root, CFG_IMPORT_LAYOUT_MAPPING);
 
 #if defined(HAVE_NL_LANGINFO) && defined(HAVE_SETLOCALE)
-    if (setlocale(LC_ALL, "") != nullptr) {
+    if (setlocale(LC_ALL, "")) {
         temp = nl_langinfo(CODESET);
         log_debug("received {} from nl_langinfo", temp.c_str());
     }
@@ -606,7 +606,7 @@ void ConfigManager::load(const fs::path& userHome)
     log_debug("Config file dump after validation: {}", buf.str().c_str());
 
     // now the XML is no longer needed we can destroy it
-    xmlDoc = nullptr;
+    xmlDoc = {};
 }
 
 void ConfigManager::updateConfigFromDatabase(std::shared_ptr<Database> database)
@@ -619,8 +619,7 @@ void ConfigManager::updateConfigFromDatabase(std::shared_ptr<Database> database)
     for (auto&& cfgValue : values) {
         try {
             auto cs = ConfigDefinition::findConfigSetupByPath(cfgValue.key, true);
-
-            if (cs != nullptr) {
+            if (cs) {
                 if (cfgValue.item == cs->xpath) {
                     origValues[cfgValue.item] = cs->getCurrentValue();
                     cs->makeOption(cfgValue.value, self);
@@ -666,7 +665,7 @@ void ConfigManager::setOrigValue(const std::string& item, int value)
 std::string ConfigManager::getOption(config_option_t option) const
 {
     auto o = options->at(option);
-    if (o == nullptr) {
+    if (!o) {
         throw std::runtime_error("option not set");
     }
     return o->getOption();
@@ -675,7 +674,7 @@ std::string ConfigManager::getOption(config_option_t option) const
 int ConfigManager::getIntOption(config_option_t option) const
 {
     auto o = options->at(option);
-    if (o == nullptr) {
+    if (!o) {
         throw std::runtime_error("option not set");
     }
     return o->getIntOption();
@@ -684,7 +683,7 @@ int ConfigManager::getIntOption(config_option_t option) const
 bool ConfigManager::getBoolOption(config_option_t option) const
 {
     auto o = options->at(option);
-    if (o == nullptr) {
+    if (!o) {
         throw std::runtime_error("option not set");
     }
     return o->getBoolOption();

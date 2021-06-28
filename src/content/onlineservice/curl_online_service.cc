@@ -71,21 +71,21 @@ std::unique_ptr<pugi::xml_document> CurlOnlineService::getData()
             curl_handle, false, true, true);
     } catch (const std::runtime_error& ex) {
         log_error("Failed to download {} XML data: {}", serviceName, ex.what());
-        return nullptr;
+        return {};
     }
 
     if (buffer.empty())
-        return nullptr;
+        return {};
 
     if (retcode != 200)
-        return nullptr;
+        return {};
 
     log_debug("GOT BUFFER{}", buffer.c_str());
     auto doc = std::make_unique<pugi::xml_document>();
     pugi::xml_parse_result result = doc->load_string(sc->convert(buffer).c_str());
     if (result.status != pugi::xml_parse_status::status_ok) {
         log_error("Error parsing {} XML: {}", serviceName, result.description());
-        return nullptr;
+        return {};
     }
 
     return doc;
@@ -108,7 +108,7 @@ bool CurlOnlineService::refreshServiceData(std::shared_ptr<Layout> layout)
         throw_std_runtime_error("Not allowed to call refreshServiceData from different threads");
 
     auto reply = getData();
-    if (reply == nullptr) {
+    if (!reply) {
         log_debug("Failed to get XML content from {} service", serviceName);
         throw_std_runtime_error("Failed to get XML content from {} service", serviceName);
     }
@@ -121,16 +121,16 @@ bool CurlOnlineService::refreshServiceData(std::shared_ptr<Layout> layout)
         /// \todo add try/catch here and a possibility do find out if we
         /// may request more stuff or if we are at the end of the list
         obj = sc->getNextObject();
-        if (obj == nullptr)
+        if (!obj)
             break;
 
         obj->setVirtual(true);
 
         auto old = database->loadObjectByServiceID(std::static_pointer_cast<CdsItem>(obj)->getServiceID());
-        if (old == nullptr) {
+        if (!old) {
             log_debug("Adding new {} object", serviceName);
 
-            if (layout != nullptr)
+            if (layout)
                 layout->processCdsObject(obj, "");
         } else {
             log_debug("Updating existing {} object", serviceName);
@@ -141,7 +141,7 @@ bool CurlOnlineService::refreshServiceData(std::shared_ptr<Layout> layout)
 
         //        if (server->getShutdownStatus())
         //            return false;
-    } while (obj != nullptr);
+    } while (obj);
 
     return false;
 }

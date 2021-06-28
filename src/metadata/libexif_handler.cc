@@ -239,18 +239,17 @@ void LibExifHandler::process_ifd(ExifContent* content, const std::shared_ptr<Cds
 void LibExifHandler::fillMetadata(std::shared_ptr<CdsObject> obj)
 {
     auto item = std::dynamic_pointer_cast<CdsItem>(obj);
-    if (item == nullptr)
+    if (!item)
         return;
 
-    auto sc = StringConverter::m2i(CFG_IMPORT_LIBOPTS_EXIF_CHARSET, item->getLocation(), config);
     ExifData* ed = exif_data_new_from_file(item->getLocation().c_str());
-
     if (!ed) {
         log_debug("Exif data not found, attempting to set resolution internally...");
         setJpegResolutionResource(item, 0);
         return;
     }
 
+    auto sc = StringConverter::m2i(CFG_IMPORT_LIBOPTS_EXIF_CHARSET, item->getLocation(), config);
     std::vector<std::string> aux = config->getArrayOption(CFG_IMPORT_LIBOPTS_EXIF_AUXDATA_TAGS_LIST);
     for (auto&& i : ed->ifd) {
         if (i)
@@ -286,8 +285,8 @@ void LibExifHandler::fillMetadata(std::shared_ptr<CdsObject> obj)
 std::unique_ptr<IOHandler> LibExifHandler::serveContent(std::shared_ptr<CdsObject> obj, int resNum)
 {
     auto item = std::dynamic_pointer_cast<CdsItem>(obj);
-    if (item == nullptr)
-        return nullptr;
+    if (!item)
+        return {};
 
     auto res = item->getResource(resNum);
 

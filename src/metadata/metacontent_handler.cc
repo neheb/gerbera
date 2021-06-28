@@ -47,8 +47,8 @@ ContentPathSetup::ContentPathSetup(std::shared_ptr<Config> config, config_option
 std::vector<fs::path> ContentPathSetup::getContentPath(const std::shared_ptr<CdsObject>& obj, const std::string& setting, fs::path folder)
 {
     auto tweak = allTweaks->get(obj->getLocation());
-    auto files = tweak == nullptr || !tweak->hasSetting(setting) ? this->names : std::vector<std::string> { tweak->getSetting(setting) };
-    auto isCaseSensitive = tweak != nullptr && tweak->hasCaseSensitive() ? tweak->getCaseSensitive() : this->caseSensitive;
+    auto files = !tweak || !tweak->hasSetting(setting) ? this->names : std::vector<std::string> { tweak->getSetting(setting) };
+    auto isCaseSensitive = tweak && tweak->hasCaseSensitive() ? tweak->getCaseSensitive() : this->caseSensitive;
 
     std::vector<fs::path> result;
 
@@ -202,7 +202,7 @@ std::unique_ptr<IOHandler> FanArtHandler::serveContent(std::shared_ptr<CdsObject
     int ret = stat(path.c_str(), &statbuf);
     if (ret != 0) {
         log_warning("File does not exist: {} ({})", path.c_str(), std::strerror(errno));
-        return nullptr;
+        return {};
     }
     return std::make_unique<FileIOHandler>(path);
 }
@@ -256,7 +256,7 @@ std::unique_ptr<IOHandler> ContainerArtHandler::serveContent(std::shared_ptr<Cds
     int ret = stat(path.c_str(), &statbuf);
     if (ret != 0) {
         log_warning("File does not exist: {} ({})", path.c_str(), std::strerror(errno));
-        return nullptr;
+        return {};
     }
     return std::make_unique<FileIOHandler>(path);
 }
@@ -311,7 +311,7 @@ std::unique_ptr<IOHandler> SubtitleHandler::serveContent(std::shared_ptr<CdsObje
     int ret = stat(path.c_str(), &statbuf);
     if (ret != 0) {
         log_warning("File does not exist: {} ({})", path.c_str(), std::strerror(errno));
-        return nullptr;
+        return {};
     }
     return std::make_unique<FileIOHandler>(path);
 }
@@ -356,7 +356,7 @@ std::unique_ptr<IOHandler> ResourceHandler::serveContent(std::shared_ptr<CdsObje
     int ret = stat(path.c_str(), &statbuf);
     if (ret != 0) {
         log_warning("File does not exist: {} ({})", path.c_str(), std::strerror(errno));
-        return nullptr;
+        return {};
     }
     return std::make_unique<FileIOHandler>(path);
 }

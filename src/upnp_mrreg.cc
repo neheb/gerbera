@@ -119,7 +119,7 @@ void MRRegistrarService::processSubscriptionRequest(const std::unique_ptr<Subscr
         deviceHandle, config->getOption(CFG_SERVER_UDN).c_str(),
         UPNP_DESC_MRREG_SERVICE_ID, xml, request->getSubscriptionID().c_str());
 #else
-    IXML_Document* event = nullptr;
+    IXML_Document* event = {};
     int err = ixmlParseBufferEx(xml.c_str(), &event);
     if (err != IXML_SUCCESS) {
         throw UpnpException(UPNP_E_SUBSCRIPTION_FAILED, "Could not convert property set to ixml");
@@ -146,7 +146,7 @@ void MRRegistrarService::prcoessSubscriptionUpdate(std::string sourceProtocol_CS
     propset->print(buf, "", 0);
     std::string xml = buf.str();
 
-    IXML_Document *event = nullptr;
+    IXML_Document *event = {};
     int err = ixmlParseBufferEx(xml.c_str(), &event);
     if (err != IXML_SUCCESS)
     {

@@ -56,7 +56,7 @@ void* Timer::staticThreadProc(void* arg)
     auto inst = static_cast<Timer*>(arg);
     inst->threadProc();
     log_debug("Exiting Timer thread...");
-    return nullptr;
+    return {};
 }
 
 void Timer::threadProc()
@@ -105,7 +105,7 @@ void Timer::removeTimerSubscriber(Subscriber* timerSubscriber, std::shared_ptr<P
 
 void Timer::triggerWait()
 {
-    StdThreadRunner::waitFor("Timer", [this] { return threadRunner != nullptr; });
+    StdThreadRunner::waitFor("Timer", [this] { return bool(threadRunner); });
     std::unique_lock<std::mutex> lock(waitMutex);
 
     // tell run() that we are ready

@@ -101,12 +101,12 @@ void FileRequestHandler::getInfo(const char* filename, UpnpFileInfo* info)
 
     auto item = std::dynamic_pointer_cast<CdsItem>(obj);
 
-    fs::path path = item != nullptr ? item->getLocation() : "";
+    fs::path path = item ? item->getLocation() : "";
     std::string mimeType;
     struct stat statbuf;
     bool is_srt = checkFileAndSubtitle(path, obj, res_id, mimeType, statbuf, rh);
 
-    UpnpFileInfo_set_IsReadable(info, access(path.c_str(), R_OK) == 0);
+    UpnpFileInfo_set_IsReadable(info, int(access(path.c_str(), R_OK) == 0));
 
     std::string header;
     log_debug("path: {}", path.c_str());
@@ -152,7 +152,7 @@ void FileRequestHandler::getInfo(const char* filename, UpnpFileInfo* info)
     } else if (!is_srt && !tr_profile.empty()) {
         auto tp = config->getTranscodingProfileListOption(CFG_TRANSCODING_PROFILE_LIST)
                       ->getByName(tr_profile);
-        if (tp == nullptr)
+        if (!tp)
             throw_std_runtime_error("Transcoding of file {} but no profile matching the name {} found", path.c_str(), tr_profile.c_str());
 
         mimeType = tp->getTargetMimeType();
@@ -173,7 +173,7 @@ void FileRequestHandler::getInfo(const char* filename, UpnpFileInfo* info)
 #else
         UpnpFileInfo_set_FileLength(info, -1);
 #endif
-    } else if (item != nullptr) {
+    } else if (item) {
         UpnpFileInfo_set_FileLength(info, statbuf.st_size);
 
         quirks->addCaptionInfo(item, headers);
@@ -186,7 +186,7 @@ void FileRequestHandler::getInfo(const char* filename, UpnpFileInfo* info)
         }
     }
 
-    if (mimeType.empty() && item != nullptr)
+    if (mimeType.empty() && item)
         mimeType = item->getMimeType();
 
     std::string dlnaTransferHeader = getDLNATransferHeader(config, mimeType);
@@ -231,8 +231,7 @@ std::unique_ptr<IOHandler> FileRequestHandler::open(const char* filename, enum U
     }
 
     auto item = std::dynamic_pointer_cast<CdsItem>(obj);
-
-    fs::path path = item != nullptr ? item->getLocation() : "";
+    fs::path path = item ? item->getLocation() : "";
     std::string mimeType;
     struct stat statbuf;
     bool is_srt = checkFileAndSubtitle(path, obj, res_id, mimeType, statbuf, rh);

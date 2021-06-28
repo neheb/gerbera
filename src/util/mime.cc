@@ -44,7 +44,7 @@ Mime::Mime(const std::shared_ptr<Config>& config)
     // init filemagic
     int magicFlags = config->getBoolOption(CFG_IMPORT_FOLLOW_SYMLINKS) ? MAGIC_MIME_TYPE | MAGIC_SYMLINK : MAGIC_MIME_TYPE;
     magicCookie = magic_open(magicFlags);
-    if (magicCookie == nullptr) {
+    if (!magicCookie) {
         throw_std_runtime_error("magic_open failed");
     }
 
@@ -53,7 +53,7 @@ Mime::Mime(const std::shared_ptr<Config>& config)
     if (magic_load(magicCookie, magicFile) == -1) {
         auto errMsg = magic_error(magicCookie);
         magic_close(magicCookie);
-        magicCookie = nullptr;
+        magicCookie = {};
         throw_std_runtime_error("magic_load failed: {}", errMsg);
     }
 #endif // HAVE_MAGIC
@@ -64,7 +64,7 @@ Mime::~Mime()
 {
     if (magicCookie) {
         magic_close(magicCookie);
-        magicCookie = nullptr;
+        magicCookie = {};
     }
 }
 #endif
