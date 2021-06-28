@@ -65,25 +65,21 @@ void web::autoscan::process()
         if (fromFs) {
             autoscan.append_child("from_fs").append_child(pugi::node_pcdata).set_value("1");
             autoscan.append_child("object_id").append_child(pugi::node_pcdata).set_value(objID.c_str());
-            std::shared_ptr<AutoscanDirectory> adir = content->getAutoscanDirectory(path);
-            autoscan2XML(adir, &autoscan);
+            auto adir = content->getAutoscanDirectory(path);
+            autoscan2XML(std::move(adir), &autoscan);
         } else {
             autoscan.append_child("from_fs").append_child(pugi::node_pcdata).set_value("0");
             autoscan.append_child("object_id").append_child(pugi::node_pcdata).set_value(objID.c_str());
-            std::shared_ptr<AutoscanDirectory> adir = database->getAutoscanDirectory(intParam("object_id"));
-            autoscan2XML(adir, &autoscan);
+            auto adir = database->getAutoscanDirectory(intParam("object_id"));
+            autoscan2XML(std::move(adir), &autoscan);
         }
     } else if (action == "as_edit_save") {
         std::string scan_mode_str = param("scan_mode");
         if (scan_mode_str == "none") {
             // remove...
             try {
-                std::shared_ptr<AutoscanDirectory> adir;
-                if (fromFs)
-                    adir = content->getAutoscanDirectory(path);
-                else
-                    adir = content->getAutoscanDirectory(intParam("object_id"));
-                content->removeAutoscanDirectory(adir);
+                auto adir = fromFs ? content->getAutoscanDirectory(path) : content->getAutoscanDirectory(intParam("object_id"));
+                content->removeAutoscanDirectory(std::move(adir));
             } catch (const std::runtime_error& e) {
                 // didn't work, well we don't care in this case
             }
