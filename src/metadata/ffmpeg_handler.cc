@@ -385,8 +385,6 @@ std::unique_ptr<IOHandler> FfmpegHandler::serveContent(std::shared_ptr<CdsObject
         }
     }
 
-    auto thumb_lock = std::scoped_lock<std::mutex>(thumb_mutex);
-
     auto th = ffmpegthumbnailer::VideoThumbnailer(config->getIntOption(CFG_SERVER_EXTOPTS_FFMPEGTHUMBNAILER_THUMBSIZE), false, true, config->getIntOption(CFG_SERVER_EXTOPTS_FFMPEGTHUMBNAILER_IMAGE_QUALITY), false);
     std::vector<uint8_t> img;
 
