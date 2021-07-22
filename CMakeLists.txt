@@ -42,7 +42,7 @@ set(STATIC_LIBUPNP 0 CACHE BOOL "Link to libupnp statically")
 
 # Leverage a modern C++
 # Set defaults here before we create targets
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 # Cygwin requires extensions for a lot of the networking stuff.
 if(CYGWIN)
 	set(CMAKE_CXX_STANDARD_REQUIRED NO)

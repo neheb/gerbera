@@ -7,6 +7,8 @@ if (NOT "${GTest_LIBRARY_LIST}" MATCHES "gmock")
     set_property(TARGET GTest::GTest APPEND PROPERTY INTERFACE_LINK_LIBRARIES ${GMOCK_LIBRARIES})
 endif()
 
+set(CMAKE_CXX_STANDARD 20)
+
 ## Add tests below
 add_subdirectory(config)
 add_subdirectory(content)
