@@ -33,7 +33,7 @@ ELSE()
 
 #	MESSAGE( STATUS "PATHS: ${PATHS}")
 	# if taglib-config has been found
-	if(TAGLIBCONFIG_EXECUTABLE)
+	if(FALSE)
 
 	  exec_program(${TAGLIBCONFIG_EXECUTABLE} ARGS --version RETURN_VALUE _return_VALUE OUTPUT_VARIABLE TAGLIB_VERSION)
 
@@ -54,7 +54,7 @@ ELSE()
 	  endif(TAGLIB_VERSION VERSION_LESS "${TAGLIB_MIN_VERSION}")
 	  mark_as_advanced(TAGLIB_CFLAGS TAGLIB_LIBRARIES TAGLIB_INCLUDES)
 
-	else(TAGLIBCONFIG_EXECUTABLE)
+	else(FALSE)
 
 	  include(FindLibraryWithDebug)
 	  include(FindPackageHandleStandardArgs)
@@ -78,7 +78,7 @@ ELSE()
 	  
 	  find_package_handle_standard_args(Taglib DEFAULT_MSG 
 										TAGLIB_INCLUDES TAGLIB_LIBRARIES)
-	endif(TAGLIBCONFIG_EXECUTABLE)
+	endif(FALSE)
 ENDIF()
 
 if(TAGLIB_FOUND)
