@@ -77,7 +77,7 @@ void ProcessIOHandler::killAll() const
     }
 }
 
-void ProcessIOHandler::registerAll()
+void ProcessIOHandler::registerAll() const
 {
     if (mainProc)
         content->registerExecutor(mainProc);
@@ -89,7 +89,7 @@ void ProcessIOHandler::registerAll()
     }
 }
 
-void ProcessIOHandler::unregisterAll()
+void ProcessIOHandler::unregisterAll() const
 {
     if (mainProc)
         content->unregisterExecutor(mainProc);

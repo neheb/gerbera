@@ -432,7 +432,7 @@ void AutoscanInotify::recheckNonexistingMonitors(int wd, const std::shared_ptr<W
     }
 }
 
-void AutoscanInotify::removeNonexistingMonitor(int wd, const std::shared_ptr<Wd>& wdObj, const std::vector<std::string>& pathAr)
+void AutoscanInotify::removeNonexistingMonitor(int wd, const std::shared_ptr<Wd>& wdObj, const std::vector<std::string>& pathAr) const
 {
     auto&& wdWatches = wdObj->getWdWatches();
     auto it = std::find_if(wdWatches->begin(), wdWatches->end(),
@@ -652,7 +652,7 @@ void AutoscanInotify::removeWatchMoves(int wd)
     } while (checkWd >= 0);
 }
 
-bool AutoscanInotify::removeFromWdObj(const std::shared_ptr<Wd>& wdObj, const std::shared_ptr<Watch>& toRemove)
+bool AutoscanInotify::removeFromWdObj(const std::shared_ptr<Wd>& wdObj, const std::shared_ptr<Watch>& toRemove) const
 {
     auto&& wdWatches = wdObj->getWdWatches();
     auto it = std::find(wdWatches->begin(), wdWatches->end(), toRemove);

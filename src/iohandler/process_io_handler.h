@@ -116,8 +116,8 @@ protected:
 
     bool abort() const;
     void killAll() const;
-    void registerAll();
-    void unregisterAll();
+    void registerAll() const;
+    void unregisterAll() const;
 };
 
 #endif // __PROCESS_IO_HANDLER_H__

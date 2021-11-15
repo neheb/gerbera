@@ -179,7 +179,7 @@ void ClientManager::refresh(const std::shared_ptr<Config>& config)
     }
 }
 
-void ClientManager::addClientByDiscovery(const std::shared_ptr<GrbNet>& addr, const std::string& userAgent, const std::string& descLocation)
+void ClientManager::addClientByDiscovery(const std::shared_ptr<GrbNet>& addr, const std::string& userAgent, const std::string& descLocation) const
 {
 #if 0 // only needed if UserAgent is not good enough
     const ClientInfo* info = nullptr;

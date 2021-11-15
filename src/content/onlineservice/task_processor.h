@@ -28,7 +28,7 @@ public:
     void addTask(std::shared_ptr<GenericTask> task);
     std::deque<std::shared_ptr<GenericTask>> getTasklist() const;
     std::shared_ptr<GenericTask> getCurrentTask() const;
-    void invalidateTask(unsigned int taskID);
+    void invalidateTask(unsigned int taskID) const;
 
 protected:
     std::shared_ptr<Config> config;

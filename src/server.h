@@ -76,7 +76,7 @@ public:
     /// terminated. This is the case when upnp_clean() was called.
     bool getShutdownStatus() const;
 
-    void sendCDSSubscriptionUpdate(const std::string& updateString);
+    void sendCDSSubscriptionUpdate(const std::string& updateString) const;
 
     std::shared_ptr<ContentManager> getContent() const { return content; }
 
@@ -150,7 +150,7 @@ protected:
     /// and ConnectionManagerService), this function looks at the service id
     /// of the request and calls the process_action_request() for the
     /// appropriate service.
-    void routeActionRequest(ActionRequest& request);
+    void routeActionRequest(ActionRequest& request) const;
 
     /// \brief Dispatched a SubscriptionRequest between the services.
     /// \param request Incoming SubscriptionRequest.
@@ -197,12 +197,12 @@ protected:
     /// \param eventtype Upnp_EventType, identifying what kind of event came in.
     /// \param event Pointer to the event.
     ///
-    int handleUpnpClientEvent(Upnp_EventType eventType, const void* event);
+    int handleUpnpClientEvent(Upnp_EventType eventType, const void* event) const;
 
     /// \brief Creates a html file that is a redirector to the current server i
     /// instance
-    void writeBookmark(const std::string& addr);
-    void emptyBookmark();
+    void writeBookmark(const std::string& addr) const;
+    void emptyBookmark() const;
 
     std::string getPresentationUrl() const;
     int startupInterface(const std::string& iface, in_port_t inPort);

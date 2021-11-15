@@ -877,7 +877,7 @@ void Script::cdsObject2dukObject(const std::shared_ptr<CdsObject>& obj)
     }
 }
 
-std::string Script::convertToCharset(const std::string& str, charset_convert_t chr)
+std::string Script::convertToCharset(const std::string& str, charset_convert_t chr) const
 {
     switch (chr) {
     case P2I:

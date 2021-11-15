@@ -154,7 +154,7 @@ private:
         void setParentWd(int parentWd) { this->parentWd = parentWd; }
 
         const std::unique_ptr<std::vector<std::shared_ptr<Watch>>>& getWdWatches() const { return wdWatches; }
-        void addWatch(const std::shared_ptr<Watch>& w) { wdWatches->push_back(w); }
+        void addWatch(const std::shared_ptr<Watch>& w) const { wdWatches->push_back(w); }
 
     private:
         std::unique_ptr<std::vector<std::shared_ptr<Watch>>> wdWatches { std::make_unique<std::vector<std::shared_ptr<Watch>>>() };
@@ -173,12 +173,12 @@ private:
     static std::shared_ptr<WatchAutoscan> getAppropriateAutoscan(const std::shared_ptr<Wd>& wdObj, const fs::path& path);
     static std::shared_ptr<WatchAutoscan> getStartPoint(const std::shared_ptr<Wd>& wdObj);
 
-    bool removeFromWdObj(const std::shared_ptr<Wd>& wdObj, const std::shared_ptr<Watch>& toRemove);
+    bool removeFromWdObj(const std::shared_ptr<Wd>& wdObj, const std::shared_ptr<Watch>& toRemove) const;
 
     void monitorNonexisting(const fs::path& path, const std::shared_ptr<AutoscanDirectory>& adir);
     void recheckNonexistingMonitor(int curWd, const std::vector<std::string>& pathAr, const std::shared_ptr<AutoscanDirectory>& adir);
     void recheckNonexistingMonitors(int wd, const std::shared_ptr<Wd>& wdObj);
-    void removeNonexistingMonitor(int wd, const std::shared_ptr<Wd>& wdObj, const std::vector<std::string>& pathAr);
+    void removeNonexistingMonitor(int wd, const std::shared_ptr<Wd>& wdObj, const std::vector<std::string>& pathAr) const;
 
     int watchPathForMoves(const fs::path& path, int wd);
     int addMoveWatch(const fs::path& path, int removeWd, int parentWd);

@@ -371,7 +371,7 @@ void ContentDirectoryService::processActionRequest(ActionRequest& request)
     log_debug("ContentDirectoryService::processActionRequest: end");
 }
 
-void ContentDirectoryService::processSubscriptionRequest(const SubscriptionRequest& request)
+void ContentDirectoryService::processSubscriptionRequest(const SubscriptionRequest& request) const
 {
     log_debug("start");
 

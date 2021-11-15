@@ -91,14 +91,14 @@ public:
     ///
     /// This function looks at the incoming ActionRequest and passes it on
     /// to the appropriate action for processing.
-    void processActionRequest(ActionRequest& request);
+    void processActionRequest(ActionRequest& request) const;
 
     /// \brief Processes an incoming SubscriptionRequest.
     /// \param request Incoming SubscriptionRequest.
     ///
     /// Looks at the incoming SubscriptionRequest and accepts the subscription
     /// if everything is ok. Currently we do not support any updates.
-    void processSubscriptionRequest(const SubscriptionRequest& request);
+    void processSubscriptionRequest(const SubscriptionRequest& request) const;
 
     // subscriptions for this service are not supported
     // subscriptions for this service are not supported

@@ -106,7 +106,7 @@ protected:
     /// \brief check if ui update ids should be added to the response and add
     /// them in that case.
     /// must only be called after checkRequest
-    void handleUpdateIDs();
+    void handleUpdateIDs() const;
 
     /// \brief add the content manager task to the given xml element as xml elements
     /// \param task the task to add to the given xml element

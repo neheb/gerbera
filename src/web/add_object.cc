@@ -36,7 +36,7 @@
 #include "metadata/metadata_handler.h"
 #include "util/tools.h"
 
-void Web::AddObject::addContainer(int parentID)
+void Web::AddObject::addContainer(int parentID) const
 {
     auto cont = content->addContainer(parentID, param("title"), param("class"));
 
@@ -45,7 +45,7 @@ void Web::AddObject::addContainer(int parentID)
         cont->setFlags(CdsObject::makeFlag(flags));
 }
 
-std::shared_ptr<CdsItem> Web::AddObject::addItem(int parentID)
+std::shared_ptr<CdsItem> Web::AddObject::addItem(int parentID) const
 {
     auto item = std::make_shared<CdsItem>();
     item->setParentID(parentID);
@@ -74,7 +74,7 @@ std::shared_ptr<CdsItem> Web::AddObject::addItem(int parentID)
     return item;
 }
 
-std::shared_ptr<CdsItemExternalURL> Web::AddObject::addUrl(int parentID, bool addProtocol)
+std::shared_ptr<CdsItemExternalURL> Web::AddObject::addUrl(int parentID, bool addProtocol) const
 {
     auto item = std::make_shared<CdsItemExternalURL>();
     std::string protocolInfo;

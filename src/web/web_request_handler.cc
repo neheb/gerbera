@@ -197,7 +197,7 @@ std::unique_ptr<IOHandler> WebRequestHandler::open(const char* filename, enum Up
     return ioHandler;
 }
 
-void WebRequestHandler::handleUpdateIDs()
+void WebRequestHandler::handleUpdateIDs() const
 {
     // session will be filled by check_request
     std::string updates = param("updates");

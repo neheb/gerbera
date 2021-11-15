@@ -145,7 +145,7 @@ public:
     // always return something, 'Unknown' if we do not know better
     const ClientInfo* getInfo(const std::shared_ptr<GrbNet>& addr, const std::string& userAgent) const;
 
-    void addClientByDiscovery(const std::shared_ptr<GrbNet>& addr, const std::string& userAgent, const std::string& descLocation);
+    void addClientByDiscovery(const std::shared_ptr<GrbNet>& addr, const std::string& userAgent, const std::string& descLocation) const;
     const std::vector<ClientCacheEntry>& getClientList() const { return cache; }
 
 private:

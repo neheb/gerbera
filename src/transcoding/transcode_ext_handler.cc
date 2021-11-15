@@ -110,7 +110,7 @@ std::unique_ptr<IOHandler> TranscodeExternalHandler::serveContent(const std::sha
     return std::make_unique<BufferedIOHandler>(config, std::move(processIoHandler), profile->getBufferSize(), profile->getBufferChunkSize(), profile->getBufferInitialFillSize());
 }
 
-fs::path TranscodeExternalHandler::makeFifo()
+fs::path TranscodeExternalHandler::makeFifo() const
 {
     fs::path tmpDir = config->getOption(CFG_SERVER_TMPDIR);
     auto fifoPath = tmpDir / fmt::format("grb-tr-{}", generateRandomId());

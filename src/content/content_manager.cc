@@ -1160,7 +1160,7 @@ void ContentManager::updateObject(int objectID, const std::map<std::string, std:
     }
 }
 
-void ContentManager::addObject(const std::shared_ptr<CdsObject>& obj, bool firstChild)
+void ContentManager::addObject(const std::shared_ptr<CdsObject>& obj, bool firstChild) const
 {
     obj->validate();
 
@@ -1295,7 +1295,7 @@ void ContentManager::assignFanArt(const std::shared_ptr<CdsContainer>& container
     }
 }
 
-void ContentManager::updateObject(const std::shared_ptr<CdsObject>& obj, bool sendUpdates)
+void ContentManager::updateObject(const std::shared_ptr<CdsObject>& obj, bool sendUpdates) const
 {
     obj->validate();
 
@@ -1312,7 +1312,7 @@ void ContentManager::updateObject(const std::shared_ptr<CdsObject>& obj, bool se
     }
 }
 
-std::string ContentManager::mimeTypeToUpnpClass(const std::string& mimeType)
+std::string ContentManager::mimeTypeToUpnpClass(const std::string& mimeType) const
 {
     auto it = std::find_if(upnpMap.begin(), upnpMap.end(), [=](auto&& um) { return startswith(mimeType, um.mimeType); });
     if (it != upnpMap.end())
@@ -1408,7 +1408,7 @@ std::shared_ptr<CdsObject> ContentManager::createObjectFromFile(const fs::direct
     return obj;
 }
 
-void ContentManager::updateItemData(const std::shared_ptr<CdsItem>& item, const std::string& mimetype)
+void ContentManager::updateItemData(const std::shared_ptr<CdsItem>& item, const std::string& mimetype) const
 {
     if (item->getMetaData(M_DATE).empty())
         item->addMetaData(M_DATE, fmt::format("{:%FT%T%z}", fmt::localtime(item->getMTime().count())));
@@ -1639,7 +1639,7 @@ void ContentManager::invalidateAddTask(const std::shared_ptr<GenericTask>& t, co
     }
 }
 
-void ContentManager::invalidateTask(unsigned int taskID, task_owner_t taskOwner)
+void ContentManager::invalidateTask(unsigned int taskID, task_owner_t taskOwner) const
 {
     if (taskOwner == ContentManagerTask) {
         auto lock = threadRunner->lockGuard("invalidateTask");
@@ -1797,7 +1797,7 @@ void ContentManager::handlePeristentAutoscanRemove(const std::shared_ptr<Autosca
     }
 }
 
-void ContentManager::handlePersistentAutoscanRecreate(const std::shared_ptr<AutoscanDirectory>& adir)
+void ContentManager::handlePersistentAutoscanRecreate(const std::shared_ptr<AutoscanDirectory>& adir) const
 {
     int id = ensurePathExistence(adir->getLocation());
     adir->setObjectID(id);
@@ -1882,7 +1882,7 @@ void ContentManager::setAutoscanDirectory(const std::shared_ptr<AutoscanDirector
         session_manager->containerChangedUI(copy->getObjectID());
 }
 
-void ContentManager::triggerPlayHook(const std::string& group, const std::shared_ptr<CdsObject>& obj)
+void ContentManager::triggerPlayHook(const std::string& group, const std::shared_ptr<CdsObject>& obj) const
 {
     log_debug("start");
 

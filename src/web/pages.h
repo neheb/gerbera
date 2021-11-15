@@ -136,9 +136,9 @@ public:
     void process() override;
 
 protected:
-    void addContainer(int parentID);
-    std::shared_ptr<CdsItem> addItem(int parentID);
-    std::shared_ptr<CdsItemExternalURL> addUrl(int parentID, bool addProtocol);
+    void addContainer(int parentID) const;
+    std::shared_ptr<CdsItem> addItem(int parentID) const;
+    std::shared_ptr<CdsItemExternalURL> addUrl(int parentID, bool addProtocol) const;
 };
 
 /// \brief autoscan add and remove

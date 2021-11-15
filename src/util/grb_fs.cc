@@ -199,7 +199,7 @@ std::optional<std::vector<std::byte>> GrbFile::readBinaryFile()
     return result;
 }
 
-void GrbFile::writeBinaryFile(const std::byte* data, std::size_t size)
+void GrbFile::writeBinaryFile(const std::byte* data, std::size_t size) const
 {
     static_assert(sizeof(std::byte) == sizeof(std::ifstream::char_type));
 
@@ -215,7 +215,7 @@ void GrbFile::writeBinaryFile(const std::byte* data, std::size_t size)
         throw_std_runtime_error("Failed to write to file {}", path.c_str());
 }
 
-void GrbFile::setPermissions()
+void GrbFile::setPermissions() const
 {
     auto err = chmod(path.c_str(), S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
     if (err != 0) {

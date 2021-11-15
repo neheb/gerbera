@@ -83,7 +83,7 @@ protected:
 
     static std::size_t extractIndex(const std::string& item);
 
-    void setOption(const std::shared_ptr<Config>& config)
+    void setOption(const std::shared_ptr<Config>& config) const
     {
         config->addOption(option, optionValue);
     }
@@ -660,7 +660,7 @@ protected:
     /// \brief Creates an array of AutoscanDirectory objects from a XML nodeset.
     /// \param element starting element of the nodeset.
     /// \param scanmode add only directories with the specified scanmode to the array
-    bool createOptionFromNode(const pugi::xml_node& element, std::vector<AutoscanDirectory>& result);
+    bool createOptionFromNode(const pugi::xml_node& element, std::vector<AutoscanDirectory>& result) const;
 
     bool updateItem(std::size_t i, const std::string& optItem, const std::shared_ptr<Config>& config, AutoscanDirectory& entry, std::string& optValue, const std::string& status = "") const;
 

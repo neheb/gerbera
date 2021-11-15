@@ -51,9 +51,9 @@ public:
     /// \return an empty optional if file can't be open and throws if read fails.
     std::optional<std::vector<std::byte>> readBinaryFile();
     /// \brief Writes data into a file. Throws if file can't be open or if write fails.
-    void writeBinaryFile(const std::byte* data, std::size_t size);
+    void writeBinaryFile(const std::byte* data, std::size_t size) const;
     /// \brief Ensure that a file has permissions 644 (-rw-r--r--)
-    void setPermissions();
+    void setPermissions() const;
     bool isReadable(bool warn = false);
     bool isWritable();
     const fs::path& getPath() { return path; }

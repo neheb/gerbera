@@ -139,7 +139,7 @@ void ConnectionManagerService::processSubscriptionRequest(const SubscriptionRequ
 #endif
 }
 
-void ConnectionManagerService::sendSubscriptionUpdate(const std::string& sourceProtocolCsv)
+void ConnectionManagerService::sendSubscriptionUpdate(const std::string& sourceProtocolCsv) const
 {
     auto propset = xmlBuilder->createEventPropertySet();
     auto property = propset->document_element().first_child();

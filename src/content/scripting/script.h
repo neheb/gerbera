@@ -81,7 +81,7 @@ public:
     std::shared_ptr<CdsObject> dukObject2cdsObject(const std::shared_ptr<CdsObject>& pcd);
     void cdsObject2dukObject(const std::shared_ptr<CdsObject>& obj);
 
-    std::string convertToCharset(const std::string& str, charset_convert_t chr);
+    std::string convertToCharset(const std::string& str, charset_convert_t chr) const;
     virtual std::pair<std::shared_ptr<CdsObject>, int> createObject2cdsObject(const std::shared_ptr<CdsObject>& origObject, const std::string& rootPath) = 0;
     virtual bool setRefId(const std::shared_ptr<CdsObject>& cdsObj, const std::shared_ptr<CdsObject>& origObject, int pcdId) = 0;
     static Script* getContextScript(duk_context* ctx);

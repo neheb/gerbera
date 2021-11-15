@@ -279,7 +279,7 @@ std::string Server::getPresentationUrl() const
     return presentationURL;
 }
 
-void Server::writeBookmark(const std::string& addr)
+void Server::writeBookmark(const std::string& addr) const
 {
     const std::string data = config->getBoolOption(CFG_SERVER_UI_ENABLED)
         ? httpRedirectTo(addr)
@@ -290,7 +290,7 @@ void Server::writeBookmark(const std::string& addr)
     GrbFile(std::move(path)).writeTextFile(data);
 }
 
-void Server::emptyBookmark()
+void Server::emptyBookmark() const
 {
     const std::string_view data = "<html><body><h1>Gerbera Media Server is not running.</h1><p>Please start it and try again.</p></body></html>";
 
@@ -354,7 +354,7 @@ void Server::shutdown()
     if (database->threadCleanupRequired()) {
         try {
             database->threadCleanup();
-        } catch (const std::runtime_error& ex) {
+        } catch (const std::runtime_error&) {
         }
     }
     database->shutdown();
@@ -419,7 +419,7 @@ int Server::handleUpnpRootDeviceEvent(Upnp_EventType eventType, const void* even
     return ret;
 }
 
-int Server::handleUpnpClientEvent(Upnp_EventType eventType, const void* event)
+int Server::handleUpnpClientEvent(Upnp_EventType eventType, const void* event) const
 {
     // check parameters
     if (!event) {
@@ -445,7 +445,7 @@ int Server::handleUpnpClientEvent(Upnp_EventType eventType, const void* event)
     return 0;
 }
 
-void Server::routeActionRequest(ActionRequest& request)
+void Server::routeActionRequest(ActionRequest& request) const
 {
     log_debug("start");
 
@@ -501,7 +501,7 @@ void Server::routeSubscriptionRequest(const SubscriptionRequest& request) const
 }
 
 // Temp
-void Server::sendCDSSubscriptionUpdate(const std::string& updateString)
+void Server::sendCDSSubscriptionUpdate(const std::string& updateString) const
 {
     cds->sendSubscriptionUpdate(updateString);
 }
@@ -569,7 +569,7 @@ int Server::registerVirtualDirCallbacks()
             auto ioHandler = reqHandler->open(startswith(link, fmt::format("/{}/{}", SERVER_VIRTUAL_DIR, CONTENT_UI_HANDLER)) ? filename : link.c_str(), mode);
             ioHandler->open(mode);
             return ioHandler.release();
-        } catch (const ServerShutdownException& se) {
+        } catch (const ServerShutdownException&) {
             return nullptr;
         } catch (const SubtitlesNotFoundException& sex) {
             log_info("SubtitlesNotFoundException: {}", sex.what());

@@ -60,7 +60,7 @@ public:
 
     // Look for subtitle file and returns its URL in CaptionInfo.sec response header.
     // To be more compliant with original Samsung server we should check for getCaptionInfo.sec: 1 request header.
-    void addCaptionInfo(const std::shared_ptr<CdsItem>& item, Headers& headers);
+    void addCaptionInfo(const std::shared_ptr<CdsItem>& item, Headers& headers) const;
 
     /** \brief Add Samsung specific bookmark information to the request's result.
      *
