@@ -137,8 +137,6 @@ void MatroskaHandler::parseMKV(const std::shared_ptr<CdsItem>& item, std::unique
 
             delete (elL1->SkipData(ebmlStream, EBML_CONTEXT(elL1)));
             delete elL1;
-            if (activeFlag == 0) // terminate search
-                break;
         } // while elementLevel1
 
         delete (elL0->SkipData(ebmlStream, LIBMATROSKA_NAMESPACE::KaxSegment_Context));
