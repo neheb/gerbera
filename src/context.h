@@ -23,8 +23,7 @@
 
 /// \file context.h
 
-#ifndef __CONTEXT_H__
-#define __CONTEXT_H__
+#pragma once
 
 #include <memory>
 
@@ -79,5 +78,3 @@ private:
     std::shared_ptr<Database> database;
     std::shared_ptr<Web::SessionManager> session_manager;
 };
-
-#endif // __CONTEXT_H__

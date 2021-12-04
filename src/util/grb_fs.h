@@ -21,8 +21,7 @@ Gerbera - https://gerbera.io/
 /// \file grb_fs.h
 /// \brief std::filesystem and fs namespace header
 
-#ifndef __GRB_FS_H__
-#define __GRB_FS_H__
+#pragma once
 
 #include <filesystem>
 #include <optional>
@@ -92,5 +91,3 @@ std::string getAVIFourCC(const fs::path& aviFilename);
 ///
 /// "/some/path/to/file.txt" -> "to"
 fs::path getLastPath(const fs::path& path);
-
-#endif // __GRB_FS_H__

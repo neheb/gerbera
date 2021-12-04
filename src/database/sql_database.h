@@ -29,8 +29,7 @@
 
 /// \file sql_database.h
 
-#ifndef __SQL_STORAGE_H__
-#define __SQL_STORAGE_H__
+#pragma once
 
 #include <array>
 #include <mutex>
@@ -342,5 +341,3 @@ protected:
     bool use_transaction;
     bool inTransaction {};
 };
-
-#endif // __SQL_STORAGE_H__

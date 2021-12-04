@@ -23,8 +23,7 @@
 
 /// \file mime.h
 
-#ifndef __MIME_H__
-#define __MIME_H__
+#pragma once
 
 #include <map>
 
@@ -69,5 +68,3 @@ private:
     std::string fileToMimeType(const fs::path& path, const std::string& defval = "");
 #endif
 };
-
-#endif // __MIME_H__

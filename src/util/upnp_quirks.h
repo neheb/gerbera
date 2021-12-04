@@ -23,8 +23,7 @@
 
 /// \file upnp_quirks.h
 
-#ifndef __UPNP_QUIRKS_H__
-#define __UPNP_QUIRKS_H__
+#pragma once
 
 #include "upnp_xml.h"
 #include <memory>
@@ -165,5 +164,3 @@ private:
     const UpnpXMLBuilder& xmlBuilder;
     const ClientInfo* pClientInfo;
 };
-
-#endif // __UPNP_QUIRKS_H__

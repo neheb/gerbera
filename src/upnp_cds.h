@@ -29,13 +29,12 @@
 
 /// \file upnp_cds.h
 /// \brief Definition of the ContentDirectoryService class.
-#ifndef __UPNP_CDS_H__
-#define __UPNP_CDS_H__
+
+#pragma once
 
 #include <memory>
 
 #include "action_request.h"
-#include "common.h"
 #include "context.h"
 #include "subscription_request.h"
 #include "upnp_xml.h"
@@ -152,5 +151,3 @@ public:
     /// and of course the minimum required - systemUpdateID.
     void sendSubscriptionUpdate(const std::string& containerUpdateIDsCsv);
 };
-
-#endif // __UPNP_CDS_H__

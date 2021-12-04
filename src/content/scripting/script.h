@@ -29,8 +29,7 @@
 
 /// \file script.h
 
-#ifndef __SCRIPTING_SCRIPT_H__
-#define __SCRIPTING_SCRIPT_H__
+#pragma once
 
 #include <duktape.h>
 #include <mutex>
@@ -128,5 +127,3 @@ private:
     std::unique_ptr<StringConverter> _m2i;
     std::unique_ptr<StringConverter> _i2i;
 };
-
-#endif // __SCRIPTING_SCRIPT_H__

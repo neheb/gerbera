@@ -35,9 +35,9 @@
 /// \brief Definition of the FfmpegHandler class - getting metadata via
 /// ffmpeg library calls.
 
+#pragma once
+
 #ifdef HAVE_FFMPEG
-#ifndef __FFMPEG_HANDLER_H__
-#define __FFMPEG_HANDLER_H__
 
 #include <optional>
 
@@ -63,5 +63,4 @@ private:
     static void addFfmpegResourceFields(const std::shared_ptr<CdsItem>& item, const AVFormatContext* pFormatCtx);
 };
 
-#endif //__FFMPEG_HANDLER_H__
 #endif // HAVE_FFMPEG

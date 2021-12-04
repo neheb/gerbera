@@ -29,8 +29,8 @@
 
 /// \file transcode_handler.h
 /// \brief Definition of the TranscodeRequest class.
-#ifndef __TRANSCODE_HANDLER_H__
-#define __TRANSCODE_HANDLER_H__
+
+#pragma once
 
 #include <memory>
 
@@ -60,5 +60,3 @@ protected:
     std::shared_ptr<Config> config;
     std::shared_ptr<ContentManager> content;
 };
-
-#endif // __TRANSCODE_HANDLER_H__

@@ -29,8 +29,8 @@
 
 /// \file upnp_xml.h
 /// \brief Provides various XML related functions, basically a toolkit.
-#ifndef __UPNP_XML_H__
-#define __UPNP_XML_H__
+
+#pragma once
 
 #include <deque>
 #include <memory>
@@ -38,7 +38,6 @@
 #include <vector>
 
 #include "cds_objects.h"
-#include "common.h"
 #include "config/config.h"
 #include "context.h"
 #include "util/upnp_quirks.h"
@@ -130,4 +129,3 @@ protected:
     std::string buildProtocolInfo(CdsResource& res, const std::map<std::string, std::string>& mimeMappings) const;
     std::string getMimeType(const CdsResource& resource, const std::map<std::string, std::string>& mimeMappings) const;
 };
-#endif // __UPNP_XML_H__

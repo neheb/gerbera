@@ -30,8 +30,7 @@
 /// \file transcoding.h
 /// \brief Definitions of the Transcoding classes.
 
-#ifndef __TRANSCODING_H__
-#define __TRANSCODING_H__
+#pragma once
 
 #include <map>
 #include <vector>
@@ -261,5 +260,3 @@ public:
 protected:
     std::vector<std::shared_ptr<TranscodingFilter>> filterList;
 };
-
-#endif //__TRANSCODING_H__

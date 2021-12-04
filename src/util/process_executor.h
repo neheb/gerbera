@@ -29,8 +29,7 @@
 
 /// \file process_executor.h
 
-#ifndef __PROCESS_EXECUTOR_H__
-#define __PROCESS_EXECUTOR_H__
+#pragma once
 
 #include <map>
 #include <memory>
@@ -58,5 +57,3 @@ protected:
     pid_t pid;
     int exitStatus {};
 };
-
-#endif // __PROCESS_EXECUTOR_H__

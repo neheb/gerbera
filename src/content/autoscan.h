@@ -30,8 +30,7 @@
 /// \file autoscan.h
 ///\brief Definitions of the Autoscan classes.
 
-#ifndef __AUTOSCAN_H__
-#define __AUTOSCAN_H__
+#pragma once
 
 #include <mutex>
 
@@ -202,5 +201,3 @@ protected:
 
     constexpr const static int INVALID_SCAN_ID = -1;
 };
-
-#endif

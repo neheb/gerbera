@@ -29,8 +29,7 @@
 
 /// \file logger.h
 
-#ifndef __LOGGER_H__
-#define __LOGGER_H__
+#pragma once
 
 #include <fmt/format.h>
 #include <spdlog/spdlog.h>
@@ -64,5 +63,3 @@ struct fmt::formatter<T, std::enable_if_t<std::is_enum_v<T>, char>>
     }
 };
 #endif
-
-#endif // __LOGGER_H__

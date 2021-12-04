@@ -28,8 +28,8 @@
 */
 
 /// \file tools.h
-#ifndef __TOOLS_H__
-#define __TOOLS_H__
+
+#pragma once
 
 #include <chrono>
 #include <map>
@@ -258,5 +258,3 @@ std::vector<std::string> populateCommandLine(const std::string& line,
 /// \brief Calculates a position where it is safe to cut an UTF-8 string.
 /// \return Caclulated position or -1 in case of an error.
 ssize_t getValidUTF8CutPosition(std::string_view str, ssize_t cutpos);
-
-#endif // __TOOLS_H__

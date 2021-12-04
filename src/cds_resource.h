@@ -29,8 +29,7 @@
 
 /// \file cds_resource.h
 
-#ifndef __CDS_RESOURCE_H__
-#define __CDS_RESOURCE_H__
+#pragma once
 
 #include <map>
 #include <memory>
@@ -209,5 +208,3 @@ protected:
 };
 
 using ResourceAttributeIterator = EnumIterator<CdsResource::Attribute, CdsResource::Attribute::SIZE, CdsResource::Attribute::MAX>;
-
-#endif // __CDS_RESOURCE_H__

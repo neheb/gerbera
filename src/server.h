@@ -29,8 +29,8 @@
 
 /// \file server.h
 ///\brief Definitions of the server class.
-#ifndef __SERVER_H__
-#define __SERVER_H__
+
+#pragma once
 
 #include "action_request.h"
 #include "context.h"
@@ -215,5 +215,3 @@ protected:
     /// contains the port on which the server is actually running.
     std::string getVirtualUrl() const;
 };
-
-#endif // __SERVER_H__

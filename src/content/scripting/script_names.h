@@ -23,8 +23,7 @@
 
 /// \file script_names.h
 
-#ifndef __SCRIPTING_SCRIPT_NAMES_H__
-#define __SCRIPTING_SCRIPT_NAMES_H__
+#pragma once
 
 #include "cds_objects.h"
 #include "metadata/metadata_handler.h"
@@ -110,5 +109,3 @@ const static auto upnp_classes = std::map<const std::string_view, const std::str
     { UPNP_CLASS_PHOTO_ALBUM, "UPNP_CLASS_CONTAINER_ITEM_IMAGE" },
     { UPNP_CLASS_PLAYLIST_CONTAINER, "UPNP_CLASS_PLAYLIST_CONTAINER" },
 };
-
-#endif

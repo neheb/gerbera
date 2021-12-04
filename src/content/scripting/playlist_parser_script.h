@@ -29,8 +29,7 @@
 
 /// \file playlist_parser_script.h
 
-#ifndef __SCRIPTING_PLAYLIST_PARSER_SCRIPT_H__
-#define __SCRIPTING_PLAYLIST_PARSER_SCRIPT_H__
+#pragma once
 
 #include <memory>
 #include <pugixml.hpp>
@@ -91,5 +90,3 @@ protected:
     std::shared_ptr<CdsObject> createObject(const std::shared_ptr<CdsObject>& pcd) override;
     void handleObject2cdsItem(duk_context* ctx, const std::shared_ptr<CdsObject>& pcd, const std::shared_ptr<CdsItem>& item) override;
 };
-
-#endif // __SCRIPTING_PLAYLIST_PARSER_SCRIPT_H__

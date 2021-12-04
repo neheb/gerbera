@@ -29,8 +29,7 @@
 
 /// \file import_script.h
 
-#ifndef __SCRIPTING_IMPORT_SCRIPT_H__
-#define __SCRIPTING_IMPORT_SCRIPT_H__
+#pragma once
 
 #include <memory>
 
@@ -52,5 +51,3 @@ public:
         return { dukObject2cdsObject(origObject), INVALID_OBJECT_ID };
     }
 };
-
-#endif // __SCRIPTING_IMPORT_SCRIPT_H__

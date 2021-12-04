@@ -29,8 +29,8 @@
 
 /// \file file_request_handler.h
 /// \brief Definition of the FileRequestHandler class.
-#ifndef __FILE_REQUEST_HANDLER_H__
-#define __FILE_REQUEST_HANDLER_H__
+
+#pragma once
 
 #include "common.h"
 #include "request_handler.h"
@@ -53,5 +53,3 @@ private:
     static std::size_t parseResourceInfo(std::map<std::string, std::string>& params);
     std::unique_ptr<MetadataHandler> getResourceMetadataHandler(const std::shared_ptr<CdsObject>& obj, const std::shared_ptr<CdsResource>& resource) const;
 };
-
-#endif // __FILE_REQUEST_HANDLER_H__

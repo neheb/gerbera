@@ -31,8 +31,7 @@
 
 /// \file xml_to_json.h
 
-#ifndef __UTIL_XML_TO_JSON_H__
-#define __UTIL_XML_TO_JSON_H__
+#pragma once
 
 #include <map>
 
@@ -53,5 +52,3 @@ private:
     std::map<pugi::xml_node, std::string> asArray;
     std::map<std::string, std::string> asType;
 };
-
-#endif // __UTIL_XML_TO_JSON_H__

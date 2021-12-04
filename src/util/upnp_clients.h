@@ -25,8 +25,7 @@
 /// \brief Definition of the Clients class.
 /// inspired by https://sourceforge.net/p/minidlna/git/ci/master/tree/clients.h
 
-#ifndef __UPNP_CLIENTS_H__
-#define __UPNP_CLIENTS_H__
+#pragma once
 
 #include <chrono>
 #include <memory>
@@ -165,5 +164,3 @@ private:
     std::shared_ptr<Database> database;
     std::chrono::hours cacheThreshold;
 };
-
-#endif // __UPNP_CLIENTS_H__
