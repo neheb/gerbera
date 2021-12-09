@@ -603,14 +603,14 @@ std::string DefaultSQLEmitter::emit(const ASTCompareOperator* node, const std::s
 
     if ((operatr == ">" || operatr == ">=") && startswith(value, "@last")) {
         auto dateVal = currentTime() - std::chrono::hours(24 * stoiString(value.substr(5)));
-        return fmt::format(logicOperator.at("newer"), "", fmt::format("{} {}", prpUpper, operatr), fmt::format("{} {}", prpLower, operatr), dateVal.count());
+        return fmt::format(fmt::runtime(logicOperator.at("newer")), "", fmt::format("{} {}", prpUpper, operatr), fmt::format("{} {}", prpLower, operatr), dateVal.count());
     }
 
     if (operatr != "=")
         throw_std_runtime_error("Operator '{}' not yet supported", operatr);
 
     auto [clsUpper, clcLower] = getPropertyStatement(UPNP_SEARCH_CLASS);
-    return fmt::format(logicOperator.at((property[0] == '@') ? "@compare" : "compare"), clsUpper,
+    return fmt::format(fmt::runtime(logicOperator.at((property[0] == '@') ? "@compare" : "compare")), clsUpper,
         fmt::format("{}{}", prpUpper, operatr), fmt::format("{}{}", prpLower, operatr), value);
 }
 
@@ -622,7 +622,7 @@ std::string DefaultSQLEmitter::emit(const ASTStringOperator* node, const std::st
     }
     auto [prpUpper, prpLower] = getPropertyStatement(property);
     auto [clsUpper, clsLower] = getPropertyStatement(UPNP_SEARCH_CLASS);
-    return fmt::format(logicOperator.at(stringOperator), clsUpper, prpUpper, prpLower, value);
+    return fmt::format(fmt::runtime(logicOperator.at(stringOperator)), clsUpper, prpUpper, prpLower, value);
 }
 
 std::string DefaultSQLEmitter::emit(const ASTExistsOperator* node, const std::string& property, const std::string& value) const
@@ -637,7 +637,7 @@ std::string DefaultSQLEmitter::emit(const ASTExistsOperator* node, const std::st
     }
     auto [prpUpper, prpLower] = getPropertyStatement(property);
     auto [clsUpper, clsLower] = getPropertyStatement(UPNP_SEARCH_CLASS);
-    return fmt::format(logicOperator.at((property[0] == '@') ? "@exists" : "exists"), clsUpper, prpUpper, prpLower, exists);
+    return fmt::format(fmt::runtime(logicOperator.at((property[0] == '@') ? "@exists" : "exists")), clsUpper, prpUpper, prpLower, exists);
 }
 
 std::string DefaultSQLEmitter::emit(const ASTAndOperator* node, const std::string& lhs,
