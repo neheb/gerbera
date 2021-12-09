@@ -494,7 +494,7 @@ void SQLDatabase::upgradeDatabase(unsigned int dbVersion, const std::array<unsig
                 if (actionResult && !upgradeCmd.empty())
                     _exec(upgradeCmd);
             }
-            _exec(fmt::format(updateVersionCommand, version + 1, version));
+            _exec(fmt::format(fmt::runtime(updateVersionCommand), version + 1, version));
             dbVersion = version + 1;
             log_info("Database upgrade to version {} successful.", dbVersion);
         }
@@ -2905,7 +2905,7 @@ void SQLDatabase::prepareResourceTable(std::string_view addColumnCmd)
     for (auto&& resAttrId : ResourceAttributeIterator()) {
         auto&& resAttrib = CdsResource::getAttributeName(resAttrId);
         if (std::find(resourceAttributes.begin(), resourceAttributes.end(), resAttrib) == resourceAttributes.end()) {
-            _exec(fmt::format(addColumnCmd, resAttrib));
+            _exec(fmt::format(fmt::runtime(addColumnCmd), resAttrib));
             log_info("'{}': Adding column '{}'", RESOURCE_TABLE, resAttrib);
             resourceAttributes.push_back(resAttrib);
             addedAttribute = true;
