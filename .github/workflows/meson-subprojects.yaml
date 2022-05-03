@@ -1,0 +1,77 @@
+name: meson-subprojects
+
+on:
+  pull_request:
+    branches:
+      - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    container:
+      image: alpine:3.16
+    steps:
+      - name: Install Dependencies
+        run: |
+          apk add --no-cache \
+            clang \
+            g++ \
+            gcc \
+            git \
+            meson \
+            ninja \
+            pkgconf \
+            util-linux-dev
+
+      - uses: actions/checkout@v1
+
+#ffmpegthumbnailer requires ffmpeg 4. Disabled for that reason.
+#lastfm requires libcurl.
+#npupnp requires libmicrohttpd.
+#libebml is broken with GCC11
+#all others disabled because of missing wraps.
+      - name: Meson Subprojects Only GCC
+        run: |
+          env CC=gcc CXX=g++ meson setup --auto-features=enabled build \
+            -Davcodec=disabled \
+            -Dcurl=disabled \
+            -Dexiv2=disabled \
+            -Dffmpegthumbnailer=disabled \
+            -Djs=disabled \
+            -Dlastfm=disabled \
+            -Dmagic=disabled \
+            -Dmatroska=disabled \
+            -Dmysql=disabled \
+            -Dnpupnp=disabled \
+            -Dsystemd=disabled \
+            -Dwavpack=disabled
+          meson compile -v -C build
+
+      - name: Meson Subprojects Only GCC Test
+        run: |
+          meson test -v -C build
+
+      - name: Meson Subprojects Only Clang
+        run: |
+          env CC=clang CXX=clang++ meson setup --auto-features=enabled build2 \
+            -Davcodec=disabled \
+            -Dcurl=disabled \
+            -Dexiv2=disabled \
+            -Dffmpegthumbnailer=disabled \
+            -Djs=disabled \
+            -Dlastfm=disabled \
+            -Dmagic=disabled \
+            -Dmatroska=disabled \
+            -Dmysql=disabled \
+            -Dnpupnp=disabled \
+            -Dsystemd=disabled \
+            -Dwavpack=disabled
+          meson compile -v -C build2
+
+      - name: Meson Subprojects Only Clang Test
+        run: |
+          meson test -v -C build2
