@@ -31,6 +31,7 @@ jobs:
             libmatroska \
             libupnp \
             lzlib \
+            ninja \
             ossp-uuid \
             pugixml \
             taglib
@@ -40,9 +41,7 @@ jobs:
 
       - name: Build
         run: |
-          mkdir build
-          cd build
-          cmake .. \
+          cmake -S . -G Ninja -B build \
             -DCMAKE_VERBOSE_MAKEFILE=ON \
             -DCMAKE_FIND_FRAMEWORK=LAST \
             -DCMAKE_CXX_FLAGS=\"-stdlib=libc++\"" \
@@ -57,7 +56,7 @@ jobs:
             -DWITH_FFMPEGTHUMBNAILER=1 \
             -DWITH_MYSQL=0 \
             -DWITH_TESTS=1
-          make
+          cmake --build build
 
       - name: Test
         run: |

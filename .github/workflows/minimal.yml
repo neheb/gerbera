@@ -27,7 +27,7 @@ jobs:
             git \
             gtest-dev \
             libupnp-dev \
-            make \
+            ninja \
             pkgconf \
             pugixml-dev \
             spdlog-dev \
@@ -39,7 +39,7 @@ jobs:
 
       - name: Build
         run: |
-          cmake -S . -B build \
+          cmake -S . -G Ninja -B build \
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -DWITH_AVCODEC=NO \
             -DWITH_CURL=NO \
@@ -55,7 +55,7 @@ jobs:
             -DWITH_SYSTEMD=NO \
             -DWITH_TAGLIB=NO \
             -DWITH_TESTS=YES
-          cmake --build build -j$(nproc)
+          cmake --build build
 
       - name: Test
         run: |
