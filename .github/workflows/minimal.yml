@@ -27,6 +27,7 @@ jobs:
             git \
             gtest-dev \
             libupnp-dev \
+            meson \
             ninja \
             pkgconf \
             pugixml-dev \
@@ -61,3 +62,12 @@ jobs:
         run: |
           cd build
           ctest --output-on-failure
+
+      - name: Meson Build
+        run: |
+          meson setup build
+          meson compile -v -C build
+
+      - name: Meson Test
+        run: |
+          meson test -v -C build
