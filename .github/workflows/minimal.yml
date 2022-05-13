@@ -55,7 +55,7 @@ jobs:
             -DWITH_SYSTEMD=NO \
             -DWITH_TAGLIB=NO \
             -DWITH_TESTS=YES
-          cmake --build build
+          cmake --build build --verbose
 
       - name: Test
         run: |
