@@ -193,7 +193,6 @@ libgerbera_deps = [
   avfilter_dep,
   avformat_dep,
   avutil_dep,
-  cxxopts_dep,
   curl_dep,
   duktape_dep,
   ebml_dep,
@@ -371,7 +370,7 @@ gerbera = executable(
   'src/main.cc',
   include_directories : libgerbera_incdir,
   link_with : libgerbera,
-  dependencies : libgerbera_deps,
+  dependencies : [ libgerbera_deps, cxxopts_dep ],
   install : true,
 )
 

@@ -36,6 +36,7 @@
 
 #include <csignal>
 #include <cstdlib>
+#include <cxxopts.hpp>
 #include <filesystem>
 #include <fmt/core.h>
 #include <mutex>
@@ -65,7 +66,6 @@
 #include "config/config_generator.h"
 #include "config/config_manager.h"
 #include "content/content_manager.h"
-#include "contrib/cxxopts.hpp"
 #include "server.h"
 
 static constexpr auto gitBranch = std::string_view(GIT_BRANCH);
