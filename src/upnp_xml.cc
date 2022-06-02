@@ -621,8 +621,7 @@ void UpnpXMLBuilder::addResources(const std::shared_ptr<CdsItem>& item, pugi::xm
 
             tRes->mergeAttributes(tp->getAttributes());
 
-            if (!tp->dlnaProfile().empty())
-                tRes->addParameter("dlnaProfile", tp->dlnaProfile());
+            tRes->addParameter("dlnaProfile", tp->dlnaProfile());
 
             if (tp->hideOriginalResource())
                 hideOriginalResource = true;

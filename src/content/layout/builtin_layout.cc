@@ -51,74 +51,6 @@
 
 #endif //ONLINE_SERVICES
 
-BuiltinLayout::BuiltinLayout(std::shared_ptr<ContentManager> content)
-    : Layout(std::move(content))
-    , config(this->content->getContext()->getConfig())
-    , genreMap(this->config->getDictionaryOption(CFG_IMPORT_SCRIPTING_IMPORT_GENRE_MAP))
-{
-    container["Video"] = std::make_shared<CdsContainer>("Video");
-    container["All Video"] = std::make_shared<CdsContainer>("All Video");
-    chain["/Video/All Video"] = this->content->addContainerTree({ container["Video"], container["All Video"] });
-    container["Video/Year"] = std::make_shared<CdsContainer>("Year");
-    chain["/Video/Year"] = this->content->addContainerTree({ container["Video"], container["Video/Year"] });
-    container["Video/Date"] = std::make_shared<CdsContainer>("Date");
-    chain["/Video/Date"] = this->content->addContainerTree({ container["Video"], container["Video/Date"] });
-    container["Video/Directories"] = std::make_shared<CdsContainer>("Directories");
-    chain["/Video/Directories"] = this->content->addContainerTree({ container["Video"], container["Video/Directories"] });
-
-    container["Photos"] = std::make_shared<CdsContainer>("Photos");
-    container["All Photos"] = std::make_shared<CdsContainer>("All Photos");
-    chain["/Photos/All Photos"] = this->content->addContainerTree({ container["Photos"], container["All Photos"] });
-    container["Photos/Year"] = std::make_shared<CdsContainer>("Year");
-    chain["/Photos/Year"] = this->content->addContainerTree({ container["Photos"], container["Photos/Year"] });
-    container["Photos/Date"] = std::make_shared<CdsContainer>("Date");
-    chain["/Photos/Date"] = this->content->addContainerTree({ container["Photos"], container["Photos/Date"] });
-    container["Photos/Directories"] = std::make_shared<CdsContainer>("Directories");
-    chain["/Photos/Directories"] = this->content->addContainerTree({ container["Photos"], container["Photos/Directories"] });
-
-    container["Audio"] = std::make_shared<CdsContainer>("Audio");
-    container["All Audio"] = std::make_shared<CdsContainer>("All Audio");
-    container["All Songs"] = std::make_shared<CdsContainer>("All Songs");
-    chain["/Audio/All Audio"] = this->content->addContainerTree({ container["Audio"], container["All Audio"] });
-    container["All - full name"] = std::make_shared<CdsContainer>("All - full name");
-    chain["/Audio/All - full name"] = this->content->addContainerTree({ container["Audio"], container["All - full name"] });
-    container["Albums"] = std::make_shared<CdsContainer>("Albums");
-    chain["/Audio/Albums"] = this->content->addContainerTree({ container["Audio"], container["Albums"] });
-    container["Artists"] = std::make_shared<CdsContainer>("Artists");
-    chain["/Audio/Artists"] = this->content->addContainerTree(std::vector<std::shared_ptr<CdsObject>> { container["Audio"], container["Artists"] });
-    container["Genres"] = std::make_shared<CdsContainer>("Genres");
-    chain["/Audio/Genres"] = this->content->addContainerTree({ container["Audio"], container["Genres"] });
-    container["Composers"] = std::make_shared<CdsContainer>("Composers");
-    chain["/Audio/Composers"] = this->content->addContainerTree({ container["Audio"], container["Composers"] });
-    container["Year"] = std::make_shared<CdsContainer>("Year");
-    chain["/Audio/Year"] = this->content->addContainerTree({ container["Audio"], container["Year"] });
-    container["Audio/Directories"] = std::make_shared<CdsContainer>("Directories");
-    chain["/Audio/Directories"] = this->content->addContainerTree({ container["Audio"], container["Audio/Directories"] });
-
-#ifdef ONLINE_SERVICES
-    container["Online Services"] = std::make_shared<CdsContainer>("Online Services");
-#ifdef SOPCAST
-    container["SopCast"] = std::make_shared<CdsContainer>("SopCast");
-    container["SopCast/All Channels"] = std::make_shared<CdsContainer>("All Channels");
-    container["SopCast/Groups"] = std::make_shared<CdsContainer>("Groups");
-    chain["/Online Services/SopCast/All Channels"] = this->content->addContainerTree({ container["Online Services"], container["SopCast"], container["SopCast/All Channels"] });
-    chain["/Online Services/SopCast/Groups"] = this->content->addContainerTree({ container["Online Services"], container["SopCast"], container["SopCast/Groups"] });
-#endif
-
-#ifdef ATRAILERS
-    container["Apple"] = std::make_shared<CdsContainer>("Apple Trailers");
-    container["Apple/All Trailers"] = std::make_shared<CdsContainer>("All Trailers");
-    container["Apple/Genres"] = std::make_shared<CdsContainer>("Genres");
-    container["Apple/Release Date"] = std::make_shared<CdsContainer>("Release Date");
-    container["Apple/Post Date"] = std::make_shared<CdsContainer>("Post Date");
-    chain["/Online Services/Apple/All Trailers"] = this->content->addContainerTree({ container["Online Services"], container["Apple"], container["Apple/All Trailers"] });
-    chain["/Online Services/Apple/Genres"] = this->content->addContainerTree({ container["Online Services"], container["Apple"], container["Apple/Genres"] });
-    chain["/Online Services/Apple/Release Date"] = this->content->addContainerTree({ container["Online Services"], container["Apple"], container["Apple/Release Date"] });
-    chain["/Online Services/Apple/Post Date"] = this->content->addContainerTree({ container["Online Services"], container["Apple"], container["Apple/Post Date"] });
-#endif
-#endif
-}
-
 void BuiltinLayout::add(const std::shared_ptr<CdsObject>& obj, const std::pair<int, bool>& parentID, bool useRef)
 {
     obj->setParentID(parentID.first);
@@ -129,10 +61,15 @@ void BuiltinLayout::add(const std::shared_ptr<CdsObject>& obj, const std::pair<i
     content->addObject(obj, parentID.second);
 }
 
+std::string BuiltinLayout::esc(std::string str)
+{
+    return escape(std::move(str), VIRTUAL_CONTAINER_ESCAPE, VIRTUAL_CONTAINER_SEPARATOR);
+}
+
 void BuiltinLayout::addVideo(const std::shared_ptr<CdsObject>& obj, const fs::path& rootpath)
 {
     auto f2i = StringConverter::f2i(config);
-    auto id = chain["/Video/All Video"];
+    auto id = content->addContainerChain("/Video/All Video");
 
     if (obj->getID() != INVALID_OBJECT_ID) {
         obj->setRefID(obj->getID());
@@ -159,13 +96,13 @@ void BuiltinLayout::addVideo(const std::shared_ptr<CdsObject>& obj, const fs::pa
 
         std::string chain;
         if ((y > 0) && (m > 0)) {
-            id = content->addContainerTree(std::vector<std::shared_ptr<CdsObject>> { container["Video"], container["Video/Year"],
-                std::make_shared<CdsContainer>(year), std::make_shared<CdsContainer>(month) });
+            chain = fmt::format("/Video/Year/{}/{}", esc(year), esc(month));
+            id = content->addContainerChain(chain);
             add(obj, id);
         }
 
-        id = content->addContainerTree(std::vector<std::shared_ptr<CdsObject>> { container["Video"], container["Video/Date"],
-            std::make_shared<CdsContainer>(date) });
+        chain = fmt::format("/Video/Date/{}", esc(date));
+        id = content->addContainerChain(chain);
         add(obj, id);
     }
 
@@ -175,15 +112,10 @@ void BuiltinLayout::addVideo(const std::shared_ptr<CdsObject>& obj, const fs::pa
         dir = fs::relative(obj->getLocation().parent_path(), config->getBoolOption(CFG_IMPORT_LAYOUT_PARENT_PATH) ? rootpath.parent_path() : rootpath);
         dir = f2i->convert(dir);
     } else
-        dir = f2i->convert(getLastPath(obj->getLocation()));
+        dir = esc(f2i->convert(getLastPath(obj->getLocation())));
 
     if (!dir.empty()) {
-        auto dirVect = std::vector<std::shared_ptr<CdsObject>> { container["Video"], container["Video/Directories"] };
-        for (auto&& segment : dir) {
-            if (segment != "/" && !segment.empty())
-                dirVect.push_back(std::make_shared<CdsContainer>(segment.string()));
-        }
-        id = content->addContainerTree(dirVect);
+        id = content->addContainerChain(fmt::format("/Video/Directories/{}", dir.string()));
         add(obj, id);
     }
 }
@@ -192,7 +124,7 @@ void BuiltinLayout::addImage(const std::shared_ptr<CdsObject>& obj, const fs::pa
 {
     auto f2i = StringConverter::f2i(config);
 
-    auto id = chain["/Photos/All Photos"];
+    auto id = content->addContainerChain("/Photos/All Photos");
     if (obj->getID() != INVALID_OBJECT_ID) {
         obj->setRefID(obj->getID());
         add(obj, id);
@@ -218,13 +150,13 @@ void BuiltinLayout::addImage(const std::shared_ptr<CdsObject>& obj, const fs::pa
 
         std::string chain;
         if ((y > 0) && (m > 0)) {
-            id = content->addContainerTree(std::vector<std::shared_ptr<CdsObject>> { container["Photos"], container["Photos/Year"],
-                std::make_shared<CdsContainer>(year), std::make_shared<CdsContainer>(month) });
+            chain = fmt::format("/Photos/Year/{}/{}", esc(year), esc(month));
+            id = content->addContainerChain(chain);
             add(obj, id);
         }
 
-        id = content->addContainerTree(std::vector<std::shared_ptr<CdsObject>> { container["Photos"], container["Photos/Date"],
-            std::make_shared<CdsContainer>(date) });
+        chain = fmt::format("/Photos/Date/{}", esc(date));
+        id = content->addContainerChain(chain);
         add(obj, id);
     }
 
@@ -234,15 +166,10 @@ void BuiltinLayout::addImage(const std::shared_ptr<CdsObject>& obj, const fs::pa
         dir = fs::relative(obj->getLocation().parent_path(), config->getBoolOption(CFG_IMPORT_LAYOUT_PARENT_PATH) ? rootpath.parent_path() : rootpath);
         dir = f2i->convert(dir);
     } else
-        dir = f2i->convert(getLastPath(obj->getLocation()));
+        dir = esc(f2i->convert(getLastPath(obj->getLocation())));
 
     if (!dir.empty()) {
-        auto dirVect = std::vector<std::shared_ptr<CdsObject>> { container["Photos"], container["Photos/Directories"] };
-        for (auto&& segment : dir) {
-            if (segment != "/" && !segment.empty())
-                dirVect.push_back(std::make_shared<CdsContainer>(segment.string()));
-        }
-        id = content->addContainerTree(dirVect);
+        id = content->addContainerChain(fmt::format("/Photos/Directories/{}", dir.string()));
         add(obj, id);
     }
 }
@@ -286,7 +213,7 @@ void BuiltinLayout::addAudio(const std::shared_ptr<CdsObject>& obj, const fs::pa
             date = date.substr(0, i);
 
         desc = fmt::format("{}, {}", desc, date);
-        albumDate = date;
+        albumDate = esc(date);
     } else {
         date = "Unknown";
         albumDate = "Unknown";
@@ -311,7 +238,7 @@ void BuiltinLayout::addAudio(const std::shared_ptr<CdsObject>& obj, const fs::pa
     if (composer.empty())
         composer = "None";
 
-    auto id = chain["/Audio/All Audio"];
+    auto id = content->addContainerChain("/Audio/All Audio");
     obj->setTitle(title);
 
     // we get the main object here, so the object that we will add below
@@ -329,9 +256,11 @@ void BuiltinLayout::addAudio(const std::shared_ptr<CdsObject>& obj, const fs::pa
         obj->setRefID(obj->getID());
     }
 
-    auto artistContainer = std::make_shared<CdsContainer>(artist, UPNP_CLASS_MUSIC_ARTIST);
-    id = content->addContainerTree(std::vector<std::shared_ptr<CdsObject>> { container["Audio"], container["Artists"],
-        artistContainer, container["All Songs"] });
+    artist = esc(artist);
+
+    std::string chain = fmt::format("/Audio/Artists/{}/All Songs", artist);
+
+    id = content->addContainerChain(chain);
     add(obj, id);
 
     std::string temp;
@@ -343,41 +272,34 @@ void BuiltinLayout::addAudio(const std::shared_ptr<CdsObject>& obj, const fs::pa
     else
         temp = fmt::format("{} - ", temp);
 
-    auto albumContainer = std::make_shared<CdsContainer>(album, UPNP_CLASS_MUSIC_ALBUM);
-    albumContainer->setMetaData(obj->getMetaData());
-    albumContainer->setResources(obj->getResources());
-    albumContainer->setRefID(obj->getID());
-    artistContainer->setSearchable(true);
-    id = content->addContainerTree(std::vector<std::shared_ptr<CdsObject>> { container["Audio"], container["Artists"],
-        artistContainer, albumContainer });
+    album = esc(album);
+    chain = fmt::format("/Audio/Artists/{}/{}", artist, album);
+    id = content->addContainerChain(chain, UPNP_CLASS_MUSIC_ALBUM, obj->getID(), obj);
     add(obj, id);
 
-    albumContainer->setSearchable(true);
-    id = content->addContainerTree(std::vector<std::shared_ptr<CdsObject>> { container["Audio"], container["Albums"],
-        albumContainer });
+    chain = fmt::format("/Audio/Albums/{}", album);
+    id = content->addContainerChain(chain, UPNP_CLASS_MUSIC_ALBUM, obj->getID(), obj);
     add(obj, id);
 
-    id = content->addContainerTree(std::vector<std::shared_ptr<CdsObject>> { container["Audio"], container["Genres"],
-        std::make_shared<CdsContainer>(genre, UPNP_CLASS_MUSIC_GENRE) });
+    chain = fmt::format("/Audio/Genres/{}", esc(genre));
+    id = content->addContainerChain(chain, UPNP_CLASS_MUSIC_GENRE);
     add(obj, id);
 
-    auto composerContainer = std::make_shared<CdsContainer>(composer, UPNP_CLASS_MUSIC_COMPOSER);
-    composerContainer->setSearchable(true);
-    id = content->addContainerTree(std::vector<std::shared_ptr<CdsObject>> { container["Audio"], container["Composers"],
-        composerContainer });
+    chain = fmt::format("/Audio/Composers/{}", esc(composer));
+    id = content->addContainerChain(chain, UPNP_CLASS_MUSIC_COMPOSER);
     add(obj, id);
 
-    auto yearContainer = std::make_shared<CdsContainer>(date);
-    yearContainer->setSearchable(true);
-    id = content->addContainerTree(std::vector<std::shared_ptr<CdsObject>> { container["Audio"], container["Year"],
-        yearContainer });
+    chain = fmt::format("/Audio/Year/{}", esc(date));
+    id = content->addContainerChain(chain);
     add(obj, id);
 
     obj->setTitle(fmt::format("{}{}", temp, title));
-    add(obj, chain["/Audio/All - full name"]);
 
-    id = content->addContainerTree(std::vector<std::shared_ptr<CdsObject>> { container["Audio"], container["Artists"],
-        artistContainer, container["All - full name"] });
+    id = content->addContainerChain("/Audio/All - full name");
+    add(obj, id);
+
+    chain = fmt::format("/Audio/Artists/{}/All - full name", artist);
+    id = content->addContainerChain(chain);
     add(obj, id);
 
     obj->setTitle(title);
@@ -387,15 +309,10 @@ void BuiltinLayout::addAudio(const std::shared_ptr<CdsObject>& obj, const fs::pa
         dir = fs::relative(obj->getLocation().parent_path(), config->getBoolOption(CFG_IMPORT_LAYOUT_PARENT_PATH) ? rootpath.parent_path() : rootpath);
         dir = f2i->convert(dir);
     } else
-        dir = f2i->convert(getLastPath(obj->getLocation()));
+        dir = esc(f2i->convert(getLastPath(obj->getLocation())));
 
     if (!dir.empty()) {
-        auto dirVect = std::vector<std::shared_ptr<CdsObject>> { container["Audio"], container["Audio/Directories"] };
-        for (auto&& segment : dir) {
-            if (segment != "/" && !segment.empty())
-                dirVect.push_back(std::make_shared<CdsContainer>(segment.string()));
-        }
-        id = content->addContainerTree(dirVect);
+        id = content->addContainerChain(fmt::format("/Audio/Directories/{}", dir.string()));
         add(obj, id);
     }
 }
@@ -403,6 +320,7 @@ void BuiltinLayout::addAudio(const std::shared_ptr<CdsObject>& obj, const fs::pa
 #ifdef SOPCAST
 void BuiltinLayout::addSopCast(const std::shared_ptr<CdsObject>& obj)
 {
+#define SP_VPATH "/Online Services/SopCast"
     bool refSet = false;
 
     if (obj->getID() != INVALID_OBJECT_ID) {
@@ -410,7 +328,8 @@ void BuiltinLayout::addSopCast(const std::shared_ptr<CdsObject>& obj)
         refSet = true;
     }
 
-    add(obj, chain["/Online Services/SopCast/All Channels"], refSet);
+    auto id = content->addContainerChain(SP_VPATH "/All Channels");
+    add(obj, id, refSet);
     if (!refSet) {
         obj->setRefID(obj->getID());
         refSet = true;
@@ -418,8 +337,7 @@ void BuiltinLayout::addSopCast(const std::shared_ptr<CdsObject>& obj)
 
     auto temp = obj->getAuxData(SOPCAST_AUXDATA_GROUP);
     if (!temp.empty()) {
-        auto id = content->addContainerTree(std::vector<std::shared_ptr<CdsObject>> { container["Online Services"], container["SopCast"], container["Groups"],
-            std::make_shared<CdsContainer>(temp) });
+        id = content->addContainerChain(fmt::format(SP_VPATH "/Groups/{}", esc(temp)));
         add(obj, id, refSet);
     }
 }
@@ -428,15 +346,15 @@ void BuiltinLayout::addSopCast(const std::shared_ptr<CdsObject>& obj)
 #ifdef ATRAILERS
 void BuiltinLayout::addATrailers(const std::shared_ptr<CdsObject>& obj)
 {
-    {
-        auto id = chain["/Online Services/Apple/All Trailers"];
-        if (obj->getID() != INVALID_OBJECT_ID) {
-            obj->setRefID(obj->getID());
-            add(obj, id);
-        } else {
-            add(obj, id);
-            obj->setRefID(obj->getID());
-        }
+#define AT_VPATH "/Online Services/Apple Trailers"
+    auto id = content->addContainerChain(AT_VPATH "/All Trailers");
+
+    if (obj->getID() != INVALID_OBJECT_ID) {
+        obj->setRefID(obj->getID());
+        add(obj, id);
+    } else {
+        add(obj, id);
+        obj->setRefID(obj->getID());
     }
 
     auto meta = obj->getMetaData();
@@ -449,26 +367,30 @@ void BuiltinLayout::addATrailers(const std::shared_ptr<CdsObject>& obj)
         if (genre.empty())
             continue;
 
-        auto id = content->addContainerTree(std::vector<std::shared_ptr<CdsObject>> { container["Online Services"], container["Apple"], container["Genres"],
-            std::make_shared<CdsContainer>(genre) });
+        id = content->addContainerChain(fmt::format(AT_VPATH "/Genres/{}", esc(genre)));
         add(obj, id);
     }
 
     temp = getValueOrDefault(meta, MetadataHandler::getMetaFieldName(M_DATE));
     if (temp.length() >= 7) {
-        auto id = content->addContainerTree(std::vector<std::shared_ptr<CdsObject>> { container["Online Services"], container["Apple"], container["Release Date"],
-            std::make_shared<CdsContainer>(temp.substr(0, 7)) });
+        id = content->addContainerChain(fmt::format(AT_VPATH "/Release Date/{}", esc(temp.substr(0, 7))));
         add(obj, id);
     }
 
     temp = obj->getAuxData(ATRAILERS_AUXDATA_POST_DATE);
     if (temp.length() >= 7) {
-        auto id = content->addContainerTree(std::vector<std::shared_ptr<CdsObject>> { container["Online Services"], container["Apple"], container["Post Date"],
-            std::make_shared<CdsContainer>(temp.substr(0, 7)) });
+        id = content->addContainerChain(fmt::format(AT_VPATH "/Post Date/{}", esc(temp.substr(0, 7))));
         add(obj, id);
     }
 }
 #endif
+
+BuiltinLayout::BuiltinLayout(std::shared_ptr<ContentManager> content)
+    : Layout(std::move(content))
+    , config(this->content->getContext()->getConfig())
+    , genreMap(this->config->getDictionaryOption(CFG_IMPORT_SCRIPTING_IMPORT_GENRE_MAP))
+{
+}
 
 std::string BuiltinLayout::mapGenre(const std::string& genre)
 {
