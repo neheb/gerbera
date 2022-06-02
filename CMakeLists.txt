@@ -101,6 +101,10 @@ add_library(libgerbera STATIC
         src/content/onlineservice/online_service.h
         src/content/onlineservice/online_service_helper.cc
         src/content/onlineservice/online_service_helper.h
+        src/content/onlineservice/sopcast_content_handler.cc
+        src/content/onlineservice/sopcast_content_handler.h
+        src/content/onlineservice/sopcast_service.cc
+        src/content/onlineservice/sopcast_service.h
         src/content/onlineservice/task_processor.cc
         src/content/onlineservice/task_processor.h
         src/content/scripting/import_script.cc
@@ -461,7 +465,8 @@ if(WITH_CURL)
     target_compile_definitions(libgerbera PUBLIC
         HAVE_CURL
         ONLINE_SERVICES
-        ATRAILERS)
+        ATRAILERS
+        SOPCAST)
 endif()
 
 if(WITH_TAGLIB)

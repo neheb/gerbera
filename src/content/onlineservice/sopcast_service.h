@@ -2,7 +2,7 @@
     
     MediaTomb - http://www.mediatomb.cc/
     
-    online_service_helper.cc - this file is part of MediaTomb.
+    sopcast_service.h - this file is part of MediaTomb.
     
     Copyright (C) 2005 Gena Batyan <bgeradz@mediatomb.cc>,
                        Sergey 'Jin' Bostandzhyan <jin@mediatomb.cc>
@@ -27,35 +27,34 @@
     $Id$
 */
 
-/// \file online_service_helper.cc
-
-#ifdef ONLINE_SERVICES
-#include "online_service_helper.h" // API
-
-#include "cds_objects.h"
-#include "config/config_manager.h"
-#include "online_service.h"
-
-std::string OnlineServiceHelper::resolveURL(const std::shared_ptr<CdsItemExternalURL>& item)
-{
-    if (!item->getFlag(OBJECT_FLAG_ONLINE_SERVICE))
-        throw_std_runtime_error("The given item does not belong to an online service");
-
-    auto service = service_type_t(std::stoi(item->getAuxData(ONLINE_SERVICE_AUX_ID)));
-    if (service > OS_Max)
-        throw_std_runtime_error("Invalid service id");
+/// \file sopcast_service.h
+/// \brief Definition of the SopCastService class.
 
 #ifdef SOPCAST
-    if (service == OS_SopCast) {
-        return item->getLocation();
-    }
-#endif
-#ifdef ATRAILERS
-    if (service == OS_ATrailers) {
-        return item->getLocation();
-    }
-#endif
-    throw_std_runtime_error("No handler for this service");
-}
 
-#endif //ONLINE_SERVICES
+#ifndef __SOPCAST_SERVICE_H__
+#define __SOPCAST_SERVICE_H__
+
+#include "curl_online_service.h"
+
+// forward declaration
+class Config;
+class ContentManager;
+class Database;
+
+/// \brief This is an interface for all online services, the function
+/// handles adding/refreshing content in the database.
+class SopCastService : public CurlOnlineService {
+public:
+    explicit SopCastService(std::shared_ptr<ContentManager> content);
+
+    /// \brief Get the type of the service (i.e. SopCast, Shoutcast, etc.)
+    service_type_t getServiceType() const override;
+
+protected:
+    std::unique_ptr<CurlContentHandler> getContentHandler() const override;
+};
+
+#endif //__ONLINE_SERVICE_H__
+
+#endif //SOPCAST

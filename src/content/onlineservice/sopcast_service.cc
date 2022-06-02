@@ -2,7 +2,7 @@
     
     MediaTomb - http://www.mediatomb.cc/
     
-    online_service_helper.cc - this file is part of MediaTomb.
+    sopcast_service.cc - this file is part of MediaTomb.
     
     Copyright (C) 2005 Gena Batyan <bgeradz@mediatomb.cc>,
                        Sergey 'Jin' Bostandzhyan <jin@mediatomb.cc>
@@ -27,35 +27,30 @@
     $Id$
 */
 
-/// \file online_service_helper.cc
-
-#ifdef ONLINE_SERVICES
-#include "online_service_helper.h" // API
-
-#include "cds_objects.h"
-#include "config/config_manager.h"
-#include "online_service.h"
-
-std::string OnlineServiceHelper::resolveURL(const std::shared_ptr<CdsItemExternalURL>& item)
-{
-    if (!item->getFlag(OBJECT_FLAG_ONLINE_SERVICE))
-        throw_std_runtime_error("The given item does not belong to an online service");
-
-    auto service = service_type_t(std::stoi(item->getAuxData(ONLINE_SERVICE_AUX_ID)));
-    if (service > OS_Max)
-        throw_std_runtime_error("Invalid service id");
+/// \file sopcast_service.cc
 
 #ifdef SOPCAST
-    if (service == OS_SopCast) {
-        return item->getLocation();
-    }
-#endif
-#ifdef ATRAILERS
-    if (service == OS_ATrailers) {
-        return item->getLocation();
-    }
-#endif
-    throw_std_runtime_error("No handler for this service");
+#include "sopcast_service.h" // API
+
+#include "content/content_manager.h"
+#include "sopcast_content_handler.h"
+
+#define SOPCAST_CHANNEL_URL "http://www.sopcast.com/gchlxml"
+
+SopCastService::SopCastService(std::shared_ptr<ContentManager> content)
+    : CurlOnlineService(std::move(content), SOPCAST_SERVICE)
+{
+    service_url = SOPCAST_CHANNEL_URL;
 }
 
-#endif //ONLINE_SERVICES
+std::unique_ptr<CurlContentHandler> SopCastService::getContentHandler() const
+{
+    return std::make_unique<SopCastContentHandler>(content->getContext());
+}
+
+service_type_t SopCastService::getServiceType() const
+{
+    return OS_SopCast;
+}
+
+#endif //SOPCAST
