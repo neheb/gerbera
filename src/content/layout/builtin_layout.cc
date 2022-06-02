@@ -129,32 +129,6 @@ void BuiltinLayout::add(const std::shared_ptr<CdsObject>& obj, const std::pair<i
     content->addObject(obj, parentID.second);
 }
 
-void BuiltinLayout::getDir(const std::shared_ptr<CdsObject>& obj, const fs::path& rootPath, const std::string& c1, const std::string& c2)
-{
-    fs::path dir;
-    auto&& objPath = obj->getLocation();
-    if (!rootPath.empty()) {
-        // make location relative to rootpath: "/home/.../Videos/Action/a.mkv" with rootpath "/home/.../Videos" -> "Action"
-        dir = fs::relative(objPath.parent_path(), config->getBoolOption(CFG_IMPORT_LAYOUT_PARENT_PATH) ? rootPath.parent_path() : rootPath);
-        if (dir == ".")
-            dir = getLastPath(objPath);
-    } else
-        dir = getLastPath(objPath);
-
-    auto f2i = StringConverter::f2i(config);
-    dir = f2i->convert(dir);
-
-    if (!dir.empty()) {
-        auto dirVect = std::vector<std::shared_ptr<CdsObject>> { container[c1], container[c2] };
-        for (auto&& segment : dir) {
-            if (segment != "/" && !segment.empty())
-                dirVect.push_back(std::make_shared<CdsContainer>(segment.string()));
-        }
-        auto id = content->addContainerTree(dirVect);
-        add(obj, id);
-    }
-}
-
 void BuiltinLayout::addVideo(const std::shared_ptr<CdsObject>& obj, const fs::path& rootpath)
 {
     auto f2i = StringConverter::f2i(config);
@@ -195,7 +169,23 @@ void BuiltinLayout::addVideo(const std::shared_ptr<CdsObject>& obj, const fs::pa
         add(obj, id);
     }
 
-    getDir(obj, rootpath, "Video", "Video/Directories");
+    fs::path dir;
+    if (!rootpath.empty()) {
+        // make location relative to rootpath: "/home/.../Videos/Action/a.mkv" with rootpath "/home/.../Videos" -> "Action"
+        dir = fs::relative(obj->getLocation().parent_path(), config->getBoolOption(CFG_IMPORT_LAYOUT_PARENT_PATH) ? rootpath.parent_path() : rootpath);
+        dir = f2i->convert(dir);
+    } else
+        dir = f2i->convert(getLastPath(obj->getLocation()));
+
+    if (!dir.empty()) {
+        auto dirVect = std::vector<std::shared_ptr<CdsObject>> { container["Video"], container["Video/Directories"] };
+        for (auto&& segment : dir) {
+            if (segment != "/" && !segment.empty())
+                dirVect.push_back(std::make_shared<CdsContainer>(segment.string()));
+        }
+        id = content->addContainerTree(dirVect);
+        add(obj, id);
+    }
 }
 
 void BuiltinLayout::addImage(const std::shared_ptr<CdsObject>& obj, const fs::path& rootpath)
@@ -238,7 +228,23 @@ void BuiltinLayout::addImage(const std::shared_ptr<CdsObject>& obj, const fs::pa
         add(obj, id);
     }
 
-    getDir(obj, rootpath, "Photos", "Photos/Directories");
+    fs::path dir;
+    if (!rootpath.empty()) {
+        // make location relative to rootpath: "/home/.../Photos/Action/a.mkv" with rootpath "/home/.../Photos" -> "Action"
+        dir = fs::relative(obj->getLocation().parent_path(), config->getBoolOption(CFG_IMPORT_LAYOUT_PARENT_PATH) ? rootpath.parent_path() : rootpath);
+        dir = f2i->convert(dir);
+    } else
+        dir = f2i->convert(getLastPath(obj->getLocation()));
+
+    if (!dir.empty()) {
+        auto dirVect = std::vector<std::shared_ptr<CdsObject>> { container["Photos"], container["Photos/Directories"] };
+        for (auto&& segment : dir) {
+            if (segment != "/" && !segment.empty())
+                dirVect.push_back(std::make_shared<CdsContainer>(segment.string()));
+        }
+        id = content->addContainerTree(dirVect);
+        add(obj, id);
+    }
 }
 
 void BuiltinLayout::addAudio(const std::shared_ptr<CdsObject>& obj, const fs::path& rootpath)
@@ -375,7 +381,23 @@ void BuiltinLayout::addAudio(const std::shared_ptr<CdsObject>& obj, const fs::pa
     add(obj, id);
 
     obj->setTitle(title);
-    getDir(obj, rootpath, "Audio", "Audio/Directories");
+    fs::path dir;
+    if (!rootpath.empty()) {
+        // make location relative to rootpath: "/home/.../Audio/Action/a.mp3" with rootpath "/home/.../Audio" -> "Action"
+        dir = fs::relative(obj->getLocation().parent_path(), config->getBoolOption(CFG_IMPORT_LAYOUT_PARENT_PATH) ? rootpath.parent_path() : rootpath);
+        dir = f2i->convert(dir);
+    } else
+        dir = f2i->convert(getLastPath(obj->getLocation()));
+
+    if (!dir.empty()) {
+        auto dirVect = std::vector<std::shared_ptr<CdsObject>> { container["Audio"], container["Audio/Directories"] };
+        for (auto&& segment : dir) {
+            if (segment != "/" && !segment.empty())
+                dirVect.push_back(std::make_shared<CdsContainer>(segment.string()));
+        }
+        id = content->addContainerTree(dirVect);
+        add(obj, id);
+    }
 }
 
 #ifdef SOPCAST
