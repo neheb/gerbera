@@ -448,7 +448,7 @@ std::shared_ptr<CdsObject> ContentManager::createSingleItem(const fs::directory_
 #ifdef HAVE_JS
             try {
                 if (playlist_parser_script && contentType == CONTENT_TYPE_PLAYLIST)
-                    playlist_parser_script->processPlaylistObject(obj, task, rootPath);
+                    playlist_parser_script->processPlaylistObject(obj, task);
             } catch (const std::runtime_error& e) {
                 log_error("{}", e.what());
             }
