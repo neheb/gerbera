@@ -102,9 +102,9 @@ bool CurlOnlineService::refreshServiceData(const std::shared_ptr<Layout>& layout
     // we do it here because the handle is initialized in a different thread
     // which is OK
     if (pid == 0)
-        pid = pthread_self();
+        pid = thrd_current();
 
-    if (pid != pthread_self())
+    if (thrd_equal(pid, thrd_current() != 0))
         throw_std_runtime_error("Not allowed to call refreshServiceData from different threads");
 
     auto reply = getData();

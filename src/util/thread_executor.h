@@ -34,6 +34,7 @@
 #include <condition_variable>
 #include <mutex>
 #include <pthread.h>
+#include <threads.h>
 
 #include "common.h"
 #include "executor.h"
@@ -63,7 +64,7 @@ protected:
 
     std::condition_variable cond;
     mutable std::mutex mutex;
-    pthread_t thread {};
+    thrd_t thread {};
 
     /// \brief abstract thread method, which needs to be overridden
     virtual void threadProc() = 0;

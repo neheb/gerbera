@@ -38,13 +38,13 @@ ThreadExecutor::~ThreadExecutor()
 
 void ThreadExecutor::startThread()
 {
-    int ret = pthread_create(
+    int ret = thrd_create(
         &thread,
-        nullptr,
-        [](void* arg) -> void* {
+        [](void* arg) -> int {
             auto inst = static_cast<ThreadExecutor*>(arg);
             inst->threadProc();
-            pthread_exit(nullptr);
+            thrd_exit(thrd_success);
+            return thrd_success;
         },
         this);
 
@@ -67,7 +67,7 @@ bool ThreadExecutor::kill()
 
     if (thread) {
         threadRunning = false;
-        pthread_join(thread, nullptr);
+        thrd_join(thread, nullptr);
         thread = 0;
     }
     return true;

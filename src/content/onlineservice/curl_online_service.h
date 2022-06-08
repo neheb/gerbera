@@ -31,6 +31,7 @@
 
 #include <curl/curl.h>
 #include <pugixml.hpp>
+#include <threads.h>
 
 #include "context.h"
 #include "online_service.h"
@@ -91,7 +92,7 @@ protected:
     // the handle *must never be used from multiple threads*
     CURL* curl_handle;
     // safeguard to ensure the above
-    pthread_t pid {};
+    thrd_t pid {};
 
     std::string service_url;
     std::string serviceName;
