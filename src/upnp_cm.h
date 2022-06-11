@@ -59,7 +59,7 @@ protected:
     /// string PeerConnectionManager, i4 PeerConnectionID, string Direction, string Status)
     ///
     /// This action is currently unsupported.
-    void doGetCurrentConnectionInfo(ActionRequest& request) const;
+    static void doGetCurrentConnectionInfo(ActionRequest& request);
 
     /// \brief UPnP standard defined action: GetProtocolInfo()
     /// \param request Incoming ActionRequest.

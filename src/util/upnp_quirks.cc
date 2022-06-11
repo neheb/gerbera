@@ -77,7 +77,7 @@ void Quirks::getSamsungFeatureList(ActionRequest& request) const
 
     log_debug("Call for Samsung extension: X_GetFeatureList");
 
-    auto response = xmlBuilder.createResponse(request.getActionName(), UPNP_DESC_CDS_SERVICE_TYPE);
+    auto response = UpnpXMLBuilder::createResponse(request.getActionName(), UPNP_DESC_CDS_SERVICE_TYPE);
     pugi::xml_document respRoot;
     auto features = respRoot.append_child("Features");
     features.append_attribute("xmlns") = "urn:schemas-upnp-org:av:avs";
@@ -140,7 +140,7 @@ void Quirks::getSamsungObjectIDfromIndex(ActionRequest& request) const
 
     log_debug("X_GetObjectIDfromIndex CategoryType [{}] Index[{}]", categoryType, index);
 
-    auto response = xmlBuilder.createResponse(request.getActionName(), UPNP_DESC_CDS_SERVICE_TYPE);
+    auto response = UpnpXMLBuilder::createResponse(request.getActionName(), UPNP_DESC_CDS_SERVICE_TYPE);
     response->document_element().append_child("ObjectID").append_child(pugi::node_pcdata).set_value("0");
     request.setResponse(std::move(response));
 }
@@ -160,7 +160,7 @@ void Quirks::getSamsungIndexfromRID(ActionRequest& request) const
 
     log_debug("X_GetIndexfromRID CategoryType [{}] RID[{}]", categoryType, rID);
 
-    auto response = xmlBuilder.createResponse(request.getActionName(), UPNP_DESC_CDS_SERVICE_TYPE);
+    auto response = UpnpXMLBuilder::createResponse(request.getActionName(), UPNP_DESC_CDS_SERVICE_TYPE);
     response->document_element().append_child("Index").append_child(pugi::node_pcdata).set_value("0");
     request.setResponse(std::move(response));
 }
@@ -202,7 +202,7 @@ void Quirks::saveSamsungBookMarkedPosition(Database& database, ActionRequest& re
             playStatus->setBookMarkPosition(bookMarkPos);
         database.savePlayStatus(playStatus);
     }
-    auto response = xmlBuilder.createResponse(request.getActionName(), UPNP_DESC_CDS_SERVICE_TYPE);
+    auto response = UpnpXMLBuilder::createResponse(request.getActionName(), UPNP_DESC_CDS_SERVICE_TYPE);
     request.setResponse(std::move(response));
 }
 

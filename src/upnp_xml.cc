@@ -61,7 +61,7 @@ UpnpXMLBuilder::UpnpXMLBuilder(const std::shared_ptr<Context>& context,
     transferMappings = config->getDictionaryOption(CFG_IMPORT_MAPPINGS_CONTENTTYPE_TO_DLNATRANSFER_LIST);
 }
 
-std::unique_ptr<pugi::xml_document> UpnpXMLBuilder::createResponse(const std::string& actionName, const std::string& serviceType) const
+std::unique_ptr<pugi::xml_document> UpnpXMLBuilder::createResponse(const std::string& actionName, const std::string& serviceType)
 {
     auto response = std::make_unique<pugi::xml_document>();
     auto root = response->append_child(fmt::format("u:{}Response", actionName).c_str());
@@ -103,7 +103,7 @@ std::string UpnpXMLBuilder::printXml(const pugi::xml_node& entry, const char* in
     return buf.str();
 }
 
-void UpnpXMLBuilder::addField(pugi::xml_node& entry, const std::string& key, const std::string& val) const
+void UpnpXMLBuilder::addField(pugi::xml_node& entry, const std::string& key, const std::string& val)
 {
     auto i = key.find('@');
     auto j = key.find('[', i + 1);
@@ -243,7 +243,7 @@ void UpnpXMLBuilder::renderObject(const std::shared_ptr<CdsObject>& obj, std::si
     log_debug("Rendered DIDL: {}", printXml(result, "  "));
 }
 
-std::unique_ptr<pugi::xml_document> UpnpXMLBuilder::createEventPropertySet() const
+std::unique_ptr<pugi::xml_document> UpnpXMLBuilder::createEventPropertySet()
 {
     auto doc = std::make_unique<pugi::xml_document>();
 
@@ -505,7 +505,7 @@ std::optional<std::string> UpnpXMLBuilder::renderSubtitleURL(const std::shared_p
     return {};
 }
 
-std::string UpnpXMLBuilder::renderExtension(const std::string& contentType, const fs::path& location, const std::string& language) const
+std::string UpnpXMLBuilder::renderExtension(const std::string& contentType, const fs::path& location, const std::string& language)
 {
     auto urlExt = URLUtils::joinUrl({ URL_FILE_EXTENSION, "file" });
 
@@ -845,7 +845,7 @@ void UpnpXMLBuilder::addResources(const std::shared_ptr<CdsItem>& item, pugi::xm
     }
 }
 
-std::string UpnpXMLBuilder::getMimeType(const CdsResource& resource, const std::map<std::string, std::string>& mimeMappings) const
+std::string UpnpXMLBuilder::getMimeType(const CdsResource& resource, const std::map<std::string, std::string>& mimeMappings)
 {
     std::string protocolInfo = resource.getAttribute(CdsResource::Attribute::PROTOCOLINFO);
     std::string mimeType = getMTFromProtocolInfo(protocolInfo);

@@ -57,7 +57,7 @@ public:
     /// <u:actionNameResponse xmlns:u="serviceType"/>
     /// Further response information (various parameters, DIDL-Lite or
     /// whatever can then be adapted to it.
-    std::unique_ptr<pugi::xml_document> createResponse(const std::string& actionName, const std::string& serviceType) const;
+    static std::unique_ptr<pugi::xml_document> createResponse(const std::string& actionName, const std::string& serviceType);
 
     /// \brief Renders the DIDL-Lite representation of an object in the content directory.
     /// \param obj Object to be rendered as XML.
@@ -68,7 +68,7 @@ public:
 
     /// \brief Renders XML for the event property set.
     /// \return pugi::xml_document representing the newly created XML.
-    std::unique_ptr<pugi::xml_document> createEventPropertySet() const;
+    static std::unique_ptr<pugi::xml_document> createEventPropertySet();
 
     /// \brief Renders the device description XML.
     /// \return pugi::xml_document representing the newly created device description.
@@ -120,12 +120,12 @@ protected:
     std::deque<std::shared_ptr<CdsResource>> getOrderedResources(const CdsObject& object) const;
     std::pair<bool, int> insertTempTranscodingResource(const std::shared_ptr<CdsItem>& item, const std::unique_ptr<Quirks>& quirks, std::deque<std::shared_ptr<CdsResource>>& orderedResources, bool skipURL) const;
 
-    std::string renderExtension(const std::string& contentType, const fs::path& location, const std::string& language) const;
-    void addField(pugi::xml_node& entry, const std::string& key, const std::string& val) const;
+    static std::string renderExtension(const std::string& contentType, const fs::path& location, const std::string& language);
+    static void addField(pugi::xml_node& entry, const std::string& key, const std::string& val);
     void addPropertyList(pugi::xml_node& result, const std::vector<std::pair<std::string, std::string>>& meta, const std::map<std::string, std::string>& auxData, config_option_t itemProps, config_option_t nsProp) const;
     std::string findDlnaProfile(const CdsResource& res, const std::string& contentType) const;
     std::string dlnaProfileString(const CdsResource& res, const std::string& contentType, bool formatted = true) const;
 
     std::string buildProtocolInfo(CdsResource& res, const std::map<std::string, std::string>& mimeMappings) const;
-    std::string getMimeType(const CdsResource& resource, const std::map<std::string, std::string>& mimeMappings) const;
+    static std::string getMimeType(const CdsResource& resource, const std::map<std::string, std::string>& mimeMappings);
 };

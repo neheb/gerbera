@@ -66,7 +66,7 @@
 #include "scripting/scripting_runtime.h"
 #endif
 
-bool UpnpMap::checkValue(const std::string& op, const std::string& expect, const std::string& actual) const
+bool UpnpMap::checkValue(const std::string& op, const std::string& expect, const std::string& actual)
 {
     if (op == "=" && actual.find(expect) != std::string::npos)
         return true;
@@ -77,7 +77,7 @@ bool UpnpMap::checkValue(const std::string& op, const std::string& expect, const
     return (op == ">" && actual > expect);
 }
 
-bool UpnpMap::checkValue(const std::string& op, int expect, int actual) const
+bool UpnpMap::checkValue(const std::string& op, int expect, int actual)
 {
     if (op == "=" && actual != expect)
         return true;

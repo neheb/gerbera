@@ -142,8 +142,8 @@ class UpnpMap {
 private:
     std::vector<std::tuple<std::string, std::string, std::string>> filters;
 
-    bool checkValue(const std::string& op, const std::string& expect, const std::string& actual) const;
-    bool checkValue(const std::string& op, int expect, int actual) const;
+    static bool checkValue(const std::string& op, const std::string& expect, const std::string& actual);
+    static bool checkValue(const std::string& op, int expect, int actual);
 
 public:
     std::string mimeType;

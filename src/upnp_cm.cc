@@ -60,7 +60,7 @@ void ConnectionManagerService::doGetCurrentConnectionIDs(ActionRequest& request)
     log_debug("end");
 }
 
-void ConnectionManagerService::doGetCurrentConnectionInfo(ActionRequest& request) const
+void ConnectionManagerService::doGetCurrentConnectionInfo(ActionRequest& request)
 {
     log_debug("start");
 

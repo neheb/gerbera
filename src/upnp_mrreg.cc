@@ -60,7 +60,7 @@ void MRRegistrarService::doIsAuthorized(ActionRequest& request) const
     log_debug("end");
 }
 
-void MRRegistrarService::doRegisterDevice(ActionRequest& request) const
+void MRRegistrarService::doRegisterDevice(ActionRequest& request)
 {
     log_debug("start");
 

@@ -98,15 +98,15 @@ private:
     /// \brief Samsung Extension X_GetFeatureListResponse
     /// \param request Incoming ActionRequest.
     ///
-    void doSamsungFeatureList(ActionRequest& request);
+    static void doSamsungFeatureList(ActionRequest& request);
 
     /// \brief Samsung Extension X_GetObjectIDfromIndex
     /// \param request Incoming ActionRequest.
-    void doSamsungGetObjectIDfromIndex(ActionRequest& request);
+    static void doSamsungGetObjectIDfromIndex(ActionRequest& request);
 
     /// \brief Samsung Extension X_GetIndexfromRID
     /// \param request Incoming ActionRequest.
-    void doSamsungGetIndexfromRID(ActionRequest& request);
+    static void doSamsungGetIndexfromRID(ActionRequest& request);
 
     /// \brief mark played item if activated
     /// \param cdsObject item to mark

@@ -65,7 +65,7 @@ protected:
     /// RegisterDevice(bin.base64 RegistrationReqMsg, bin.base64 RegistrationRespMsg)
     ///
     /// This action is currently unsupported.
-    void doRegisterDevice(ActionRequest& request) const;
+    static void doRegisterDevice(ActionRequest& request);
 
     /// \brief Media Receiver Registrar service action: IsValidated()
     /// \param request Incoming ActionRequest.
