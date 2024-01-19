@@ -1,0 +1,60 @@
+name: Mangix
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cpp:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        platform: ['x86','armhf','armv7','aarch64','ppc64le','riscv64', 's390x']
+    defaults:
+      run:
+        shell: alpine.sh {0}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jirutka/setup-alpine@v1
+        with:
+          branch: edge
+          arch: ${{matrix.platform}}
+          packages: >
+            build-base
+            cmake
+            pkgconf
+            samurai
+            curl-dev
+            duktape-dev
+            exiv2-dev
+            ffmpeg-dev
+            ffmpegthumbnailer-dev
+            file-dev
+            gtest-dev
+            libexif-dev
+            libmatroska-dev
+            libnpupnp-dev
+            mariadb-connector-c-dev
+            pugixml-dev
+            spdlog-dev
+            sqlite-dev
+            taglib-dev
+            util-linux-dev
+            wavpack-dev
+            zlib-dev
+
+      - name: Build
+        run: |
+          cmake -S . -G Ninja -DWITH_INOTIFY=ON -DWITH_JS=ON -DWITH_CURL=ON -DWITH_TAGLIB=ON -DWITH_MAGIC=ON -DWITH_AVCODEC=ON -DWITH_FFMPEGTHUMBNAILER=ON -DWITH_EXIF=ON -DWITH_EXIV2=ON -DWITH_MATROSKA=ON -DWITH_NPUPNP=ON -DWITH_SYSTEMD=OFF -DWITH_TESTS=ON -DCMAKE_CXX_FLAGS="-Werror=cast-align"
+          cmake --build . --parallel
+
+      - name: Test
+        run: |
+          ctest --output-on-failure
