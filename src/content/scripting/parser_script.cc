@@ -99,9 +99,10 @@ duk_ret_t jsReadln(duk_context* ctx)
     }
 
     try {
-        auto [line, trimmed] = self->readLine();
-        duk_push_string(ctx, line.c_str());
-        return trimmed ? 1 : 0;
+        auto line = self->readLine();
+        if (line)
+            duk_push_string(ctx, line->c_str());
+        return line ? 1 : 0;
     } catch (const ServerShutdownException&) {
         log_warning("Aborting script execution due to server shutdown.");
         return duk_error(ctx, DUK_ERR_ERROR, "Aborting script execution due to server shutdown.");
@@ -213,21 +214,21 @@ pugi::xml_node& ParserScript::readXml(int direction)
     return nullNode;
 }
 
-std::pair<std::string, bool> ParserScript::readLine()
+std::optional<std::string> ParserScript::readLine()
 {
     if (!currentHandle)
         throw_std_runtime_error("readLine not yet setup for use");
 
     if (currentTask && !currentTask->isValid())
-        return { {}, false };
+        return std::nullopt;
 
     while (true) {
         log_debug("Scanning {}", currentLine);
         if (!fgets(currentLine, ONE_TEXTLINE_BYTES, currentHandle))
-            return { {}, false };
+            return std::nullopt;
         auto ret = trimString(currentLine);
         if (!ret.empty())
-            return { ret, true };
+            return std::move(ret);
     }
 }
 

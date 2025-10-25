@@ -38,6 +38,7 @@
 #include "script.h"
 
 #include <memory>
+#include <optional>
 #include <pugixml.hpp>
 
 // forward declaration
@@ -54,7 +55,7 @@ duk_ret_t jsUpdateCdsObject(duk_context* ctx);
 
 class ParserScript : public Script {
 public:
-    std::pair<std::string, bool> readLine();
+    std::optional<std::string> readLine();
     pugi::xml_node& readXml(int direction);
 
 protected:
