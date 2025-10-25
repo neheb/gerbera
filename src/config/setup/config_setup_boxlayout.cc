@@ -42,7 +42,6 @@
 
 #include <algorithm>
 #include <array>
-#include <numeric>
 
 ConfigBoxLayoutSetup::ConfigBoxLayoutSetup(
     ConfigVal option,

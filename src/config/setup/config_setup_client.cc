@@ -41,7 +41,6 @@
 #include "util/logger.h"
 
 #include <iterator>
-#include <numeric>
 #include <pugixml.hpp>
 
 /// @brief Creates an array of ClientConfig objects from a XML nodeset.

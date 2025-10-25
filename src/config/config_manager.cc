@@ -49,7 +49,6 @@
 #include "util/string_converter.h"
 #include "util/tools.h"
 
-#include <numeric>
 #include <pugixml.hpp>
 #include <sstream>
 

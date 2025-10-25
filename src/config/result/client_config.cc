@@ -33,7 +33,6 @@
 
 #include <algorithm>
 #include <array>
-#include <numeric>
 
 static constexpr QuirkFlags QUIRKBASE = 1;
 
@@ -258,9 +257,10 @@ QuirkFlags ClientConfig::makeFlags(const std::string& optValue)
     auto negate = startswith(val, "~");
     if (negate)
         val = val.substr(1);
-    std::vector<std::string> flagsVector = splitString(val, '|');
-    auto flags = std::accumulate(flagsVector.begin(), flagsVector.end(), 0, [](auto flg, auto&& i) { return flg | ClientConfig::remapFlag(trimString(i)); });
-    return negate ? ~flags : flags;
+    int ret = 0;
+    for (const auto& str : splitString(val, '|'))
+        ret |= ClientConfig::remapFlag(trimString(str));
+    return negate ? ~ret : ret;
 }
 
 std::string ClientConfig::mapFlags(QuirkFlags flags)

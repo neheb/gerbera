@@ -33,7 +33,6 @@
 #include "config_setup_int.h"
 #include "util/logger.h"
 
-#include <numeric>
 #include <pugixml.hpp>
 
 /// @brief Creates an array of strings from an XML nodeset.

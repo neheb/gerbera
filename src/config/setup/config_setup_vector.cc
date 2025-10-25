@@ -32,7 +32,6 @@
 #include "config_setup_bool.h"
 #include "util/logger.h"
 
-#include <numeric>
 #include <pugixml.hpp>
 
 /// @brief Creates a vector from an XML nodeset.
