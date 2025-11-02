@@ -98,7 +98,7 @@ public:
 protected:
     std::string nextStringToken(const std::string& input);
     static std::optional<SearchToken> makeToken(std::string tokenStr);
-    std::string getQuotedValue(const std::string& input);
+    std::string getQuotedValue(std::string_view input);
 
     std::string input;
     unsigned currentPos {};
@@ -301,7 +301,7 @@ public:
     virtual std::string emitSQL(const ASTNode* node) const = 0;
     virtual std::string emit(const ASTAsterisk* node) const = 0;
     virtual std::string emit(const ASTParenthesis* node,
-        const std::string& bracketedNode) const
+        std::string_view bracketedNode) const
         = 0;
     virtual std::string emit(const ASTDQuote* node) const = 0;
     virtual std::string emit(const ASTCompareOperator* node,
@@ -314,10 +314,10 @@ public:
         const std::string& property, const std::string& value) const
         = 0;
     virtual std::string emit(const ASTAndOperator* node,
-        const std::string& lhs, const std::string& rhs) const
+        std::string_view lhs, std::string_view rhs) const
         = 0;
     virtual std::string emit(const ASTOrOperator* node,
-        const std::string& lhs, const std::string& rhs) const
+        std::string_view lhs, std::string_view rhs) const
         = 0;
 };
 
@@ -338,7 +338,7 @@ public:
     ColumnMapper& operator=(const ColumnMapper&) = delete;
 
     /// @brief check whether tag is valid colum
-    virtual bool hasEntry(const std::string& tag) const = 0;
+    virtual bool hasEntry(std::string_view tag) const = 0;
     /// @brief get the table name
     virtual std::string getTableName() const = 0;
     /// @brief get the table name quoted
@@ -346,14 +346,14 @@ public:
     /// @brief quote column for statement
     /// @param tag column name
     /// @param noAlias generate no alias
-    virtual std::string mapQuoted(const std::string& tag, bool noAlias = false) const = 0;
-    virtual bool mapQuotedList(std::vector<std::string>& sort, const std::string& tag, const std::string& desc) const = 0;
+    virtual std::string mapQuoted(std::string_view tag, bool noAlias = false) const = 0;
+    virtual bool mapQuotedList(std::vector<std::string>& sort, std::string_view tag, std::string_view desc) const = 0;
     /// @brief quote column for statement with lowercase
-    virtual std::string mapQuotedLower(const std::string& tag) const = 0;
+    virtual std::string mapQuotedLower(std::string_view tag) const = 0;
     /// @brief get type of column from tagMap
-    virtual FieldType getFieldType(const std::string& tag) const = 0;
+    virtual FieldType getFieldType(std::string_view tag) const = 0;
     /// @brief quote tag for statement
-    virtual std::string quote(const std::string& tag) const = 0;
+    virtual std::string quote(std::string_view tag) const = 0;
 };
 
 struct SearchProperty {
@@ -386,7 +386,7 @@ public:
 
     std::string emitSQL(const ASTNode* node) const override;
     std::string emit(const ASTAsterisk* node) const override { return {}; }
-    std::string emit(const ASTParenthesis* node, const std::string& bracketedNode) const override;
+    std::string emit(const ASTParenthesis* node, std::string_view bracketedNode) const override;
     std::string emit(const ASTDQuote* node) const override { return {}; }
     std::string emit(const ASTCompareOperator* node,
         const std::string& property, const std::string& value) const override;
@@ -394,8 +394,8 @@ public:
         const std::string& property, const std::string& value) const override;
     std::string emit(const ASTExistsOperator* node,
         const std::string& property, const std::string& value) const override;
-    std::string emit(const ASTAndOperator* node, const std::string& lhs, const std::string& rhs) const override;
-    std::string emit(const ASTOrOperator* node, const std::string& lhs, const std::string& rhs) const override;
+    std::string emit(const ASTAndOperator* node, std::string_view lhs, std::string_view rhs) const override;
+    std::string emit(const ASTOrOperator* node, std::string_view lhs, std::string_view rhs) const override;
 
 private:
     std::shared_ptr<ColumnMapper> colMapper;
@@ -437,7 +437,7 @@ public:
         , colMap(std::move(colMap))
     {
     }
-    bool hasEntry(const std::string& tag) const override
+    bool hasEntry(std::string_view tag) const override
     {
         return std::any_of(keyMap.begin(), keyMap.end(), [=](auto&& map) { return map.first == tag; });
     }
@@ -465,7 +465,7 @@ public:
         return fmt::format("{0}{1}{3} {0}{2}{3}", table_quote_begin, tableName, tableAlias, table_quote_end);
     }
 
-    bool mapQuotedList(std::vector<std::string>& sort, const std::string& tag, const std::string& desc) const override
+    bool mapQuotedList(std::vector<std::string>& sort, std::string_view tag, std::string_view desc) const override
     {
         bool result = false;
         for (auto&& [key, value] : keyMap) {
@@ -480,41 +480,37 @@ public:
         return result;
     }
 
-    std::string mapQuoted(const std::string& tag, bool noAlias = false) const override
+    std::string mapQuoted(std::string_view tag, bool noAlias = false) const override
     {
         auto it = std::find_if(keyMap.begin(), keyMap.end(), [=](auto&& map) { return map.first == tag; });
-        if (it != keyMap.end()) {
+        if (it != keyMap.end())
             return colMap.at(it->second).print(table_quote_begin, table_quote_end, noAlias);
-        }
         return {};
     }
 
-    std::string quote(const std::string& tag) const override
+    std::string quote(std::string_view tag) const override
     {
-        if (!tag.empty()) {
+        if (!tag.empty())
             return fmt::format("{0}{1}{2}", table_quote_begin, tag, table_quote_end);
-        }
         return {};
     }
 
-    std::string mapQuotedLower(const std::string& tag) const override
+    std::string mapQuotedLower(std::string_view tag) const override
     {
         auto it = std::find_if(keyMap.begin(), keyMap.end(), [=](auto&& map) { return map.first == tag; });
-        if (it != keyMap.end()) {
+        if (it != keyMap.end())
             return colMap.at(it->second).convert(table_quote_begin, table_quote_end);
-        }
         return {};
     }
 
-    FieldType getFieldType(const std::string& tag) const override
+    FieldType getFieldType(std::string_view tag) const override
     {
         auto it = std::find_if(keyMap.begin(), keyMap.end(), [=](auto&& map) { return map.first == tag; });
-        if (it != keyMap.end()) {
+        if (it != keyMap.end())
             return colMap.at(it->second).type;
-        }
         return FieldType::String;
     }
-    std::string getClause(En field, const std::string& value, bool noAlias = false)
+    std::string getClause(En field, std::string_view value, bool noAlias = false)
     {
         return fmt::format("{} = {}", this->mapQuoted(field, noAlias), value);
     }

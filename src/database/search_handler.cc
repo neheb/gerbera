@@ -123,7 +123,7 @@ std::optional<SearchToken> SearchLexer::nextToken()
     return std::nullopt;
 }
 
-std::string SearchLexer::getQuotedValue(const std::string& input)
+std::string SearchLexer::getQuotedValue(std::string_view input)
 {
     std::string token;
     bool escaping = false;
@@ -559,7 +559,7 @@ std::string DefaultSQLEmitter::emitSQL(const ASTNode* node) const
     throw_std_runtime_error("No SQL generated from AST");
 }
 
-std::string DefaultSQLEmitter::emit(const ASTParenthesis* node, const std::string& bracketedNode) const
+std::string DefaultSQLEmitter::emit(const ASTParenthesis* node, std::string_view bracketedNode) const
 {
     return fmt::format("({})", bracketedNode);
 }
@@ -666,14 +666,14 @@ std::string DefaultSQLEmitter::emit(const ASTExistsOperator* node, const std::st
     return fmt::format(logicOperator.at((property[0] == '@') ? "@exists" : "exists"), clsUpper, prpUpper, prpLower, exists, prpType);
 }
 
-std::string DefaultSQLEmitter::emit(const ASTAndOperator* node, const std::string& lhs,
-    const std::string& rhs) const
+std::string DefaultSQLEmitter::emit(const ASTAndOperator* node, std::string_view lhs,
+    std::string_view rhs) const
 {
     return fmt::format("{} AND {}", lhs, rhs);
 }
 
-std::string DefaultSQLEmitter::emit(const ASTOrOperator* node, const std::string& lhs,
-    const std::string& rhs) const
+std::string DefaultSQLEmitter::emit(const ASTOrOperator* node, std::string_view lhs,
+    std::string_view rhs) const
 {
     return fmt::format("{} OR {}", lhs, rhs);
 }
