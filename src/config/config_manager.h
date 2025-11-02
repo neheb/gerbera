@@ -39,11 +39,8 @@
 
 #include <map>
 #include <memory>
-
-namespace pugi {
-class xml_document;
-class xml_node;
-} // namespace pugi
+#include <optional>
+#include <pugixml.hpp>
 
 // forward declaration
 class AutoscanDirectory;
@@ -167,7 +164,7 @@ protected:
     fs::path dataDir;
     fs::path magicFile;
     std::map<std::string, std::string> origValues;
-    std::unique_ptr<pugi::xml_document> xmlDoc;
+    std::optional<pugi::xml_document> xmlDoc;
     std::vector<std::shared_ptr<ConfigOption>> options;
     std::map<std::string, bool> knownNodes;
 

@@ -95,7 +95,7 @@ void MetafileParserScript::processObject(const std::shared_ptr<CdsObject>& obj, 
 
     delete[] currentLine;
     currentLine = nullptr;
-    xmlDoc->reset();
+    xmlDoc.reset();
     root = nullNode;
 
     currentObjectID = INVALID_OBJECT_ID;

@@ -210,7 +210,7 @@ void PlaylistParserScript::processPlaylistObject(
 
     delete[] currentLine;
     currentLine = nullptr;
-    xmlDoc->reset();
+    xmlDoc.reset();
     root = nullNode;
 
     currentObjectID = INVALID_OBJECT_ID;
