@@ -109,7 +109,7 @@ public:
     bool createNodeFromDefaults(const std::shared_ptr<pugi::xml_node>& result) const override;
 
     void makeOption(
-        const pugi::xml_node& root,
+        pugi::xml_node root,
         const std::shared_ptr<Config>& config,
         const std::map<std::string, std::string>* arguments = nullptr) override;
 

@@ -80,7 +80,7 @@ bool ConfigDictionarySetup::createOptionFromNode(
     return true;
 }
 
-void ConfigDictionarySetup::makeOption(const pugi::xml_node& root, const std::shared_ptr<Config>& config, const std::map<std::string, std::string>* arguments)
+void ConfigDictionarySetup::makeOption(pugi::xml_node root, const std::shared_ptr<Config>& config, const std::map<std::string, std::string>* arguments)
 {
     if (arguments && arguments->find("tolower") != arguments->end()) {
         tolower = arguments->at("tolower") == "true";

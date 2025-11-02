@@ -152,7 +152,7 @@ void ConfigPathSetup::setFlag(bool hasFlag, ConfigPathArguments flag)
 }
 
 void ConfigPathSetup::makeOption(
-    const pugi::xml_node& root,
+    pugi::xml_node root,
     const std::shared_ptr<Config>& config,
     const std::map<std::string, std::string>* arguments)
 {

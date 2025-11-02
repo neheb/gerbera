@@ -136,7 +136,7 @@ pugi::xpath_node_set ConfigSetup::getXmlTree(pugi::xml_node element) const
     return element.select_nodes(xpath);
 }
 
-void ConfigSetup::makeOption(const pugi::xml_node& root, const std::shared_ptr<Config>& config, const std::map<std::string, std::string>* arguments)
+void ConfigSetup::makeOption(pugi::xml_node root, const std::shared_ptr<Config>& config, const std::map<std::string, std::string>* arguments)
 {
     optionValue = std::make_shared<Option>("");
     setOption(config);
