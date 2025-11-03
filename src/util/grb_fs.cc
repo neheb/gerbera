@@ -198,10 +198,11 @@ void GrbFile::writeTextFile(std::string_view contents)
 std::optional<std::vector<std::byte>> GrbFile::readBinaryFile()
 {
     static_assert(sizeof(std::byte) == sizeof(std::ifstream::char_type));
+    std::optional<std::vector<std::byte>> result;
 
     auto file = std::ifstream(path, std::ios::in | std::ios::binary);
     if (!file)
-        return std::nullopt;
+        return result;
 
     auto& fb = *file.rdbuf();
 
@@ -215,7 +216,7 @@ std::optional<std::vector<std::byte>> GrbFile::readBinaryFile()
 
     fb.pubseekoff(0, std::ios::beg);
 
-    auto result = std::optional<std::vector<std::byte>>(size);
+    result.emplace(size);
     size = fb.sgetn(reinterpret_cast<char*>(result->data()), size);
     if (size < 0 || !file)
         throw_std_runtime_error("Failed to read from file {}", path.c_str());
