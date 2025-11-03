@@ -50,7 +50,6 @@
 #include "update_manager.h"
 #include "upnp/clients.h"
 #include "util/generic_task.h"
-#include "util/mime.h"
 #include "util/string_converter.h"
 #include "util/timer.h"
 #include "util/tools.h"
@@ -58,7 +57,6 @@
 
 #ifdef HAVE_JS
 #include "scripting/metafile_parser_script.h"
-#include "scripting/playlist_parser_script.h"
 #include "scripting/scripting_runtime.h"
 #endif
 
