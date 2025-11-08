@@ -35,7 +35,7 @@
 #include "upnp/headers.h"
 #include "util/grb_net.h"
 
-static std::string secondsToString(const std::chrono::seconds& t)
+static std::string secondsToString(std::chrono::seconds t)
 {
     return grbLocaltime("{:%a %b %d %H:%M:%S %Y}", t);
 }

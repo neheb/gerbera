@@ -87,7 +87,7 @@ BuiltinLayout::BuiltinLayout(std::shared_ptr<Content> content)
 
 int BuiltinLayout::add(
     const std::shared_ptr<CdsObject>& obj,
-    const std::pair<int, bool>& parentID,
+    std::pair<int, bool> parentID,
     bool useRef)
 {
     obj->setParentID(parentID.first);

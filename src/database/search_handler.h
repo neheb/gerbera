@@ -514,7 +514,7 @@ public:
         }
         return FieldType::String;
     }
-    std::string getClause(En field, std::string value, bool noAlias = false)
+    std::string getClause(En field, const std::string& value, bool noAlias = false)
     {
         return fmt::format("{} = {}", this->mapQuoted(field, noAlias), value);
     }

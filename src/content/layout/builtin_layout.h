@@ -59,7 +59,7 @@ protected:
 
     int add(
         const std::shared_ptr<CdsObject>& obj,
-        const std::pair<int, bool>& parentID,
+        std::pair<int, bool> parentID,
         bool useRef = true);
     int getDir(
         const std::shared_ptr<CdsObject>& obj,

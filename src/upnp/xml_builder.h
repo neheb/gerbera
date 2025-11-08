@@ -206,7 +206,7 @@ protected:
         const std::string& key,
         const std::string& val) const;
     std::vector<std::string> addPropertyList(
-        const UpnpXMLBuilder::XmlStringFormat& xmlFormat,
+        UpnpXMLBuilder::XmlStringFormat xmlFormat,
         pugi::xml_node& result,
         const std::vector<std::string>& filter,
         const std::vector<std::pair<std::string, std::string>>& meta,
@@ -237,7 +237,7 @@ protected:
         const std::map<std::string, std::string>& defaults);
     ///  @brief update upnp property according to configuration
     static std::string formatXmlString(
-        const UpnpXMLBuilder::XmlStringFormat& xmlFormat,
+        UpnpXMLBuilder::XmlStringFormat xmlFormat,
         const std::string& input);
 };
 #endif // __UPNP_XML_H__

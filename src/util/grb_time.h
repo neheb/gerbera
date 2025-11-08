@@ -59,6 +59,6 @@ bool parseTime(long long& value, std::string& timeValue, GrbTimeType type = GrbT
 std::string makeSimpleDate(std::string& s);
 
 /// @brief Converts seconds to localtime and prints a formatted string
-std::string grbLocaltime(const std::string& format, const std::chrono::seconds& t);
+std::string grbLocaltime(const std::string& format, std::chrono::seconds t);
 
 #endif // __GRB_TIME_H__

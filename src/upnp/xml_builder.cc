@@ -157,7 +157,7 @@ std::string UpnpXMLBuilder::encodeEscapes(std::string s)
 }
 
 std::string UpnpXMLBuilder::formatXmlString(
-    const UpnpXMLBuilder::XmlStringFormat& xmlFormat,
+    UpnpXMLBuilder::XmlStringFormat xmlFormat,
     const std::string& input)
 {
     std::string s = input;
@@ -173,7 +173,7 @@ std::string UpnpXMLBuilder::formatXmlString(
 }
 
 std::vector<std::string> UpnpXMLBuilder::addPropertyList(
-    const UpnpXMLBuilder::XmlStringFormat& xmlFormat,
+    UpnpXMLBuilder::XmlStringFormat xmlFormat,
     pugi::xml_node& result,
     const std::vector<std::string>& filter,
     const std::vector<std::pair<std::string, std::string>>& meta,
