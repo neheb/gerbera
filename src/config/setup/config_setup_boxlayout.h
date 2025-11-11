@@ -44,7 +44,7 @@ protected:
     /// @param result contents of config.
     bool createOptionFromNode(
         const std::shared_ptr<Config>& config,
-        const pugi::xml_node& element,
+        pugi::xml_node element,
         const std::shared_ptr<BoxLayoutList>& result);
 
 public:
@@ -76,7 +76,7 @@ public:
     /// @brief make config option from xml content
     std::shared_ptr<ConfigOption> newOption(
         const std::shared_ptr<Config>& config,
-        const pugi::xml_node& optValue);
+        pugi::xml_node optValue);
 
     /// @brief get default value
     const std::vector<BoxLayout>& getDefault() const { return defaultEntries; }

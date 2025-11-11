@@ -48,7 +48,7 @@
 /// @param element starting element of the nodeset.
 bool ConfigClientSetup::createOptionFromNode(
     const std::shared_ptr<Config>& config,
-    const pugi::xml_node& element,
+    pugi::xml_node element,
     const std::shared_ptr<ClientConfigList>& result) const
 {
     if (!element)
@@ -504,7 +504,7 @@ bool ConfigClientSetup::updateDetail(
 
 std::shared_ptr<ConfigOption> ConfigClientSetup::newOption(
     const std::shared_ptr<Config>& config,
-    const pugi::xml_node& optValue)
+    pugi::xml_node optValue)
 {
     auto result = std::make_shared<ClientConfigList>();
 

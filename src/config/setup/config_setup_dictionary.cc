@@ -40,7 +40,7 @@
 /// @brief Creates a dictionary from an XML nodeset.
 bool ConfigDictionarySetup::createOptionFromNode(
     const std::shared_ptr<Config>& config,
-    const pugi::xml_node& element,
+    pugi::xml_node element,
     std::map<std::string, std::string>& result)
 {
     if (element) {
@@ -220,7 +220,7 @@ std::string ConfigDictionarySetup::getUniquePath() const
 }
 
 std::map<std::string, std::string> ConfigDictionarySetup::getXmlContent(
-    const pugi::xml_node& optValue,
+    pugi::xml_node optValue,
     const std::shared_ptr<Config>& config)
 {
     std::map<std::string, std::string> result;

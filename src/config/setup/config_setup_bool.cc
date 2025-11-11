@@ -70,7 +70,7 @@ void ConfigBoolSetup::makeOption(
 }
 
 bool ConfigBoolSetup::getXmlContent(
-    const pugi::xml_node& root,
+    pugi::xml_node root,
     const std::shared_ptr<Config>& config)
 {
     std::string optValue = ConfigSetup::getXmlContent(root, config, true);

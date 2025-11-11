@@ -42,7 +42,7 @@ protected:
     /// @param result contents of config.
     bool createOptionFromNode(
         const std::shared_ptr<Config>& config,
-        const pugi::xml_node& element,
+        pugi::xml_node element,
         std::shared_ptr<DynamicContentList>& result) const;
 
 public:
@@ -75,7 +75,7 @@ public:
 
     std::shared_ptr<ConfigOption> newOption(
         const std::shared_ptr<Config>& config,
-        const pugi::xml_node& optValue);
+        pugi::xml_node optValue);
 
     std::string getCurrentValue() const override { return {}; }
 };

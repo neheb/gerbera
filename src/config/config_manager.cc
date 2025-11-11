@@ -98,7 +98,7 @@ std::shared_ptr<Config> ConfigManager::getSelf()
     return shared_from_this();
 }
 
-std::shared_ptr<ConfigOption> ConfigManager::setOption(const pugi::xml_node& root, ConfigVal option, const std::map<std::string, std::string>* arguments)
+std::shared_ptr<ConfigOption> ConfigManager::setOption(pugi::xml_node root, ConfigVal option, const std::map<std::string, std::string>* arguments)
 {
     auto co = definition->findConfigSetup(option);
     auto self = getSelf();
@@ -112,7 +112,7 @@ void ConfigManager::addOption(ConfigVal option, const std::shared_ptr<ConfigOpti
     options.at(to_underlying(option)) = optionValue;
 }
 
-void ConfigManager::getAllNodes(const pugi::xml_node& parent, bool getAttributes)
+void ConfigManager::getAllNodes(pugi::xml_node parent, bool getAttributes)
 {
     for (auto&& node : parent.children()) {
         if (node.type() == pugi::xml_node_type::node_element) {

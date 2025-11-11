@@ -30,7 +30,7 @@
 #include "config/config_setup.h"
 #include "config/config_val.h"
 
-using ArrayInitFunction = std::function<bool(const pugi::xml_node& value, std::vector<std::string>& result, const char* node_name)>;
+using ArrayInitFunction = std::function<bool(pugi::xml_node value, std::vector<std::string>& result, const char* node_name)>;
 using ArrayItemCheckFunction = std::function<bool(const std::string& value)>;
 
 /// @brief Configuration parser to load arrays
@@ -60,7 +60,7 @@ protected:
     /// @param result vector with contents of array
     bool createOptionFromNode(
         const std::shared_ptr<Config>& config,
-        const pugi::xml_node& element,
+        pugi::xml_node element,
         std::vector<std::string>& result);
 
     /// @brief entry point for config ui
@@ -149,7 +149,7 @@ public:
     std::string getItemPathRoot(bool prefix = false) const override;
 
     std::vector<std::string> getXmlContent(
-        const pugi::xml_node& optValue,
+        pugi::xml_node optValue,
         const std::shared_ptr<Config>& config);
 
     bool checkArrayValue(const std::string& value, std::vector<std::string>& result) const;
@@ -160,13 +160,13 @@ public:
 
     /// @brief parse played-items-mark values
     static bool InitPlayedItemsMark(
-        const pugi::xml_node& value,
+        pugi::xml_node value,
         std::vector<std::string>& result,
         const char* nodeName);
 
     /// @brief parse items-per-page values
     static bool InitItemsPerPage(
-        const pugi::xml_node& value,
+        pugi::xml_node value,
         std::vector<std::string>& result,
         const char* nodeName);
 };

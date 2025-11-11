@@ -42,7 +42,7 @@
 /// @brief Creates an array of DynamicContent objects from a XML nodeset.
 bool ConfigDynamicContentSetup::createOptionFromNode(
     const std::shared_ptr<Config>& config,
-    const pugi::xml_node& element,
+    pugi::xml_node element,
     std::shared_ptr<DynamicContentList>& result) const
 {
     if (!element)
@@ -242,7 +242,7 @@ bool ConfigDynamicContentSetup::updateDetail(
 
 std::shared_ptr<ConfigOption> ConfigDynamicContentSetup::newOption(
     const std::shared_ptr<Config>& config,
-    const pugi::xml_node& optValue)
+    pugi::xml_node optValue)
 {
     auto result = std::make_shared<DynamicContentList>();
 

@@ -69,7 +69,7 @@ std::string ConfigAutoscanSetup::getItemPathRoot(bool prefix) const
 /// @brief Creates an array of AutoscanDirectory objects from a XML nodeset.
 bool ConfigAutoscanSetup::createOptionFromNode(
     const std::shared_ptr<Config>& config,
-    const pugi::xml_node& element,
+    pugi::xml_node element,
     std::vector<std::shared_ptr<AutoscanDirectory>>& result)
 {
     if (!element)
@@ -325,7 +325,7 @@ void ConfigAutoscanSetup::makeOption(
 
 std::shared_ptr<ConfigOption> ConfigAutoscanSetup::newOption(
     const std::shared_ptr<Config>& config,
-    const pugi::xml_node& optValue)
+    pugi::xml_node optValue)
 {
     auto result = std::vector<std::shared_ptr<AutoscanDirectory>>();
     if (!createOptionFromNode(config, optValue, result)) {

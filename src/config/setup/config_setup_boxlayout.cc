@@ -60,7 +60,7 @@ ConfigBoxLayoutSetup::~ConfigBoxLayoutSetup() = default;
 /// @param element starting element of the nodeset.
 bool ConfigBoxLayoutSetup::createOptionFromNode(
     const std::shared_ptr<Config>& config,
-    const pugi::xml_node& element,
+    pugi::xml_node element,
     const std::shared_ptr<BoxLayoutList>& result)
 {
     if (!element)
@@ -406,7 +406,7 @@ bool ConfigBoxLayoutSetup::updateDetail(const std::string& optItem,
 
 std::shared_ptr<ConfigOption> ConfigBoxLayoutSetup::newOption(
     const std::shared_ptr<Config>& config,
-    const pugi::xml_node& optValue)
+    pugi::xml_node optValue)
 {
     auto result = std::make_shared<BoxLayoutList>();
 

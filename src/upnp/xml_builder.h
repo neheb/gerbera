@@ -142,7 +142,7 @@ public:
 
     /// @brief convert xml tree to string
     static std::string printXml(
-        const pugi::xml_node& entry,
+        pugi::xml_node entry,
         const char* indent = PUGIXML_TEXT("\t"),
         int flags = pugi::format_default);
     /// @brief make sure xml syntax elemnts are escaped correctly

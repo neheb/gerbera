@@ -33,7 +33,7 @@
 #include <numeric>
 #include <pugixml.hpp>
 
-pugi::xml_node ConfigSetup::getXmlElement(const pugi::xml_node& root) const
+pugi::xml_node ConfigSetup::getXmlElement(pugi::xml_node root) const
 {
     pugi::xpath_node xpathNode = root.select_node(cpath.c_str());
     if (!xpathNode.node()) {
@@ -45,7 +45,7 @@ pugi::xml_node ConfigSetup::getXmlElement(const pugi::xml_node& root) const
     return xpathNode.node();
 }
 
-bool ConfigSetup::hasXmlElement(const pugi::xml_node& root) const
+bool ConfigSetup::hasXmlElement(pugi::xml_node root) const
 {
     return root.select_node(cpath.c_str()).node()
         || root.select_node(xpath).node()
@@ -62,7 +62,7 @@ std::string ConfigSetup::getDocs()
 
 /// @brief Returns a config option with the given xpath, if option does not exist a default value is returned.
 std::string ConfigSetup::getXmlContent(
-    const pugi::xml_node& root,
+    pugi::xml_node root,
     const std::shared_ptr<Config>& config,
     bool trim)
 {
@@ -128,7 +128,7 @@ std::string ConfigSetup::getXmlContent(
     return defaultValue;
 }
 
-pugi::xpath_node_set ConfigSetup::getXmlTree(const pugi::xml_node& element) const
+pugi::xpath_node_set ConfigSetup::getXmlTree(pugi::xml_node element) const
 {
     if (xpath[0] == '/') {
         return element.root().select_nodes(cpath.c_str());

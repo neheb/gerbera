@@ -33,7 +33,7 @@
 #include <pugixml.hpp>
 
 LongOptionType ConfigTimeSetup::getXmlContent(
-    const pugi::xml_node& root,
+    pugi::xml_node root,
     const std::shared_ptr<Config>& config)
 {
     auto optValue = ConfigSetup::getXmlContent(root, config, true);

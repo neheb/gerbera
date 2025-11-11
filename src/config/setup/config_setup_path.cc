@@ -69,7 +69,7 @@ bool ConfigPathSetup::checkExecutable(std::string& optValue) const
 }
 
 fs::path ConfigPathSetup::getXmlContent(
-    const pugi::xml_node& root,
+    pugi::xml_node root,
     const std::shared_ptr<Config>& config,
     bool doResolve)
 {

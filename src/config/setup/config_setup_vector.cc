@@ -38,7 +38,7 @@
 /// @brief Creates a vector from an XML nodeset.
 bool ConfigVectorSetup::createOptionFromNode(
     const std::shared_ptr<Config>& config,
-    const pugi::xml_node& element,
+    pugi::xml_node element,
     std::vector<std::vector<std::pair<std::string, std::string>>>& result)
 {
     if (element) {
@@ -212,7 +212,7 @@ std::string ConfigVectorSetup::getItemPathRoot(bool prefix) const
 }
 
 std::vector<std::vector<std::pair<std::string, std::string>>> ConfigVectorSetup::getXmlContent(
-    const pugi::xml_node& optValue,
+    pugi::xml_node optValue,
     const std::shared_ptr<Config>& config)
 {
     std::vector<std::vector<std::pair<std::string, std::string>>> result;

@@ -53,7 +53,7 @@ protected:
     /// list: { { "1", "3", "2" }, {"3", "", "4"}
     bool createOptionFromNode(
         const std::shared_ptr<Config>& config,
-        const pugi::xml_node& element,
+        pugi::xml_node element,
         std::vector<std::vector<std::pair<std::string, std::string>>>& result);
 
     bool updateItem(
@@ -104,7 +104,7 @@ public:
     std::string getItemPathRoot(bool prefix = false) const override;
 
     std::vector<std::vector<std::pair<std::string, std::string>>> getXmlContent(
-        const pugi::xml_node& optValue,
+        pugi::xml_node optValue,
         const std::shared_ptr<Config>& config);
 
     std::shared_ptr<ConfigOption> newOption(

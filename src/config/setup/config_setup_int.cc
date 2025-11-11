@@ -107,7 +107,7 @@ T ConfigIntegerSetup<T, OptionClass>::checkIntValue(std::string& sVal, const std
 
 template <typename T, class OptionClass>
 T ConfigIntegerSetup<T, OptionClass>::getXmlContent(
-    const pugi::xml_node& root,
+    pugi::xml_node root,
     const std::shared_ptr<Config>& config)
 {
     std::string sVal = ConfigSetup::getXmlContent(root, config, true);

@@ -29,7 +29,7 @@
 
 #include "config/config_setup.h"
 
-using DictionaryInitFunction = std::function<bool(const pugi::xml_node& value, std::map<std::string, std::string>& result)>;
+using DictionaryInitFunction = std::function<bool(pugi::xml_node value, std::map<std::string, std::string>& result)>;
 
 /// @brief Configuration parser to load dictionaries
 ///
@@ -60,7 +60,7 @@ protected:
     ///
     bool createOptionFromNode(
         const std::shared_ptr<Config>& config,
-        const pugi::xml_node& element,
+        pugi::xml_node element,
         std::map<std::string, std::string>& result);
 
     /// @brief Extracts the new value from the xpath key
@@ -126,7 +126,7 @@ public:
     std::string getUniquePath() const override;
 
     std::map<std::string, std::string> getXmlContent(
-        const pugi::xml_node& optValue,
+        pugi::xml_node optValue,
         const std::shared_ptr<Config>& config);
 
     std::shared_ptr<ConfigOption> newOption(

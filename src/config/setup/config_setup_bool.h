@@ -57,7 +57,7 @@ public:
     void makeOption(std::string optValue, const std::shared_ptr<Config>& config, const std::map<std::string, std::string>* arguments = nullptr) override;
 
     bool getXmlContent(
-        const pugi::xml_node& root,
+        pugi::xml_node root,
         const std::shared_ptr<Config>& config);
 
     bool checkValue(std::string& optValue, const std::string& pathName = "") const;

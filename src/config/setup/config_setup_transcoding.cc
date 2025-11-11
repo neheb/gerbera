@@ -46,7 +46,7 @@
 /// @param element starting element of the nodeset.
 bool ConfigTranscodingSetup::createOptionFromNode(
     const std::shared_ptr<Config>& config,
-    const pugi::xml_node& element,
+    pugi::xml_node element,
     std::shared_ptr<TranscodingProfileList>& result) const
 {
     if (!element)
@@ -698,7 +698,7 @@ bool ConfigTranscodingSetup::updateDetail(const std::string& optItem,
 
 std::shared_ptr<ConfigOption> ConfigTranscodingSetup::newOption(
     const std::shared_ptr<Config>& config,
-    const pugi::xml_node& optValue)
+    pugi::xml_node optValue)
 {
     auto result = std::make_shared<TranscodingProfileList>();
 

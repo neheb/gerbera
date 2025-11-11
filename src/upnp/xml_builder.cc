@@ -206,7 +206,7 @@ std::vector<std::string> UpnpXMLBuilder::addPropertyList(
     return propNames;
 }
 
-std::string UpnpXMLBuilder::printXml(const pugi::xml_node& entry, const char* indent, int flags)
+std::string UpnpXMLBuilder::printXml(pugi::xml_node entry, const char* indent, int flags)
 {
     std::ostringstream buf;
     entry.print(buf, indent, flags);

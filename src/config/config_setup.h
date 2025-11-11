@@ -146,7 +146,7 @@ public:
     ConfigSetup& operator=(const ConfigSetup&) = delete;
 
     /// @brief get xml tree based on config item
-    pugi::xpath_node_set getXmlTree(const pugi::xml_node& element) const;
+    pugi::xpath_node_set getXmlTree(pugi::xml_node element) const;
 
     /// @brief set default value
     void setDefaultValue(std::string defaultValue)
@@ -206,14 +206,14 @@ public:
     virtual std::string getTypeString() const { return "Unset"; }
 
     /// @brief Extract node based on config item
-    pugi::xml_node getXmlElement(const pugi::xml_node& root) const;
+    pugi::xml_node getXmlElement(pugi::xml_node root) const;
 
     /// @brief Check if node for config item exists
-    bool hasXmlElement(const pugi::xml_node& root) const;
+    bool hasXmlElement(pugi::xml_node root) const;
 
     /// @brief Returns a config option with the given xpath, if option does not exist a default value is returned.
     std::string getXmlContent(
-        const pugi::xml_node& root,
+        pugi::xml_node root,
         const std::shared_ptr<Config>& config,
         bool trim = true);
 

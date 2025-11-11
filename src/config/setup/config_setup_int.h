@@ -161,7 +161,7 @@ public:
         const std::map<std::string, std::string>* arguments = nullptr) override;
 
     T getXmlContent(
-        const pugi::xml_node& root,
+        pugi::xml_node root,
         const std::shared_ptr<Config>& config);
 
     std::shared_ptr<ConfigOption> newOption(T optValue);

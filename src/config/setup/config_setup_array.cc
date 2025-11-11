@@ -39,7 +39,7 @@
 /// @brief Creates an array of strings from an XML nodeset.
 bool ConfigArraySetup::createOptionFromNode(
     const std::shared_ptr<Config>& config,
-    const pugi::xml_node& element,
+    pugi::xml_node element,
     std::vector<std::string>& result)
 {
     if (element) {
@@ -184,7 +184,7 @@ std::string ConfigArraySetup::getItemPathRoot(bool prefix) const
 }
 
 std::vector<std::string> ConfigArraySetup::getXmlContent(
-    const pugi::xml_node& optValue,
+    pugi::xml_node optValue,
     const std::shared_ptr<Config>& config)
 {
     std::vector<std::string> result;
@@ -242,7 +242,7 @@ std::shared_ptr<ConfigOption> ConfigArraySetup::newOption(const std::vector<std:
     return optionValue;
 }
 
-bool ConfigArraySetup::InitPlayedItemsMark(const pugi::xml_node& value, std::vector<std::string>& result, const char* nodeName)
+bool ConfigArraySetup::InitPlayedItemsMark(pugi::xml_node value, std::vector<std::string>& result, const char* nodeName)
 {
     if (value && !value.empty()) {
         for (auto&& it : value.select_nodes(nodeName)) {
@@ -266,7 +266,7 @@ bool ConfigArraySetup::InitPlayedItemsMark(const pugi::xml_node& value, std::vec
     return true;
 }
 
-bool ConfigArraySetup::InitItemsPerPage(const pugi::xml_node& value, std::vector<std::string>& result, const char* nodeName)
+bool ConfigArraySetup::InitItemsPerPage(pugi::xml_node value, std::vector<std::string>& result, const char* nodeName)
 {
     if (value && !value.empty()) {
         // create the array from user settings

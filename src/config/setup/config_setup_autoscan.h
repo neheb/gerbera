@@ -46,7 +46,7 @@ protected:
     /// @param result vector with contents of array
     bool createOptionFromNode(
         const std::shared_ptr<Config>& config,
-        const pugi::xml_node& element,
+        pugi::xml_node element,
         std::vector<std::shared_ptr<AutoscanDirectory>>& result);
 
     bool updateItem(
@@ -90,7 +90,7 @@ public:
 
     std::shared_ptr<ConfigOption> newOption(
         const std::shared_ptr<Config>& config,
-        const pugi::xml_node& optValue);
+        pugi::xml_node optValue);
 
     std::string getCurrentValue() const override { return {}; }
 };

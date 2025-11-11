@@ -93,7 +93,7 @@ public:
 
     std::shared_ptr<ConfigOption> newOption(std::string& optValue);
     fs::path getXmlContent(
-        const pugi::xml_node& root,
+        pugi::xml_node root,
         const std::shared_ptr<Config>& config,
         bool doResolve = false);
 
