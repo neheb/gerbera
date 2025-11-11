@@ -399,10 +399,12 @@ std::deque<std::shared_ptr<GenericTask>> ContentManager::getTasklist()
 
 std::shared_ptr<ImportService> ContentManager::getImportService(const std::shared_ptr<AutoscanDirectory>& adir)
 {
-    auto result = adir ? adir->getImportService() : nullptr;
-    if (!result)
-        return importService;
-    return result;
+    std::shared_ptr<ImportService> ret;
+    if (adir)
+        ret = adir->getImportService();
+    if (!ret)
+        ret = importService;
+    return ret;
 }
 
 void ContentManager::addVirtualItem(const std::shared_ptr<CdsObject>& obj, bool allowFifo)

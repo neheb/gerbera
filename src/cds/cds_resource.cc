@@ -175,13 +175,14 @@ std::string CdsResource::getAttributeValue(ResourceAttribute attr) const
             auto res = Resolution(result);
             for (auto&& [val, mx, my] : resSteps) {
                 if (res.x() <= mx && res.y() <= my) {
-                    return val;
+                    result = val;
+                    break;
                 }
             }
-            return RESOURCE_IMAGE_STEP_XHD; // Image is larger with no step defined
+            result = RESOURCE_IMAGE_STEP_XHD; // Image is larger with no step defined
         } catch (const std::runtime_error& e) {
             log_warning("Resource attribute for resolution {} is invalid", result);
-            return fmt::format("???", result);
+            result = fmt::format("???", result);
         }
         break;
     }
@@ -189,6 +190,8 @@ std::string CdsResource::getAttributeValue(ResourceAttribute attr) const
         try {
             std::size_t value = stoiString(result);
             return (value > 0 && value <= orientation.size()) ? orientation.at(value - 1) : result;
+            if (value > 0 && value <= orientation.size())
+                result = orientation.at(value - 1);
         } catch (const std::runtime_error& e) {
             log_warning("Resource attribute for orientation {} is invalid", result);
             return result;

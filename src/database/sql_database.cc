@@ -2665,6 +2665,7 @@ void SQLDatabase::saveClients(const std::vector<ClientObservation>& cache)
 
 std::shared_ptr<ClientStatusDetail> SQLDatabase::getPlayStatus(const std::string& group, int objectId)
 {
+    std::shared_ptr<ClientStatusDetail> ret;
     std::vector<std::string> fields;
     fields.reserve(playstatusColMap.size());
     for (auto&& [key, col] : playstatusColMap) {
@@ -2679,12 +2680,12 @@ std::shared_ptr<ClientStatusDetail> SQLDatabase::getPlayStatus(const std::string
         playstatusColumnMapper->tableQuoted(),
         fmt::join(where, " AND ")));
     if (!res)
-        return {};
+        return ret;
 
-    std::unique_ptr<SQLRow> row;
-    if ((row = res->nextRow())) {
+    std::unique_ptr<SQLRow> row = res->nextRow();
+    if (row) {
         log_debug("Loaded {},{} items from {}", group, objectId, PLAYSTATUS_TABLE);
-        return std::make_shared<ClientStatusDetail>(
+        ret = std::make_shared<ClientStatusDetail>(
             getCol(row, PlaystatusColumn::Group),
             getColInt(row, PlaystatusColumn::ItemId, objectId),
             getColInt(row, PlaystatusColumn::PlayCount, 0),
@@ -2693,7 +2694,7 @@ std::shared_ptr<ClientStatusDetail> SQLDatabase::getPlayStatus(const std::string
             getColInt(row, PlaystatusColumn::BookMarkPosition, 0));
     }
 
-    return {};
+    return ret;
 }
 
 std::vector<std::shared_ptr<ClientStatusDetail>> SQLDatabase::getPlayStatusList(int objectId)

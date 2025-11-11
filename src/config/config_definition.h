@@ -105,11 +105,12 @@ public:
     template <class CS>
     std::shared_ptr<CS> findConfigSetup(ConfigVal option, bool save = false) const
     {
+        std::shared_ptr<CS> result;
         auto base = findConfigSetup(option, save);
         if (!base && save)
-            return nullptr;
+            return result;
 
-        auto result = std::dynamic_pointer_cast<CS>(base);
+        result = std::dynamic_pointer_cast<CS>(base);
         if (!result) {
             throw_std_runtime_error("Error in config code: {} has wrong class", option);
         }
@@ -121,7 +122,7 @@ public:
     {
         auto attr = std::string(mapConfigOption(option));
         if (!startswith(attr, ATTRIBUTE) && check)
-            return fmt::format("{}{}", ATTRIBUTE, attr);
+            attr = fmt::format("{}{}", ATTRIBUTE, attr);
         return attr;
     }
 
