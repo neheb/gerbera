@@ -39,9 +39,15 @@
 #include "util/thread_runner.h"
 #include "util/timer.h"
 
+#include <cstddef>
 #include <mutex>
 #include <queue>
 
+class Config;
+class ConverterManager;
+class Database;
+class GrbFile;
+class Mime;
 class Sqlite3Database;
 class Sqlite3Result;
 class SLTask;

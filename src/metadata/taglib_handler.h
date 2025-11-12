@@ -39,7 +39,6 @@
 
 #include "metadata_handler.h"
 
-#include <map>
 #include <tbytevector.h>
 #include <tfile.h>
 #include <tiostream.h>

@@ -30,7 +30,6 @@
 #include "content/inotify/inotify_types.h"
 #include "content/inotify/mt_inotify.h"
 #include "util/grb_fs.h"
-#include "util/tools.h"
 
 #include <memory>
 #include <mutex>

@@ -28,11 +28,11 @@
 
 #ifdef HAVE_INOTIFY
 
-#include <cinttypes>
+#include <cstdint>
 #include <string>
 
 struct inotify_event;
-typedef uint32_t InotifyFlags;
+using InotifyFlags = std::uint32_t;
 
 class InotifyUtil {
 public:

@@ -31,6 +31,10 @@
 #include <pqxx/pqxx>
 #include <queue>
 
+class Config;
+class ConverterManager;
+class Database;
+class Mime;
 class PostgresSQLResult;
 class PostgresSQLRow;
 class PGTask;

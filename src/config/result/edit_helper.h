@@ -109,7 +109,7 @@ std::size_t EditHelper<Editable>::getEditSize() const
     if (indexMap.empty())
         return 0;
 
-    size_t s = 0;
+    std::size_t s = 0;
     for (const auto& map : indexMap)
         s = std::max(s, map.first);
     return s + 1;

@@ -30,6 +30,7 @@
 
 #include "content/inotify/inotify_manager.h"
 #include "util/logger.h"
+#include "util/tools.h"
 
 #include <sys/inotify.h>
 

@@ -32,6 +32,8 @@
 class BoxChain;
 class BoxLayout;
 class BoxLayoutList;
+class Config;
+class ConfigOption;
 
 /// @brief Class for BoxLayout config parser
 class ConfigBoxLayoutSetup : public ConfigSetup {

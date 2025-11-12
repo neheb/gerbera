@@ -34,6 +34,7 @@
 class AutoscanDirectory;
 class CdsItemExternalURL;
 class CdsItem;
+class CdsObject;
 class Config;
 class ConfigDefinition;
 class ConfigSetup;

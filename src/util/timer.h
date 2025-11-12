@@ -40,6 +40,8 @@
 #include <atomic>
 #include <memory>
 
+class Config;
+
 /// @brief Class implementing time driven actions
 class Timer {
 public:

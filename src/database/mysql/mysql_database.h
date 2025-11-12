@@ -38,7 +38,10 @@
 
 #include "database/sql_database.h"
 
-#include "config/config_val.h"
+class Config;
+class ConverterManager;
+class Database;
+class Mime;
 
 #include <mysql.h>
 #include <vector>

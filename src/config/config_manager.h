@@ -36,6 +36,7 @@
 #define __CONFIG_MANAGER_H__
 
 #include "config.h"
+#include "config_int_types.h"
 
 #include <map>
 #include <memory>
