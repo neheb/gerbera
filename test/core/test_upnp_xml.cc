@@ -23,6 +23,7 @@
 
 #include "cds/cds_container.h"
 #include "cds/cds_item.h"
+#include "cds/cds_resource.h"
 #include "common.h"
 #include "config/config_definition.h"
 #include "config/config_setup.h"

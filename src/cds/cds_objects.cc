@@ -36,6 +36,7 @@
 
 #include "cds_container.h"
 #include "cds_item.h"
+#include "cds_resource.h"
 #include "exceptions.h"
 #include "util/tools.h"
 
@@ -133,6 +134,63 @@ ObjectType CdsObject::getMediaType(const std::string& contentType) const
     if (isSubClass(UPNP_CLASS_IMAGE_ITEM))
         return ObjectType::Image;
     return ObjectType::Unknown;
+}
+
+bool CdsObject::hasResource(ContentHandler id) const
+{
+    return std::any_of(resources.begin(), resources.end(), [=](auto&& res) { return id == res->getHandlerType(); });
+}
+
+/// @brief Remove resource with given handler id
+void CdsObject::removeResource(ContentHandler id)
+{
+    auto index = std::find_if(resources.begin(), resources.end(), [=](auto&& res) { return id == res->getHandlerType(); });
+    if (index != resources.end()) {
+        resources.erase(index);
+    }
+}
+
+/// @brief Query resource tag with the given index
+std::shared_ptr<CdsResource> CdsObject::getResource(int index) const
+{
+    auto res = std::find_if(resources.begin(), resources.end(), [index](auto&& r) { return r->getResId() == index; });
+    return res != resources.end() ? *res : nullptr;
+}
+
+/// @brief Query resource tag with the given handler id
+std::shared_ptr<CdsResource> CdsObject::getResource(ContentHandler id) const
+{
+    auto it = std::find_if(resources.begin(), resources.end(), [=](auto&& res) { return id == res->getHandlerType(); });
+    if (it != resources.end()) {
+        return *it;
+    }
+    return {};
+}
+
+std::shared_ptr<CdsResource> CdsObject::getResource(ResourcePurpose purpose) const
+{
+    auto it = std::find_if(resources.begin(), resources.end(), [=](auto&& res) { return purpose == res->getPurpose(); });
+    if (it != resources.end()) {
+        return *it;
+    }
+    return {};
+}
+
+/// @brief Query resource attribute with the given value
+std::shared_ptr<CdsResource> CdsObject::getResource(ResourceAttribute attrib, const std::string& value) const
+{
+    auto it = std::find_if(resources.begin(), resources.end(), [=](auto&& res) { return value == res->getAttributeValue(attrib); });
+    if (it != resources.end()) {
+        return *it;
+    }
+    return {};
+}
+
+/// @brief Add resource tag
+void CdsObject::addResource(const std::shared_ptr<CdsResource>& resource)
+{
+    resource->setResId(resources.size());
+    resources.push_back(resource);
 }
 
 std::shared_ptr<CdsObject> CdsObject::createObject(unsigned int objectType)

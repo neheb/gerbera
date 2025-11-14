@@ -37,6 +37,7 @@
 #include "autoscan_list.h"
 #include "cds/cds_container.h"
 #include "cds/cds_item.h"
+#include "cds/cds_resource.h"
 #include "cm_task.h"
 #include "config/config_option_enum.h"
 #include "config/config_options.h"

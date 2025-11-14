@@ -27,6 +27,7 @@ Gerbera - https://gerbera.io/
 #include "ffmpeg_thumbnailer_handler.h" // API
 
 #include "cds/cds_item.h"
+#include "cds/cds_resource.h"
 #include "config/config.h"
 #include "config/config_val.h"
 #include "iohandler/mem_io_handler.h"

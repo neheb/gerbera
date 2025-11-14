@@ -34,7 +34,7 @@
 #ifndef __CDS_OBJECTS_H__
 #define __CDS_OBJECTS_H__
 
-#include "cds_resource.h"
+#include "cds_enums.h"
 #include "common.h"
 #include "metadata/metadata_enums.h"
 #include "util/grb_fs.h"
@@ -48,6 +48,7 @@
 #include <utility>
 #include <vector>
 
+class CdsResource;
 enum class ContentHandler;
 enum class ObjectType;
 enum class ResourceAttribute;
@@ -338,63 +339,25 @@ public:
     }
 
     /// @brief Search resources for given handler id
-    bool hasResource(ContentHandler id) const
-    {
-        return std::any_of(resources.begin(), resources.end(), [=](auto&& res) { return id == res->getHandlerType(); });
-    }
+    bool hasResource(ContentHandler id) const;
 
     /// @brief Remove resource with given handler id
-    void removeResource(ContentHandler id)
-    {
-        auto index = std::find_if(resources.begin(), resources.end(), [=](auto&& res) { return id == res->getHandlerType(); });
-        if (index != resources.end()) {
-            resources.erase(index);
-        }
-    }
+    void removeResource(ContentHandler id);
 
     /// @brief Query resource tag with the given index
-    std::shared_ptr<CdsResource> getResource(int index) const
-    {
-        auto res = std::find_if(resources.begin(), resources.end(), [index](auto&& r) { return r->getResId() == index; });
-        return res != resources.end() ? *res : nullptr;
-    }
+    std::shared_ptr<CdsResource> getResource(int index) const;
 
     /// @brief Query resource tag with the given handler id
-    std::shared_ptr<CdsResource> getResource(ContentHandler id) const
-    {
-        auto it = std::find_if(resources.begin(), resources.end(), [=](auto&& res) { return id == res->getHandlerType(); });
-        if (it != resources.end()) {
-            return *it;
-        }
-        return {};
-    }
+    std::shared_ptr<CdsResource> getResource(ContentHandler id) const;
 
     /// @brief Query resource tag with the given purpose
-    std::shared_ptr<CdsResource> getResource(ResourcePurpose purpose) const
-    {
-        auto it = std::find_if(resources.begin(), resources.end(), [=](auto&& res) { return purpose == res->getPurpose(); });
-        if (it != resources.end()) {
-            return *it;
-        }
-        return {};
-    }
+    std::shared_ptr<CdsResource> getResource(ResourcePurpose purpose) const;
 
     /// @brief Query resource attribute with the given value
-    std::shared_ptr<CdsResource> getResource(ResourceAttribute attrib, const std::string& value) const
-    {
-        auto it = std::find_if(resources.begin(), resources.end(), [=](auto&& res) { return value == res->getAttributeValue(attrib); });
-        if (it != resources.end()) {
-            return *it;
-        }
-        return {};
-    }
+    std::shared_ptr<CdsResource> getResource(ResourceAttribute attrib, const std::string& value) const;
 
     /// @brief Add resource tag
-    void addResource(const std::shared_ptr<CdsResource>& resource)
-    {
-        resource->setResId(resources.size());
-        resources.push_back(resource);
-    }
+    void addResource(const std::shared_ptr<CdsResource>& resource);
 
     /// @brief Copies all object properties to another object.
     /// @param obj target object (clone)

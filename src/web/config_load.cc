@@ -27,6 +27,7 @@
 #include "pages.h" // API
 
 #include "cds/cds_container.h"
+#include "cds/cds_resource.h"
 #include "config/config_definition.h"
 #include "config/config_option_enum.h"
 #include "config/config_setup.h"

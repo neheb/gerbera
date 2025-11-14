@@ -36,6 +36,7 @@
 
 #include "cds/cds_container.h"
 #include "cds/cds_item.h"
+#include "cds/cds_resource.h"
 #include "config/result/autoscan.h"
 #include "content/content.h"
 #include "database/database.h"
