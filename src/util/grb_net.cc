@@ -31,10 +31,6 @@ Gerbera - https://gerbera.io/
 #include <netdb.h>
 #include <regex>
 
-#ifdef __sun__
-#include <sys/sockio.h>
-#endif
-
 #define M_SOCK_ADDR_IN_PTR(sa) reinterpret_cast<struct sockaddr_in*>(sa)
 #define M_SOCK_ADDR_IN_ADDR(sa) M_SOCK_ADDR_IN_PTR(sa)->sin_addr
 #define M_SOCK_ADDR_IN6_PTR(sa) reinterpret_cast<struct sockaddr_in6*>(sa)
